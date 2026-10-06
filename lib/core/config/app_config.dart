@@ -8,6 +8,16 @@ class AppConfig {
     defaultValue: 'http://10.0.2.2:8000/api/v1',
   );
 
+  /// Server origin derived from [apiBaseUrl] (strips a trailing /api/v1),
+  /// used to resolve public storage URLs (/storage/...).
+  static String get fileBaseUrl {
+    const String suffix = '/api/v1';
+    if (apiBaseUrl.endsWith(suffix)) {
+      return apiBaseUrl.substring(0, apiBaseUrl.length - suffix.length);
+    }
+    return apiBaseUrl;
+  }
+
   static const String pusherKey = String.fromEnvironment(
     'PUSHER_KEY',
     defaultValue: 'local',

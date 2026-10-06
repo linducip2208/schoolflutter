@@ -50,6 +50,8 @@ class _LoginPageState extends State<LoginPage> {
             ScaffoldMessenger.of(c)
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+          } else if (state.status == AuthStatus.twoFactorRequired) {
+            c.push(Routes.twoFactor);
           }
         },
         child: SafeArea(

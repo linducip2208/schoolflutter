@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/api/api_client.dart';
 import '../../../../core/api/api_endpoints.dart';
+import '../../../../core/error/error_handler.dart';
+import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/widgets/app_error.dart';
+import '../../../../core/widgets/app_loading.dart';
 
 class CanteenMenuPage extends StatefulWidget {
   final int studentId;
@@ -26,21 +30,34 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
   }
 
   Future<Map<String, dynamic>> _loadMenu() async {
-    final Response<dynamic> r = await ApiClient.dio.get<dynamic>(ApiEndpoints.canteenMenu);
-    final Map<String, dynamic> body = r.data is Map<String, dynamic>
-        ? r.data as Map<String, dynamic>
-        : <String, dynamic>{};
-    final List<dynamic> items = body['items'] as List<dynamic>? ?? <dynamic>[];
-    for (final dynamic m in items) {
-      if (m is Map<String, dynamic>) _menuById[m['id'] as int] = m;
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(ApiEndpoints.canteenMenu);
+      final Map<String, dynamic> body = r.data is Map<String, dynamic>
+          ? r.data as Map<String, dynamic>
+          : <String, dynamic>{};
+      final List<dynamic> items = body['items'] as List<dynamic>? ?? <dynamic>[];
+      for (final dynamic m in items) {
+        if (m is Map<String, dynamic>) _menuById[m['id'] as int] = m;
+      }
+      return body;
+    } on DioException catch (e) {
+      throw mapDioError(e);
     }
-    return body;
   }
 
   Future<Map<String, dynamic>> _loadWallet() async {
-    final Response<dynamic> r = await ApiClient.dio.get<dynamic>(ApiEndpoints.canteenWallet(widget.studentId));
-    return r.data is Map<String, dynamic> ? r.data as Map<String, dynamic> : <String, dynamic>{};
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(ApiEndpoints.canteenWallet(widget.studentId));
+      return r.data is Map<String, dynamic> ? r.data as Map<String, dynamic> : <String, dynamic>{};
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
   }
+
+  void _reload() => setState(() {
+        _menuFuture = _loadMenu();
+        _walletFuture = _loadWallet();
+      });
 
   int get _cartTotal {
     int total = 0;
@@ -91,7 +108,7 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
                 child: Center(
                   child: Chip(
                     avatar: const Icon(Icons.account_balance_wallet, size: 14),
-                    label: Text('Rp ${(balance / 100).toStringAsFixed(0)}'),
+                    label: Text(CurrencyFormatter.idr(balance)),
                   ),
                 ),
               );
@@ -103,10 +120,13 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
         future: _menuFuture,
         builder: (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const AppLoading();
+          }
+          if (snap.hasError) {
+            return AppError(message: '${snap.error}', onRetry: _reload);
           }
           final List<dynamic> items = snap.data?['items'] as List<dynamic>? ?? <dynamic>[];
-          if (items.isEmpty) return const Center(child: Text('Menu kosong hari ini'));
+          if (items.isEmpty) return const AppEmpty(title: 'Menu kosong hari ini');
 
           return ListView.separated(
             itemCount: items.length,
@@ -117,7 +137,7 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
               final int qty = _cart[id] ?? 0;
               return ListTile(
                 title: Text(m['name']?.toString() ?? '-'),
-                subtitle: Text('Rp ${((m['price'] ?? 0) / 100).toStringAsFixed(0)}'),
+                subtitle: Text(CurrencyFormatter.idr((m['price'] as num?)?.toInt() ?? 0)),
                 trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                   IconButton(
                     icon: const Icon(Icons.remove_circle_outline),

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/two_factor_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/attendance/presentation/pages/student_attendance_page.dart';
 import '../../features/attendance/presentation/pages/teacher_attendance_page.dart';
@@ -79,6 +80,10 @@ class AppRouter {
         GoRoute(
           path: Routes.login,
           builder: (_, __) => const LoginPage(),
+        ),
+        GoRoute(
+          path: Routes.twoFactor,
+          builder: (_, __) => const TwoFactorPage(),
         ),
         GoRoute(
           path: Routes.forgotPassword,
@@ -244,12 +249,47 @@ class AppRouter {
       return loc == Routes.splash ? null : Routes.splash;
     }
     final bool authed = s.status == AuthStatus.authenticated && s.user != null;
-    final bool isPublic =
-        loc == Routes.login || loc == Routes.forgotPassword || loc == Routes.splash;
+    final bool isPublic = loc == Routes.login ||
+        loc == Routes.twoFactor ||
+        loc == Routes.forgotPassword ||
+        loc == Routes.splash;
 
     if (!authed && !isPublic) return Routes.login;
     if (authed && isPublic) return Routes.homeForRole(s.user!.role);
+    if (authed && !isPublic) {
+      // Role-based route guard: /student/*, /parent/*, /teacher/*,
+      // /admin/*, /staff/* prefixes require the matching role.
+      // Shared routes (notice, notifications, chat, hostel, ...) are open
+      // to every authenticated user; the API enforces authorization.
+      final String role = s.user!.role;
+      final String? required = _roleForPrefix(loc);
+      if (required != null && !_roleMatches(role, required)) {
+        return Routes.homeForRole(role);
+      }
+    }
     return null;
+  }
+
+  /// Returns the role required by a path prefix, or null for shared routes.
+  static String? _roleForPrefix(String loc) {
+    if (loc.startsWith('/student/')) return 'student';
+    if (loc.startsWith('/parent/')) return 'parent';
+    if (loc.startsWith('/teacher/')) return 'teacher';
+    if (loc.startsWith('/admin/')) return 'admin';
+    if (loc.startsWith('/staff/')) return 'staff';
+    return null;
+  }
+
+  static bool _roleMatches(String role, String required) {
+    if (role == required) return true;
+    // school_admin is an admin; anything else falls back to staff areas.
+    if (required == 'admin' && role == 'school_admin') return true;
+    if (required == 'staff' &&
+        (role == 'librarian' ||
+            role == 'accountant' ||
+            role == 'counselor' ||
+            role == 'staff')) return true;
+    return false;
   }
 }
 

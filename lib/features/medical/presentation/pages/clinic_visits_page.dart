@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/api/api_client.dart';
 import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/api/response_unwrap.dart';
+import '../../../../core/error/error_handler.dart';
+import '../../../../core/widgets/app_error.dart';
+import '../../../../core/widgets/app_loading.dart';
 
 class ClinicVisitsPage extends StatefulWidget {
   final int studentId;
@@ -24,10 +27,16 @@ class _ClinicVisitsPageState extends State<ClinicVisitsPage> {
   }
 
   Future<List<Map<String, dynamic>>> _load() async {
-    final Response<dynamic> r = await ApiClient.dio
-        .get<dynamic>(ApiEndpoints.studentClinicVisits(widget.studentId));
-    return unwrapList(r.data);
+    try {
+      final Response<dynamic> r = await ApiClient.dio
+          .get<dynamic>(ApiEndpoints.studentClinicVisits(widget.studentId));
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
   }
+
+  void _reload() => setState(() => _future = _load());
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +46,14 @@ class _ClinicVisitsPageState extends State<ClinicVisitsPage> {
         future: _future,
         builder: (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const AppLoading();
           }
-          if (snap.hasError) return Center(child: Text('Error: ${snap.error}'));
+          if (snap.hasError) {
+            return AppError(message: '${snap.error}', onRetry: _reload);
+          }
           final List<Map<String, dynamic>> visits = snap.data ?? <Map<String, dynamic>>[];
           if (visits.isEmpty) {
-            return const Center(child: Text('Tidak ada riwayat kunjungan UKS'));
+            return const AppEmpty(title: 'Tidak ada riwayat kunjungan UKS');
           }
           return ListView.separated(
             itemCount: visits.length,

@@ -34,6 +34,15 @@ class AuthLogoutRequested extends AuthEvent {
   const AuthLogoutRequested();
 }
 
+class AuthTwoFactorVerifyRequested extends AuthEvent {
+  const AuthTwoFactorVerifyRequested({this.code, this.recoveryCode});
+  final String? code;
+  final String? recoveryCode;
+
+  @override
+  List<Object?> get props => <Object?>[code, recoveryCode];
+}
+
 class AuthLocaleChanged extends AuthEvent {
   const AuthLocaleChanged(this.locale);
   final String locale;
@@ -43,7 +52,7 @@ class AuthLocaleChanged extends AuthEvent {
 }
 
 // ── State
-enum AuthStatus { unknown, authenticated, unauthenticated, loggingIn, error }
+enum AuthStatus { unknown, authenticated, unauthenticated, loggingIn, twoFactorRequired, error }
 
 class AuthState extends Equatable {
   const AuthState({
@@ -51,35 +60,41 @@ class AuthState extends Equatable {
     this.user,
     this.school,
     this.errorMessage,
+    this.challengeId,
   });
 
   final AuthStatus status;
   final UserModel? user;
   final SchoolModel? school;
   final String? errorMessage;
+  final String? challengeId;
 
   AuthState copyWith({
     AuthStatus? status,
     UserModel? user,
     SchoolModel? school,
     String? errorMessage,
+    String? challengeId,
     bool clearError = false,
+    bool clearChallenge = false,
   }) =>
       AuthState(
         status: status ?? this.status,
         user: user ?? this.user,
         school: school ?? this.school,
         errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+        challengeId: clearChallenge ? null : (challengeId ?? this.challengeId),
       );
 
   @override
-  List<Object?> get props => <Object?>[status, user, school, errorMessage];
+  List<Object?> get props => <Object?>[status, user, school, errorMessage, challengeId];
 }
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this._repo) : super(const AuthState()) {
     on<AuthBootRequested>(_onBoot);
     on<AuthLoginRequested>(_onLogin);
+    on<AuthTwoFactorVerifyRequested>(_onTwoFactorVerify);
     on<AuthLogoutRequested>(_onLogout);
     on<AuthLocaleChanged>(_onLocale);
   }
@@ -114,6 +129,46 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         user: s.user,
         school: s.school,
         clearError: true,
+      ));
+    } catch (err) {
+      if (err is TwoFactorRequired) {
+        emit(state.copyWith(
+          status: AuthStatus.twoFactorRequired,
+          challengeId: err.challengeId,
+          clearError: true,
+        ));
+        return;
+      }
+      emit(state.copyWith(
+        status: AuthStatus.error,
+        errorMessage: err.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onTwoFactorVerify(
+      AuthTwoFactorVerifyRequested e, Emitter<AuthState> emit) async {
+    final String? challengeId = state.challengeId;
+    if (challengeId == null || challengeId.isEmpty) {
+      emit(state.copyWith(
+        status: AuthStatus.error,
+        errorMessage: 'Sesi verifikasi kedaluwarsa. Silakan login ulang.',
+      ));
+      return;
+    }
+    emit(state.copyWith(status: AuthStatus.loggingIn, clearError: true));
+    try {
+      final AuthSession s = await _repo.verifyTwoFactor(
+        challengeId: challengeId,
+        code: e.code,
+        recoveryCode: e.recoveryCode,
+      );
+      emit(state.copyWith(
+        status: AuthStatus.authenticated,
+        user: s.user,
+        school: s.school,
+        clearError: true,
+        clearChallenge: true,
       ));
     } catch (err) {
       emit(state.copyWith(

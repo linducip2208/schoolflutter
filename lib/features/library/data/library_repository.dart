@@ -30,11 +30,12 @@ class LibraryRepository {
     }
   }
 
-  Future<void> issue({required int bookId, required int studentId}) async {
+  /// Backend issues to a USER (user_id), not a student row.
+  Future<void> issue({required int bookId, required int userId}) async {
     try {
       await ApiClient.dio.post<dynamic>(
         ApiEndpoints.libraryIssue,
-        data: <String, dynamic>{'book_id': bookId, 'student_id': studentId},
+        data: <String, dynamic>{'book_id': bookId, 'user_id': userId},
       );
     } on DioException catch (e) {
       throw mapDioError(e);

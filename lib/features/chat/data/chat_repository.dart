@@ -28,11 +28,16 @@ class ChatRepository {
   }
 
   /// Offline-capable: queued when offline, replayed with Idempotency-Key.
-  Future<Map<String, dynamic>> send(int conversationId, String body) async {
+  /// [file] is a backend upload path (see UploadRepository).
+  Future<Map<String, dynamic>> send(int conversationId, String body,
+      {String? file}) async {
     try {
       final Response<dynamic> r = await SyncEngine.instance.postMutation(
         ApiEndpoints.sendMessage(conversationId),
-        <String, String>{'body': body},
+        <String, dynamic>{
+          'body': body,
+          if (file != null && file.isNotEmpty) 'file': file,
+        },
       );
       return unwrapMap(r.data);
     } on DioException catch (e) {

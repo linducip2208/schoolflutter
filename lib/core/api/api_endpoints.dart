@@ -3,6 +3,7 @@ class ApiEndpoints {
 
   // ── Auth
   static const String login = '/auth/login';
+  static const String twoFactorVerify = '/auth/2fa/verify';
   static const String logout = '/auth/logout';
   static const String forgotPassword = '/auth/forgot-password';
   static const String resetPassword = '/auth/reset-password';
@@ -15,6 +16,10 @@ class ApiEndpoints {
   // ── Device tokens (multi-device push registry)
   static const String devicesRegister = '/devices/register';
   static const String devicesUnregister = '/devices/unregister';
+
+  // ── Uploads (purpose-scoped, server-validated)
+  static const String uploads = '/uploads';
+  static const String uploadFile = '/uploads/file';
 
   // ── School
   static const String schoolProfile = '/school/profile';

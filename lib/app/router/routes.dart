@@ -3,6 +3,7 @@ class Routes {
 
   static const String splash = '/';
   static const String login = '/login';
+  static const String twoFactor = '/2fa';
   static const String forgotPassword = '/forgot-password';
 
   // Student

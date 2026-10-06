@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/api/api_client.dart';
 import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/api/response_unwrap.dart';
+import '../../../../core/error/error_handler.dart';
+import '../../../../core/widgets/app_error.dart';
+import '../../../../core/widgets/app_loading.dart';
 
 class BusTrackingPage extends StatefulWidget {
   final int studentId;
@@ -39,7 +42,13 @@ class _BusTrackingPageState extends State<BusTrackingPage> {
       final Response<dynamic> r = await ApiClient.dio
           .get<dynamic>(ApiEndpoints.childBusLocation(widget.studentId));
       if (!mounted) return;
-      setState(() => _data = unwrapMap(r.data));
+      setState(() {
+        _data = unwrapMap(r.data);
+        _error = null;
+      });
+    } on DioException catch (e) {
+      if (!mounted) return;
+      setState(() => _error = mapDioError(e));
     } catch (e) {
       if (!mounted) return;
       setState(() => _error = e);
@@ -59,10 +68,10 @@ class _BusTrackingPageState extends State<BusTrackingPage> {
 
   Widget _buildBody() {
     if (_error != null) {
-      return Center(child: Text('Error: $_error'));
+      return AppError(message: '$_error', onRetry: _refresh);
     }
     if (_data == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const AppLoading();
     }
 
     final Map<String, dynamic>? loc = _data!['location'] as Map<String, dynamic>?;

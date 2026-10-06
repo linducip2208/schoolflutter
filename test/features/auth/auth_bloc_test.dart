@@ -135,5 +135,74 @@ void main() {
         ),
       ],
     );
+    blocTest<AuthBloc, AuthState>(
+      'AuthLoginRequested → twoFactorRequired when repository throws TwoFactorRequired',
+      setUp: () {
+        when(() => repo.login(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              schoolCode: any(named: 'schoolCode'),
+            )).thenThrow(TwoFactorRequired('challenge-1'));
+      },
+      build: () => AuthBloc(repo),
+      act: (AuthBloc b) => b.add(const AuthLoginRequested(
+        email: 'budi@school.id',
+        password: 'secret123',
+      )),
+      expect: () => <Matcher>[
+        predicate<AuthState>(
+            (AuthState s) => s.status == AuthStatus.loggingIn, 'loggingIn'),
+        predicate<AuthState>(
+          (AuthState s) =>
+              s.status == AuthStatus.twoFactorRequired &&
+              s.challengeId == 'challenge-1',
+          'twoFactorRequired with challenge',
+        ),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'AuthTwoFactorVerifyRequested → authenticated on success',
+      setUp: () {
+        when(() => repo.verifyTwoFactor(
+              challengeId: any(named: 'challengeId'),
+              code: any(named: 'code'),
+              recoveryCode: any(named: 'recoveryCode'),
+            )).thenAnswer((_) async => testSession);
+      },
+      build: () => AuthBloc(repo)
+        ..emit(const AuthState(
+          status: AuthStatus.twoFactorRequired,
+          challengeId: 'challenge-1',
+        )),
+      act: (AuthBloc b) => b.add(const AuthTwoFactorVerifyRequested(
+        code: '123456',
+      )),
+      expect: () => <Matcher>[
+        predicate<AuthState>(
+            (AuthState s) => s.status == AuthStatus.loggingIn, 'loggingIn'),
+        predicate<AuthState>(
+          (AuthState s) =>
+              s.status == AuthStatus.authenticated &&
+              s.challengeId == null,
+          'authenticated and challenge cleared',
+        ),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'AuthTwoFactorVerifyRequested → error without challenge',
+      build: () => AuthBloc(repo),
+      act: (AuthBloc b) => b.add(const AuthTwoFactorVerifyRequested(
+        code: '123456',
+      )),
+      expect: () => <Matcher>[
+        predicate<AuthState>(
+          (AuthState s) =>
+              s.status == AuthStatus.error && s.errorMessage != null,
+          'error with message',
+        ),
+      ],
+    );
   });
 }
