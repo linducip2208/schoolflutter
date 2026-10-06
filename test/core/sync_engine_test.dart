@@ -189,4 +189,42 @@ void main() {
     expect(fresh.single['a'], 2);
     expect((await kv.read('GET /t'))?.body, '[{"a":2}]');
   });
+
+  test('queued mutation replays with its stored key after process death', () async {
+    final List<String> seenKeys = <String>[];
+    engine.configureForTest(
+      mutations: mutations,
+      kv: kv,
+      isOnline: () async => false,
+      poster: (String path, Map<String, dynamic>? body, String key) async {
+        seenKeys.add(key);
+        return okResponse();
+      },
+    );
+
+    // Offline: queued with key K (thrown to caller).
+    await expectLater(
+      engine.postMutation('/chat/conversations/9/send', <String, String>{'body': 'hi'}),
+      throwsA(isA<OfflineQueuedException>()),
+    );
+    final String storedKey =
+        (await mutations.dueMutations(now: DateTime.now())).single.idempotencyKey;
+
+    // Simulate app restart: a FRESH engine over the same durable store
+    // replays with the stored key K (no duplicate server-side).
+    final SyncEngine fresh = SyncEngine.instance;
+    fresh.configureForTest(
+      mutations: mutations,
+      kv: kv,
+      isOnline: () async => true,
+      poster: (String path, Map<String, dynamic>? body, String key) async {
+        seenKeys.add(key);
+        return okResponse();
+      },
+    );
+    await fresh.flush();
+
+    expect(seenKeys, <String>[storedKey]);
+    expect(await mutations.pendingCount(), 0);
+  });
 }

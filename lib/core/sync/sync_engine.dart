@@ -94,20 +94,27 @@ class SyncEngine {
 
   /// POST with offline fallback. Returns the server response when online,
   /// otherwise persists to the outbox and throws [OfflineQueuedException].
+  ///
+  /// The idempotency key is minted BEFORE the first attempt and reused for
+  /// the queued replay, so a manual retry after a lost response cannot
+  /// create a duplicate server-side (backend dedups on the key).
   Future<Response<dynamic>> postMutation(String path, Map<String, dynamic>? body) async {
+    final String key = _newKey();
     if (await _isOnline()) {
       try {
-        return await _poster(path, body, _newKey());
+        return await _poster(path, body, key);
       } on DioException catch (e) {
         if (_isOfflineError(e)) {
-          final QueuedMutation m = await _mutations.enqueue(method: 'POST', path: path, body: body);
+          final QueuedMutation m = await _mutations.enqueue(
+              method: 'POST', path: path, body: body, idempotencyKey: key);
           await _refreshPendingCount();
           throw OfflineQueuedException(m.id);
         }
         rethrow;
       }
     }
-    final QueuedMutation m = await _mutations.enqueue(method: 'POST', path: path, body: body);
+    final QueuedMutation m = await _mutations.enqueue(
+        method: 'POST', path: path, body: body, idempotencyKey: key);
     await _refreshPendingCount();
     throw OfflineQueuedException(m.id);
   }

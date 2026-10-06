@@ -282,13 +282,11 @@ class AppRouter {
 
   static bool _roleMatches(String role, String required) {
     if (role == required) return true;
-    // school_admin is an admin; anything else falls back to staff areas.
+    // school_admin is an admin; /staff/* is the generic fallback shell
+    // for every other back-office role (principal, nurse, librarian,
+    // accountant, ...), so it must never bounce.
     if (required == 'admin' && role == 'school_admin') return true;
-    if (required == 'staff' &&
-        (role == 'librarian' ||
-            role == 'accountant' ||
-            role == 'counselor' ||
-            role == 'staff')) return true;
+    if (required == 'staff') return true;
     return false;
   }
 }

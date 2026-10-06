@@ -35,6 +35,8 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
   final List<Map<String, dynamic>> _live = <Map<String, dynamic>>[];
   bool _sending = false;
   double? _uploadProgress;
+  String? _lastSentBody;
+  DateTime? _lastSentAt;
 
   String get _channel => 'private-conversation.${widget.conversationId}';
 
@@ -76,9 +78,22 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     } catch (_) {}
   }
 
+  /// Guards against accidental double-tap duplicates: identical bodies
+  /// within 10 seconds are treated as the same intent.
+  bool _isDuplicateTap(String body) {
+    if (_lastSentBody == body &&
+        _lastSentAt != null &&
+        DateTime.now().difference(_lastSentAt!) < const Duration(seconds: 10)) {
+      return true;
+    }
+    _lastSentBody = body;
+    _lastSentAt = DateTime.now();
+    return false;
+  }
+
   Future<void> _send() async {
     final String text = _input.text.trim();
-    if (text.isEmpty) return;
+    if (text.isEmpty || _isDuplicateTap(text)) return;
     setState(() => _sending = true);
     try {
       final Map<String, dynamic> sent =
