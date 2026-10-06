@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -76,16 +78,37 @@ class FcmService {
     }
   }
 
+  /// Registers the FCM token to the multi-device registry.
+  /// Backend: POST /devices/register {token, platform, device_name}.
   Future<void> _registerToBackend(String token) async {
     final String? jwt = await AppStorage.getToken();
     if (jwt == null) return;
     try {
       await ApiClient.dio.post<dynamic>(
-        ApiEndpoints.registerFcmToken,
-        data: <String, String>{'token': token, 'platform': 'mobile'},
+        ApiEndpoints.devicesRegister,
+        data: <String, String>{
+          'token': token,
+          'platform': Platform.isIOS ? 'ios' : 'android',
+          'device_name': 'mobile',
+        },
       );
     } on DioException catch (e) {
       if (kDebugMode) debugPrint('[FCM] register backend error: $e');
+    }
+  }
+
+  /// Removes this device from the push registry (call on logout).
+  /// Best-effort: local state is cleared regardless.
+  Future<void> unregisterFromBackend() async {
+    final String? fcmToken = AppStorage.getFcmToken();
+    if (fcmToken == null || fcmToken.isEmpty) return;
+    try {
+      await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.devicesUnregister,
+        data: <String, String>{'token': fcmToken},
+      );
+    } on DioException catch (e) {
+      if (kDebugMode) debugPrint('[FCM] unregister backend error: $e');
     }
   }
 

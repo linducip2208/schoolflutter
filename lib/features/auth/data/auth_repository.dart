@@ -4,6 +4,7 @@ import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
 import '../../../core/error/app_exception.dart';
 import '../../../core/error/error_handler.dart';
+import '../../../core/notifications/fcm_service.dart';
 import '../../../core/storage/app_storage.dart';
 import 'models/school_model.dart';
 import 'models/user_model.dart';
@@ -85,6 +86,12 @@ class AuthRepository {
   }
 
   Future<void> logout() async {
+    try {
+      // Remove this device from push registry first (still authenticated).
+      await FcmService.instance.unregisterFromBackend();
+    } catch (_) {
+      // best effort
+    }
     try {
       await ApiClient.dio.post<dynamic>(ApiEndpoints.logout);
     } catch (_) {

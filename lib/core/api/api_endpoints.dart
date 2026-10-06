@@ -12,6 +12,10 @@ class ApiEndpoints {
   static const String changePassword = '/auth/change-password';
   static const String registerFcmToken = '/auth/fcm-token';
 
+  // ── Device tokens (multi-device push registry)
+  static const String devicesRegister = '/devices/register';
+  static const String devicesUnregister = '/devices/unregister';
+
   // ── School
   static const String schoolProfile = '/school/profile';
   static const String schoolSettings = '/school/settings';

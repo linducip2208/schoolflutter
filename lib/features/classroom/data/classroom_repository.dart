@@ -4,6 +4,7 @@ import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
 import '../../../core/api/response_unwrap.dart';
 import '../../../core/error/error_handler.dart';
+import '../../../core/sync/sync_engine.dart';
 
 class ClassroomRepository {
   Future<List<Map<String, dynamic>>> assignments() async {
@@ -26,14 +27,17 @@ class ClassroomRepository {
     }
   }
 
+  /// Offline-capable submission: queued when offline (server upserts per
+  /// student so replayed retries never duplicate the submission).
+  /// Backend fields: `answer` (text) and `file` (attachment URL/path).
   Future<void> submitAssignment(int assignmentId,
-      {String? note, String? fileUrl}) async {
+      {String? answer, String? file}) async {
     try {
-      await ApiClient.dio.post<dynamic>(
+      await SyncEngine.instance.postMutation(
         ApiEndpoints.submitAssignment(assignmentId),
-        data: <String, dynamic>{
-          if (note != null) 'note': note,
-          if (fileUrl != null) 'file_url': fileUrl,
+        <String, dynamic>{
+          if (answer != null) 'answer': answer,
+          if (file != null) 'file': file,
         },
       );
     } on DioException catch (e) {

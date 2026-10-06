@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 import 'app_typography.dart';
@@ -41,11 +42,14 @@ class AppTheme {
     Color textPrimary,
     Color textSecondary,
   ) {
-    return ThemeData(
+    // Inter is loaded at runtime via google_fonts (cached on device after
+    // first fetch) so no TTF bundling is needed. Falls back to system
+    // font when offline on first launch.
+    final ThemeData base = ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: bg,
-      fontFamily: AppTypography.fontFamily,
+      fontFamily: GoogleFonts.inter().fontFamily,
       appBarTheme: AppBarTheme(
         backgroundColor: scheme.surface,
         foregroundColor: textPrimary,
@@ -132,16 +136,19 @@ class AppTheme {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         shape: const StadiumBorder(),
       ),
-      textTheme: TextTheme(
-        displayLarge: AppTypography.h1.copyWith(color: textPrimary),
-        headlineMedium: AppTypography.h2.copyWith(color: textPrimary),
-        titleLarge: AppTypography.h3.copyWith(color: textPrimary),
-        bodyLarge: AppTypography.bodyLarge.copyWith(color: textPrimary),
-        bodyMedium: AppTypography.bodyMedium.copyWith(color: textPrimary),
-        bodySmall: AppTypography.bodySmall.copyWith(color: textSecondary),
-        labelLarge: AppTypography.button,
-        labelMedium: AppTypography.label.copyWith(color: textSecondary),
+      textTheme: GoogleFonts.interTextTheme(
+        TextTheme(
+          displayLarge: AppTypography.h1.copyWith(color: textPrimary),
+          headlineMedium: AppTypography.h2.copyWith(color: textPrimary),
+          titleLarge: AppTypography.h3.copyWith(color: textPrimary),
+          bodyLarge: AppTypography.bodyLarge.copyWith(color: textPrimary),
+          bodyMedium: AppTypography.bodyMedium.copyWith(color: textPrimary),
+          bodySmall: AppTypography.bodySmall.copyWith(color: textSecondary),
+          labelLarge: AppTypography.button,
+          labelMedium: AppTypography.label.copyWith(color: textSecondary),
+        ),
       ),
     );
+    return base;
   }
 }

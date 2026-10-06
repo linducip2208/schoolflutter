@@ -4,6 +4,7 @@ import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
 import '../../../core/api/response_unwrap.dart';
 import '../../../core/error/error_handler.dart';
+import '../../../core/sync/sync_engine.dart';
 
 class TimetableRepository {
   /// Role-aware schedule: students & parents use the student endpoint,
@@ -15,22 +16,44 @@ class TimetableRepository {
     return teacherSchedule();
   }
   /// For students. Backend returns array; we group by `day_of_week`.
+  /// Offline-capable: serves the 6-hour cache when the network is down.
   Future<Map<String, List<Map<String, dynamic>>>> studentSchedule() async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.timetableStudentMy);
-      return _groupByDay(unwrapList(r.data));
+      final List<Map<String, dynamic>> items =
+          await SyncEngine.instance.getCached<List<Map<String, dynamic>>>(
+        cacheKey: cacheKey(ApiEndpoints.timetableStudentMy),
+        ttl: const Duration(hours: 6),
+        network: () async {
+          final Response<dynamic> r = await ApiClient.dio
+              .get<dynamic>(ApiEndpoints.timetableStudentMy);
+          return unwrapList(r.data);
+        },
+        encode: encodeList,
+        decode: decodeList,
+      );
+      return _groupByDay(items);
     } on DioException catch (e) {
       throw mapDioError(e);
     }
   }
 
   /// For teachers (or anyone with `teacher_id` resolvable on backend).
+  /// Offline-capable: serves the 6-hour cache when the network is down.
   Future<Map<String, List<Map<String, dynamic>>>> teacherSchedule() async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.timetableMy);
-      return _groupByDay(unwrapList(r.data));
+      final List<Map<String, dynamic>> items =
+          await SyncEngine.instance.getCached<List<Map<String, dynamic>>>(
+        cacheKey: cacheKey(ApiEndpoints.timetableMy),
+        ttl: const Duration(hours: 6),
+        network: () async {
+          final Response<dynamic> r =
+              await ApiClient.dio.get<dynamic>(ApiEndpoints.timetableMy);
+          return unwrapList(r.data);
+        },
+        encode: encodeList,
+        decode: decodeList,
+      );
+      return _groupByDay(items);
     } on DioException catch (e) {
       throw mapDioError(e);
     }
