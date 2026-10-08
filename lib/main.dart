@@ -85,12 +85,16 @@ Future<void> main() async {
     // Storage unavailable — app still runs online-only (in-memory stores).
   }
 
+  // Firebase must NEVER block first frame: on devices without Play
+  // Services / network, plugin calls can hang with no internal timeout.
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp().timeout(const Duration(seconds: 15));
     FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
-    await FcmService.instance.init();
+    await FcmService.instance
+        .init()
+        .timeout(const Duration(seconds: 45));
   } catch (_) {
-    // Firebase not configured yet — app still runs without push.
+    // Firebase not configured / unreachable — app runs without push.
   }
 
   Bloc.observer = const AppBlocObserver();

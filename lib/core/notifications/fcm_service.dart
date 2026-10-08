@@ -1,3 +1,4 @@
+import 'dart:async' show TimeoutException;
 import 'dart:io' show Platform;
 
 import 'package:dio/dio.dart';
@@ -31,7 +32,16 @@ class FcmService {
     if (_initialized) return;
     _initialized = true;
 
-    await _fcm.requestPermission(alert: true, badge: true, sound: true);
+    // Never let push setup block app startup: every platform-channel call
+    // below can hang without network/Play Services (no Dart-side timeout
+    // inside the plugins), so each is individually bounded.
+    try {
+      await _fcm
+          .requestPermission(alert: true, badge: true, sound: true)
+          .timeout(const Duration(seconds: 10));
+    } on TimeoutException {
+      // Proceed without push permission; app must still start.
+    }
 
     const AndroidInitializationSettings androidInit =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -55,7 +65,14 @@ class FcmService {
       NotificationHandler.handleMessage(m);
     });
 
-    final RemoteMessage? initial = await _fcm.getInitialMessage();
+    RemoteMessage? initial;
+    try {
+      initial = await _fcm
+          .getInitialMessage()
+          .timeout(const Duration(seconds: 10));
+    } on TimeoutException {
+      initial = null;
+    }
     if (initial != null) {
       NotificationHandler.handleMessage(initial);
     }
@@ -69,7 +86,10 @@ class FcmService {
 
   Future<void> _refreshToken() async {
     try {
-      final String? t = await _fcm.getToken();
+      // Network call to Firebase; bounded so offline devices still start.
+      final String? t = await _fcm
+          .getToken()
+          .timeout(const Duration(seconds: 20));
       if (t == null) return;
       await AppStorage.saveFcmToken(t);
       await _registerToBackend(t);
