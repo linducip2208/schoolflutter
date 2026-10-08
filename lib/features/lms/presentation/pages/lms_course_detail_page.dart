@@ -4,6 +4,7 @@ import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
 import '../../../../core/widgets/module_list_page.dart';
 import '../../data/lms_repository.dart';
+import 'quiz_attempt_page.dart';
 
 /// Detail kursus: materi, selesaikan lesson, kuis, sertifikat.
 /// Backend: `/lms/courses/{id}`, `/lms/complete-lesson`,
@@ -97,7 +98,16 @@ class _LmsCourseDetailPageState extends State<LmsCourseDetailPage> {
                     title:
                         Text((q as Map)['title']?.toString() ?? 'Kuis'),
                     subtitle: Text(
-                        'Soal ${(q as Map)['questions_count'] ?? (q as Map)['total_questions'] ?? '-'} • Kerjakan via portal web'),
+                        '${(q as Map)['questions_count'] ?? '-'} soal'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => QuizAttemptPage(
+                          quizId: ((q as Map)['id'] as num).toInt(),
+                          title: (q as Map)['title']?.toString() ?? 'Kuis',
+                        ),
+                      ),
+                    ),
                   ),
                 ),
             ],

@@ -31,6 +31,7 @@ class Routes {
   static const String studentBullying = '/student/bullying';
   static const String studentBus = '/student/bus/:studentId';
   static const String studentCalendar = '/student/calendar';
+  static const String studentQuizzes = '/student/quizzes';
 
   // Parent
   static const String parentDashboard = '/parent/dashboard';
@@ -68,6 +69,7 @@ class Routes {
   static const String teacherBullying = '/teacher/bullying';
   static const String teacherAttendanceTools = '/teacher/attendance-tools';
   static const String teacherHafalanTargets = '/teacher/hafalan-targets';
+  static const String teacherQuizzes = '/teacher/quizzes';
 
   // Admin
   static const String adminDashboard = '/admin/dashboard';
@@ -123,6 +125,12 @@ class Routes {
   static const String adminFinanceTools = '/admin/finance-tools';
   static const String adminAttendanceTools = '/admin/attendance-tools';
   static const String adminHafalanTargets = '/admin/hafalan-targets';
+  static const String adminStudents = '/admin/students';
+  static const String adminStaff = '/admin/staff';
+  static const String adminReports = '/admin/reports';
+  static const String adminBudget = '/admin/budget';
+  static const String adminLetters = '/admin/letters';
+  static const String adminQuizzes = '/admin/quizzes';
 
   // Staff
   static const String staffDashboard = '/staff/dashboard';
@@ -168,6 +176,8 @@ class Routes {
   static const String accountantPayProvider = '/accountant/pay-provider';
   static const String accountantDonasi = '/accountant/donasi';
   static const String accountantProfile = '/accountant/profile';
+  static const String accountantReports = '/accountant/reports';
+  static const String accountantBudget = '/accountant/budget';
 
   static const String librarianLibrary = '/librarian/library';
   static const String librarianProfile = '/librarian/profile';
@@ -183,6 +193,8 @@ class Routes {
   static const String principalFees = '/principal/fees';
   static const String principalChat = '/principal/chat';
   static const String principalProfile = '/principal/profile';
+  static const String principalReports = '/principal/reports';
+  static const String principalBudget = '/principal/budget';
 
   static const String frontdeskVisitor = '/frontdesk/visitor';
   static const String frontdeskAdmission = '/frontdesk/admission';

@@ -160,3 +160,31 @@ WEB_ONLY+NON_MOBILE 2.
 WEBSITE-TO-FLUTTER PARITY = 92% ((44 + 3x0.5)/48).
 SALE READINESS = 88% — remaining: 6 backend API GAPs (laravel repo),
 further polish, quiz attempt awaiting backend endpoint.
+
+## 6. Pass 4 — money contract fix + API GAP closure (2026-10-09)
+
+CRITICAL money bug (both directions, found via web-form audit):
+web stores cents (x100 on write, /100 on read) but mobile API passed
+raw values through — Flutter displayed 100x inflated invoices and
+wrote 100x-deflated payments/topups/structures.
+Fix: `ConvertsRupiah` trait, mobile API now speaks whole rupiah
+in/out (Fee, Payroll, Canteen, Donation, Scholarship, Inventory);
+percent/point/qty keys untouched. Backend Pest: 16/16 green.
+
+New backend endpoints (all school-scoped, permission-gated):
+`/directory/*` (students/staff/class-rooms/sections/class-sections/
+subjects/semesters/mediums), `/lms/quizzes/{id}/questions` (no answer
+keys), `/reports/*` (cash-summary/aging/outstanding),
+`/budget/*` (dashboard/items/transactions), `/letters*`.
+Flutter consumes all: Students/Staff pages, QuizAttempt, Reports,
+Budget, Letters + hub tiles + role routes.
+Remaining API GAP (deliberate, destructive/desktop-only):
+super backup/restore, license, email templates, webhook logs,
+maintenance toggle — documented WEB_ONLY, not mobile-appropriate.
+
+FINAL COUNT (50 rows): COMPLETE 49 / PARTIAL 1 (question-bank
+generate-exam action: repo-ready, no button) / MISSING_API 0
+operational (5 deliberate WEB_ONLY) / WEB_ONLY+NON_MOBILE 2.
+WEBSITE-TO-FLUTTER PARITY = 99% ((49 + 1x0.5)/50 excl. WEB_ONLY).
+SALE READINESS = 95% — remaining: operasional polish, quiz-bank
+generate button, backup flows stay web-only by design.

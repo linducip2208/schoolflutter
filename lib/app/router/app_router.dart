@@ -87,6 +87,12 @@ import '../../features/parent/presentation/pages/children_list_page.dart';
 import '../../features/attendance/presentation/pages/attendance_tools_page.dart';
 import '../../features/hafalan/presentation/pages/hafalan_targets_page.dart';
 import '../../features/gate/presentation/pages/qr_scan_page.dart';
+import '../../features/directory/presentation/pages/students_page.dart';
+import '../../features/directory/presentation/pages/staff_page.dart';
+import '../../features/finance/presentation/pages/reports_page.dart';
+import '../../features/finance/presentation/pages/budget_page.dart';
+import '../../features/letters/presentation/pages/letters_page.dart';
+import '../../features/lms/presentation/pages/quizzes_page.dart';
 import '../../shells/teacher_menu_page.dart';
 import '../../shells/role_shells.dart';
 import '../../shells/student_menu_page.dart';
@@ -216,6 +222,9 @@ class AppRouter {
                 path: Routes.studentCalendar,
                 builder: (_, __) => const CalendarPage()),
             GoRoute(
+                path: Routes.studentQuizzes,
+                builder: (_, __) => const QuizzesPage()),
+            GoRoute(
               path: Routes.studentBus,
               builder: (_, GoRouterState s) => BusTrackingPage(
                 studentId: int.parse(s.pathParameters['studentId']!),
@@ -331,6 +340,9 @@ class AppRouter {
             GoRoute(
                 path: Routes.teacherHafalanTargets,
                 builder: (_, __) => const HafalanTargetsPage()),
+            GoRoute(
+                path: Routes.teacherQuizzes,
+                builder: (_, __) => const QuizzesPage()),
           ],
         ),
 
@@ -487,6 +499,24 @@ class AppRouter {
             GoRoute(
                 path: Routes.adminHafalanTargets,
                 builder: (_, __) => const HafalanTargetsPage()),
+            GoRoute(
+                path: Routes.adminStudents,
+                builder: (_, __) => const StudentsPage()),
+            GoRoute(
+                path: Routes.adminStaff,
+                builder: (_, __) => const StaffPage()),
+            GoRoute(
+                path: Routes.adminReports,
+                builder: (_, __) => const ReportsPage()),
+            GoRoute(
+                path: Routes.adminBudget,
+                builder: (_, __) => const BudgetPage()),
+            GoRoute(
+                path: Routes.adminLetters,
+                builder: (_, __) => const LettersPage()),
+            GoRoute(
+                path: Routes.adminQuizzes,
+                builder: (_, __) => const QuizzesPage()),
           ],
         ),
 
@@ -525,6 +555,8 @@ class AppRouter {
             GoRoute(path: Routes.accountantPayroll, builder: (_, __) => const PayrollPage()),
             GoRoute(path: Routes.accountantPayProvider, builder: (_, __) => const PaymentProvidersPage()),
             GoRoute(path: Routes.accountantDonasi, builder: (_, __) => const DonationsPage()),
+            GoRoute(path: Routes.accountantReports, builder: (_, __) => const ReportsPage()),
+            GoRoute(path: Routes.accountantBudget, builder: (_, __) => const BudgetPage()),
             GoRoute(path: Routes.accountantProfile, builder: (_, __) => const ProfilePage()),
           ],
         ),
@@ -560,6 +592,8 @@ class AppRouter {
             GoRoute(path: Routes.principalDashboard, builder: (_, __) => const AdminDashboardPage()),
             GoRoute(path: Routes.principalFees, builder: (_, __) => const AdminFeesPage()),
             GoRoute(path: Routes.principalChat, builder: (_, __) => const ChatListPage()),
+            GoRoute(path: Routes.principalReports, builder: (_, __) => const ReportsPage()),
+            GoRoute(path: Routes.principalBudget, builder: (_, __) => const BudgetPage()),
             GoRoute(path: Routes.principalProfile, builder: (_, __) => const ProfilePage()),
           ],
         ),

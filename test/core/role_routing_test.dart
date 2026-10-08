@@ -64,6 +64,12 @@ void main() {
       expect(Routes.studentBeasiswa, '/student/beasiswa');
       expect(Routes.studentKarier, '/student/karier');
       expect(Routes.studentLms, '/student/lms');
+      expect(Routes.studentQuizzes, '/student/quizzes');
+      expect(Routes.teacherQuizzes, '/teacher/quizzes');
+      expect(Routes.accountantReports, '/accountant/reports');
+      expect(Routes.accountantBudget, '/accountant/budget');
+      expect(Routes.principalReports, '/principal/reports');
+      expect(Routes.principalBudget, '/principal/budget');
       expect(Routes.parentMenu, '/parent/menu');
       expect(Routes.parentChildren, '/parent/children');
       expect(Routes.parentEvent, '/parent/event');
@@ -106,6 +112,12 @@ void main() {
       expect(Routes.adminEmergency, '/admin/emergency');
       expect(Routes.adminCalendar, '/admin/calendar');
       expect(Routes.adminFinanceTools, '/admin/finance-tools');
+      expect(Routes.adminStudents, '/admin/students');
+      expect(Routes.adminStaff, '/admin/staff');
+      expect(Routes.adminReports, '/admin/reports');
+      expect(Routes.adminBudget, '/admin/budget');
+      expect(Routes.adminLetters, '/admin/letters');
+      expect(Routes.adminQuizzes, '/admin/quizzes');
     });
   });
 }

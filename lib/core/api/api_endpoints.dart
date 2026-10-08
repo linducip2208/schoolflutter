@@ -204,6 +204,7 @@ class ApiEndpoints {
   static const String lmsCompleteLesson = '/lms/complete-lesson';
   static const String lmsQuizzes = '/lms/quizzes';
   static const String lmsQuizSubmit = '/lms/quiz/submit';
+  static String quizQuestions(int quizId) => '/lms/quizzes/$quizId/questions';
   static String lmsCertificate(int enrollmentId) =>
       '/lms/enrollments/$enrollmentId/certificate';
 
@@ -479,9 +480,35 @@ class ApiEndpoints {
   // ── Religious (targets)
   static const String hafalanTargets = '/religious/hafalan/targets';
 
+  // ── Directory (students, staff, academic reference)
+  static const String dirStudents = '/directory/students';
+  static const String dirStaff = '/directory/staff';
+  static const String dirClassRooms = '/directory/class-rooms';
+  static const String dirSections = '/directory/sections';
+  static const String dirClassSections = '/directory/class-sections';
+  static const String dirSubjects = '/directory/subjects';
+  static const String dirSemesters = '/directory/semesters';
+  static const String dirMediums = '/directory/mediums';
+
+  // ── Finance reports (whole rupiah)
+  static const String reportsCash = '/reports/cash-summary';
+  static const String reportsAging = '/reports/aging';
+  static const String reportsOutstanding = '/reports/outstanding';
+
+  // ── Budget / RKAS (whole rupiah in/out)
+  static const String budgetDashboard = '/budget/dashboard';
+  static const String budgetCategories = '/budget/categories';
+  static const String budgetItems = '/budget/items';
+  static const String budgetTransactions = '/budget/transactions';
+
+  // ── Letters (surat-menyurat)
+  static const String letters = '/letters';
+  static const String letterTemplates = '/letters/templates';
+  static String letter(int id) => '/letters/$id';
+  static String letterStatus(int id) => '/letters/$id/status';
+
   // ── Super extras
-  static String superSchoolActivity(int id) =>
-      '/super/schools/$id/activity-log';
+  static String superSchoolActivity(int id) =>      '/super/schools/$id/activity-log';
   static String superSchoolSuspend(int id) => '/super/schools/$id/suspend';
   static String superSchoolActivate(int id) => '/super/schools/$id/activate';
   static String superSchoolExtend(int id) =>

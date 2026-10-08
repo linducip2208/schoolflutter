@@ -16,7 +16,8 @@ class AccountantShell extends StatelessWidget {
   static const List<ShellNavItem> _items = <ShellNavItem>[
     ShellNavItem(icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long, label: 'Tagihan', route: Routes.accountantFees),
     ShellNavItem(icon: Icons.payments_outlined, activeIcon: Icons.payments, label: 'Payroll', route: Routes.accountantPayroll),
-    ShellNavItem(icon: Icons.account_balance_outlined, activeIcon: Icons.account_balance, label: 'Gateway', route: Routes.accountantPayProvider),
+    ShellNavItem(icon: Icons.assessment_outlined, activeIcon: Icons.assessment, label: 'Laporan', route: Routes.accountantReports),
+    ShellNavItem(icon: Icons.account_balance_outlined, activeIcon: Icons.account_balance, label: 'Anggaran', route: Routes.accountantBudget),
     ShellNavItem(icon: Icons.volunteer_activism_outlined, activeIcon: Icons.volunteer_activism, label: 'Donasi', route: Routes.accountantDonasi),
     ShellNavItem(icon: Icons.person_outline, activeIcon: Icons.person, label: 'Profil', route: Routes.accountantProfile),
   ];
@@ -85,8 +86,9 @@ class PrincipalShell extends StatelessWidget {
   static const List<ShellNavItem> _items = <ShellNavItem>[
     ShellNavItem(icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard, label: 'Dashboard', route: Routes.principalDashboard),
     ShellNavItem(icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long, label: 'Keuangan', route: Routes.principalFees),
+    ShellNavItem(icon: Icons.assessment_outlined, activeIcon: Icons.assessment, label: 'Laporan', route: Routes.principalReports),
+    ShellNavItem(icon: Icons.account_balance_outlined, activeIcon: Icons.account_balance, label: 'Anggaran', route: Routes.principalBudget),
     ShellNavItem(icon: Icons.chat_outlined, activeIcon: Icons.chat, label: 'Chat', route: Routes.principalChat),
-    ShellNavItem(icon: Icons.campaign_outlined, activeIcon: Icons.campaign, label: 'Info', route: Routes.notice),
     ShellNavItem(icon: Icons.person_outline, activeIcon: Icons.person, label: 'Profil', route: Routes.principalProfile),
   ];
 

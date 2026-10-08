@@ -73,9 +73,21 @@ class LmsRepository {
     }
   }
 
+  Future<List<Map<String, dynamic>>> questions(int quizId) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.quizQuestions(quizId),
+      );
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  /// Backend expects answers keyed by question id: {"12": "A"}.
   Future<Map<String, dynamic>> submitQuiz({
     required int quizId,
-    required List<Map<String, dynamic>> answers,
+    required Map<String, String> answers,
   }) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.post<dynamic>(

@@ -57,6 +57,12 @@ class AdminMenuPage extends StatelessWidget {
     _MenuEntry(icon: Icons.calendar_view_month_outlined, label: 'Kalender', route: Routes.adminCalendar),
     _MenuEntry(icon: Icons.lock_outlined, label: 'Kunci & Koreksi', route: Routes.adminAttendanceTools),
     _MenuEntry(icon: Icons.flag_outlined, label: 'Target Hafalan', route: Routes.adminHafalanTargets),
+    _MenuEntry(icon: Icons.people_outline, label: 'Siswa', route: Routes.adminStudents),
+    _MenuEntry(icon: Icons.badge_outlined, label: 'Staf', route: Routes.adminStaff),
+    _MenuEntry(icon: Icons.assessment_outlined, label: 'Laporan', route: Routes.adminReports),
+    _MenuEntry(icon: Icons.account_balance_wallet_outlined, label: 'Anggaran', route: Routes.adminBudget),
+    _MenuEntry(icon: Icons.mail_outline, label: 'Surat', route: Routes.adminLetters),
+    _MenuEntry(icon: Icons.quiz_outlined, label: 'Kuis LMS', route: Routes.adminQuizzes),
     _MenuEntry(icon: Icons.info_outlined, label: 'Tentang', route: Routes.about),
   ];
 

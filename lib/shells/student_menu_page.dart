@@ -25,6 +25,7 @@ class StudentMenuPage extends StatelessWidget {
       const _MenuEntry(icon: Icons.work_outline, label: 'Karier', route: Routes.studentKarier),
       const _MenuEntry(icon: Icons.emoji_events_outlined, label: 'Prestasi', route: Routes.studentPrestasi),
       const _MenuEntry(icon: Icons.play_lesson_outlined, label: 'LMS', route: Routes.studentLms),
+      const _MenuEntry(icon: Icons.quiz_outlined, label: 'Kuis', route: Routes.studentQuizzes),
       const _MenuEntry(icon: Icons.videocam_outlined, label: 'Live Class', route: Routes.studentLive),
       const _MenuEntry(icon: Icons.auto_awesome_outlined, label: 'AI', route: Routes.studentAi),
       const _MenuEntry(icon: Icons.campaign_outlined, label: 'Pengumuman', route: Routes.notice),
