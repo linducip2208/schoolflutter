@@ -40,7 +40,7 @@ error mapping + IDR + AppConfig (10), welcome popup (12), login/2FA/
 splash/smoke widgets. Coverage via `flutter test --coverage`.
 
 ## Android / iOS
-Android: applicationId `id.coid.whitelabel.sikadpro.eschool_app`, label
+Android: applicationId `com.sikadpro`, label
 eSchool, perms minimal + camera/media/location/notification, R8, desugar,
 signing via gitignored key.properties. iOS: camera/photo/location
 descriptions, portrait (+iPad landscape), no committed plist.

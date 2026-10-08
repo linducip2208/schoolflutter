@@ -1,4 +1,4 @@
-package id.coid.whitelabel.sikadpro.eschool_app
+package com.sikadpro
 
 import io.flutter.embedding.android.FlutterActivity
 

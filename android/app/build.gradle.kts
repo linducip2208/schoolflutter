@@ -3,13 +3,15 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Google services plugin (reads android/app/google-services.json).
+    id("com.google.gms.google-services")
 }
 
 import java.io.FileInputStream
 import java.util.Properties
 
 android {
-    namespace = "id.coid.whitelabel.sikadpro.eschool_app"
+    namespace = "com.sikadpro"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -33,7 +35,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "id.coid.whitelabel.sikadpro.eschool_app"
+        applicationId = "com.sikadpro"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -76,4 +78,8 @@ flutter {
 dependencies {
     // Required by flutter_local_notifications v18+ (Java 8+ API desugaring).
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+
+    // Firebase BoM (versions managed by BoM) + Analytics.
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }

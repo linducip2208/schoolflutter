@@ -26,9 +26,20 @@ flutter run \
 ## Release Signing (Android)
 
 ```bash
-# Sekali per mesin build: generate keystore (JANGAN commit file ini)
+# Keystore release sudah dibuat lokal di android/app/eschool-release.jks
+# + android/key.properties (KEDUANYA gitignored — JANGAN commit).
+# BACKUP kedua file tersebut di tempat aman: jika hilang, update Play Store
+# dengan package yang sama TIDAK MUNGKIN dilakukan (keystore tak tergantikan).
+# Untuk dalamnya lihat SHA-256:
+keytool -list -v -keystore android/app/eschool-release.jks
+```
+
+Regenerasi hanya bila keystore hilang (akan mengubah signature!):
+
+```bash
 keytool -genkeypair -v -keystore android/app/eschool-release.jks \
   -alias eschool -keyalg RSA -keysize 2048 -validity 10000
+```
 
 # Isi android/key.properties (gitignored, lihat android/key.properties.example
 # jika tersedia — JANGAN commit password asli):
@@ -72,6 +83,19 @@ flutter build ipa --release \
 - Indikator: `SyncEngine.instance.pendingCount` (ValueNotifier<int>)
 
 ## Push Notification (FCM)
+
+- Status: file config Firebase saat ini **placeholder**
+  (`lib/firebase_options.dart`, `android/app/google-services.json`,
+  `ios/Runner/GoogleService-Info.plist` — ketiganya gitignored).
+  Aplikasi tetap jalan tanpa push (init dibungkus try/catch).
+- Aktivasi (butuh login Google pemilik project Firebase):
+
+```bash
+firebase login --reauth
+flutterfire configure --project=sikadpro-saas
+```
+
+  File placeholder otomatis tertimpa yang asli. Jangan commit file asli.
 
 - Registrasi: `POST /devices/register {token, platform, device_name}`
 - Unregister otomatis saat logout (`POST /devices/unregister`)
