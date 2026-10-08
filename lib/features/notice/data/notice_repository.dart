@@ -16,12 +16,37 @@ class NoticeRepository {
     }
   }
 
-  Future<void> create({required String title, required String body}) async {
+  /// Backend field is `content` (bukan `body`).
+  Future<void> create({
+    required String title,
+    required String body,
+    List<String>? targetRoles,
+    String? publishAt,
+    String? expireAt,
+  }) async {
     try {
       await ApiClient.dio.post<dynamic>(
         ApiEndpoints.notices,
-        data: <String, String>{'title': title, 'body': body},
+        data: <String, dynamic>{
+          'title': title,
+          'content': body,
+          'is_published': true,
+          if (targetRoles != null && targetRoles.isNotEmpty)
+            'target_roles': targetRoles,
+          if (publishAt != null && publishAt.isNotEmpty)
+            'publish_at': publishAt,
+          if (expireAt != null && expireAt.isNotEmpty)
+            'expire_at': expireAt,
+        },
       );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> remove(int id) async {
+    try {
+      await ApiClient.dio.delete<dynamic>('${ApiEndpoints.notices}/$id');
     } on DioException catch (e) {
       throw mapDioError(e);
     }

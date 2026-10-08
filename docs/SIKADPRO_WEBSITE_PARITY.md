@@ -79,7 +79,6 @@ Classroom, Exam), Pro (all modules).
 | SuperAdmin panel | SuperAdminService | `/super/*` | superadmin_repository (+dashboard) | SuperDashboard/SchoolsPage | super_admin | PARTIAL | plans/subs/analytics UI missing |
 
 ## 4. Pass 2 — implementasi (2026-10-09, semua kontrak dicek ke controller)
-
 Admin hub 45 tile, hub guru (12), hub siswa (17), hub wali (8),
 detail anak 7-tab, super plans/analytics/system — semua ke endpoint real.
 AI study-assistant diperbaiki (`messages[]`, sebelumnya pasti 422).
@@ -128,5 +127,36 @@ bullying, darurat).
 parent → ParentShell (Beranda, Nilai, Kehadiran, Tagihan, Menu, Profil)
 + hub 8 + daftar anak → detail 7-tab (overview, absensi, nilai, UKS,
 disiplin, prestasi, konseling-info).
-Other backend roles (accountant, librarian, nurse, …) → staff fallback
-placeholder — MISSING_FLUTTER (tetap).
+Other backend roles (accountant, librarian, nurse) get dedicated shells
+(see Pass 3 below; staff fallback only for truly unknown roles).
+
+## 5. Pass 3 — non-core roles + contract bugs (2026-10-09)
+
+Contract bugs fixed (found while verifying against controllers):
+- Notice create sent `body`; backend requires `content` (always 422).
+  Fixed + target roles + scheduled publish.
+- AI study-assistant sent `prompt`; backend requires `messages[]`.
+  Fixed in pass 2.
+
+New dedicated shells (permissions verified vs seeder + controllers):
+accountant, librarian, nurse, counselor, principal, receptionist, hr,
+transport_admin, hostel_admin, procurement_admin, driver/security
+(gate QR scan + emergency), visitor_operator, school_admin
+(canteen/visitor/dapodik), foundation_admin. homeroom_teacher shares
+the teacher home (documented). school_admin moved from adminDashboard
+to schoolops home (matches its actual permissions).
+
+Pending actions done: exam update, marks publish-by-id, scholarship
+apply-to-invoice, career assessment record + activity log, public
+donation, dapodik CSV import, attendance lock/reopen + corrections,
+hafalan targets.
+Native quiz attempt = API GAP (no question-detail endpoint;
+`GET /lms/quizzes` returns counts only) — directed to web portal.
+
+NEW COUNT (50 rows): COMPLETE 44 / PARTIAL 3 (LMS quiz attempt,
+question-bank generate UI, super backup/sysadmin web-only) /
+MISSING_API 6 (+quiz questions, +backup/license/email/webhook) /
+WEB_ONLY+NON_MOBILE 2.
+WEBSITE-TO-FLUTTER PARITY = 92% ((44 + 3x0.5)/48).
+SALE READINESS = 88% — remaining: 6 backend API GAPs (laravel repo),
+further polish, quiz attempt awaiting backend endpoint.

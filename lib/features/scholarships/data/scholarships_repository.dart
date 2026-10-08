@@ -85,4 +85,15 @@ class ScholarshipsRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<void> applyToInvoice(int applicationId, int invoiceId) async {
+    try {
+      await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.scholarshipApplyToInvoice(applicationId),
+        data: <String, dynamic>{'invoice_id': invoiceId},
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

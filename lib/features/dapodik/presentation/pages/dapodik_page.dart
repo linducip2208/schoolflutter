@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/app_error.dart';
@@ -39,6 +40,20 @@ class _DapodikPageState extends State<DapodikPage> {
             ],
           ),
           actions: <Widget>[
+            IconButton(
+              tooltip: 'Import siswa (CSV)',
+              icon: const Icon(Icons.upload_file_outlined),
+              onPressed: () async {
+                final FilePickerResult? picked =
+                    await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: const <String>['csv', 'txt']);
+                final String? path = picked?.files.single.path;
+                if (path == null || !context.mounted) return;
+                await runMutation(
+                    context, () => _repo.importStudents(path));
+              },
+            ),
             IconButton(
               tooltip: 'Tes koneksi',
               icon: const Icon(Icons.wifi_find_outlined),

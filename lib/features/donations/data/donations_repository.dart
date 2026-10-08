@@ -64,4 +64,28 @@ class DonationsRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<Map<String, dynamic>> donate({
+    required String subdomain,
+    required String slug,
+    required String donorName,
+    required String donorEmail,
+    required int amount,
+    String? message,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        '/public/donations/$subdomain/campaigns/$slug/donate',
+        data: <String, dynamic>{
+          'donor_name': donorName,
+          'donor_email': donorEmail,
+          'amount': amount,
+          if (message != null && message.isNotEmpty) 'message': message,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

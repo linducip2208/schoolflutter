@@ -84,7 +84,11 @@ import '../../features/lms/presentation/pages/lms_courses_page.dart';
 import '../../features/emergency/presentation/pages/emergency_page.dart';
 import '../../features/fees/presentation/pages/finance_tools_page.dart';
 import '../../features/parent/presentation/pages/children_list_page.dart';
+import '../../features/attendance/presentation/pages/attendance_tools_page.dart';
+import '../../features/hafalan/presentation/pages/hafalan_targets_page.dart';
+import '../../features/gate/presentation/pages/qr_scan_page.dart';
 import '../../shells/teacher_menu_page.dart';
+import '../../shells/role_shells.dart';
 import '../../shells/student_menu_page.dart';
 import '../../shells/parent_menu_page.dart';
 import '../../shells/admin_menu_page.dart';
@@ -321,6 +325,12 @@ class AppRouter {
             GoRoute(
                 path: Routes.teacherBullying,
                 builder: (_, __) => const BullyingReportPage()),
+            GoRoute(
+                path: Routes.teacherAttendanceTools,
+                builder: (_, __) => const AttendanceToolsPage()),
+            GoRoute(
+                path: Routes.teacherHafalanTargets,
+                builder: (_, __) => const HafalanTargetsPage()),
           ],
         ),
 
@@ -471,6 +481,12 @@ class AppRouter {
             GoRoute(
                 path: Routes.adminFinanceTools,
                 builder: (_, __) => const FinanceToolsPage()),
+            GoRoute(
+                path: Routes.adminAttendanceTools,
+                builder: (_, __) => const AttendanceToolsPage()),
+            GoRoute(
+                path: Routes.adminHafalanTargets,
+                builder: (_, __) => const HafalanTargetsPage()),
           ],
         ),
 
@@ -497,6 +513,131 @@ class AppRouter {
             GoRoute(
                 path: Routes.superSystem,
                 builder: (_, __) => const SuperSystemPage()),
+          ],
+        ),
+
+        // ── Role shells (non-core backend roles)
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              AccountantShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.accountantFees, builder: (_, __) => const AdminFeesPage()),
+            GoRoute(path: Routes.accountantPayroll, builder: (_, __) => const PayrollPage()),
+            GoRoute(path: Routes.accountantPayProvider, builder: (_, __) => const PaymentProvidersPage()),
+            GoRoute(path: Routes.accountantDonasi, builder: (_, __) => const DonationsPage()),
+            GoRoute(path: Routes.accountantProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              LibrarianShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.librarianLibrary, builder: (_, __) => const LibraryPage()),
+            GoRoute(path: Routes.librarianProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              NurseShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.nurseVisits, builder: (_, __) => const MedicalManagePage()),
+            GoRoute(path: Routes.nurseProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              CounselorShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.counselorCounseling, builder: (_, __) => const CounselingPage()),
+            GoRoute(path: Routes.counselorDiscipline, builder: (_, __) => const DisciplinePage()),
+            GoRoute(path: Routes.counselorProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              PrincipalShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.principalDashboard, builder: (_, __) => const AdminDashboardPage()),
+            GoRoute(path: Routes.principalFees, builder: (_, __) => const AdminFeesPage()),
+            GoRoute(path: Routes.principalChat, builder: (_, __) => const ChatListPage()),
+            GoRoute(path: Routes.principalProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              FrontDeskShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.frontdeskVisitor, builder: (_, __) => const VisitorsPage()),
+            GoRoute(path: Routes.frontdeskAdmission, builder: (_, __) => const AdmissionPage()),
+            GoRoute(path: Routes.frontdeskPpdb, builder: (_, __) => const PpdbVerifyPage()),
+            GoRoute(path: Routes.frontdeskProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              HrShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.hrPayroll, builder: (_, __) => const PayrollPage()),
+            GoRoute(path: Routes.hrProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              TransportOpsShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.transportOpsManage, builder: (_, __) => const TransportAdminPage()),
+            GoRoute(path: Routes.transportOpsProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              HostelOpsShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.hostelOpsHome, builder: (_, __) => const HostelPage()),
+            GoRoute(path: Routes.hostelOpsProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              ProcurementShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.procurementInventory, builder: (_, __) => const InventoryPage()),
+            GoRoute(path: Routes.procurementProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              GateShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.gateScan, builder: (_, __) => const QrScanPage()),
+            GoRoute(path: Routes.gateEmergency, builder: (_, __) => const EmergencyPage()),
+            GoRoute(path: Routes.gateProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              VisitorOpsShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.visitorOpsHome, builder: (_, __) => const VisitorsPage()),
+            GoRoute(path: Routes.visitorOpsProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              SchoolOpsShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.schoolOpsCanteen, builder: (_, __) => const CanteenMerchantPage()),
+            GoRoute(path: Routes.schoolOpsVisitor, builder: (_, __) => const VisitorsPage()),
+            GoRoute(path: Routes.schoolOpsDapodik, builder: (_, __) => const DapodikPage()),
+            GoRoute(path: Routes.schoolOpsProfile, builder: (_, __) => const ProfilePage()),
+          ],
+        ),
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              FoundationShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(path: Routes.foundationHome, builder: (_, __) => const FoundationPage()),
+            GoRoute(path: Routes.foundationProfile, builder: (_, __) => const ProfilePage()),
           ],
         ),
 
@@ -642,6 +783,20 @@ class AppRouter {
     if (loc.startsWith('/teacher/')) return 'teacher';
     if (loc.startsWith('/admin/')) return 'admin';
     if (loc.startsWith('/staff/')) return 'staff';
+    if (loc.startsWith('/accountant/')) return 'accountant';
+    if (loc.startsWith('/librarian/')) return 'librarian';
+    if (loc.startsWith('/nurse/')) return 'nurse';
+    if (loc.startsWith('/counselor/')) return 'counselor';
+    if (loc.startsWith('/principal/')) return 'principal';
+    if (loc.startsWith('/frontdesk/')) return 'receptionist';
+    if (loc.startsWith('/hr/')) return 'hr';
+    if (loc.startsWith('/transport-ops/')) return 'transport_admin';
+    if (loc.startsWith('/hostel-ops/')) return 'hostel_admin';
+    if (loc.startsWith('/procurement/')) return 'procurement_admin';
+    if (loc.startsWith('/gate/')) return 'gate_ops';
+    if (loc.startsWith('/visitor-ops/')) return 'visitor_operator';
+    if (loc.startsWith('/schoolops/')) return 'school_admin';
+    if (loc.startsWith('/foundation/')) return 'foundation_admin';
     return null;
   }
 
@@ -650,6 +805,10 @@ class AppRouter {
     // super_admin bypass on every school-scoped check).
     if (role == 'super_admin') return true;
     if (role == required) return true;
+    // Device-operator roles share the gate shell.
+    if (required == 'gate_ops' && (role == 'driver' || role == 'security')) {
+      return true;
+    }
     // school_admin is an admin; /staff/* is the generic fallback shell
     // for every other back-office role (principal, nurse, librarian,
     // accountant, ...), so it must never bounce.

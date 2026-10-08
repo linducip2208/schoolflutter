@@ -6,8 +6,8 @@ void main() {
     test('super_admin lands on super dashboard', () {
       expect(Routes.homeForRole('super_admin'), Routes.superDashboard);
     });
-    test('school_admin shares admin home', () {
-      expect(Routes.homeForRole('school_admin'), Routes.adminDashboard);
+    test('school_admin gets dedicated ops home', () {
+      expect(Routes.homeForRole('school_admin'), Routes.schoolOpsCanteen);
       expect(Routes.homeForRole('admin'), Routes.adminDashboard);
     });
     test('core roles map to their shells', () {
@@ -16,8 +16,25 @@ void main() {
       expect(Routes.homeForRole('teacher'), Routes.teacherDashboard);
     });
     test('unknown roles fall back to staff', () {
-      expect(Routes.homeForRole('accountant'), Routes.staffDashboard);
-      expect(Routes.homeForRole('librarian'), Routes.staffDashboard);
+      expect(Routes.homeForRole('accountant'), Routes.accountantFees);
+      expect(Routes.homeForRole('librarian'), Routes.librarianLibrary);
+      expect(Routes.homeForRole('nurse'), Routes.nurseVisits);
+      expect(Routes.homeForRole('counselor'), Routes.counselorCounseling);
+      expect(Routes.homeForRole('principal'), Routes.principalDashboard);
+      expect(Routes.homeForRole('receptionist'), Routes.frontdeskVisitor);
+      expect(Routes.homeForRole('hr'), Routes.hrPayroll);
+      expect(Routes.homeForRole('transport_admin'), Routes.transportOpsManage);
+      expect(Routes.homeForRole('hostel_admin'), Routes.hostelOpsHome);
+      expect(
+          Routes.homeForRole('procurement_admin'), Routes.procurementInventory);
+      expect(Routes.homeForRole('driver'), Routes.gateScan);
+      expect(Routes.homeForRole('security'), Routes.gateScan);
+      expect(
+          Routes.homeForRole('visitor_operator'), Routes.visitorOpsHome);
+      expect(Routes.homeForRole('school_admin'), Routes.schoolOpsCanteen);
+      expect(Routes.homeForRole('foundation_admin'), Routes.foundationHome);
+      expect(Routes.homeForRole('homeroom_teacher'), Routes.teacherDashboard);
+      expect(Routes.homeForRole('random_xyz'), Routes.staffDashboard);
     });
     test('admin module hub + aliases registered', () {
       expect(Routes.adminMenu, '/admin/menu');

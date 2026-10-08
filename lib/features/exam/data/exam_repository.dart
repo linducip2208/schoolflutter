@@ -26,6 +26,18 @@ class ExamRepository {
     }
   }
 
+  Future<Map<String, dynamic>> update(int examId, String title) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.put<dynamic>(
+        ApiEndpoints.examUpdate(examId),
+        data: <String, dynamic>{'title': title},
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<Map<String, dynamic>> create({
     required int classSectionId,
     required int subjectId,

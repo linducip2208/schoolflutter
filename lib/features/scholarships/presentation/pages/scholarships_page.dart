@@ -138,16 +138,48 @@ class ScholarshipsPage extends StatelessWidget {
                               title: Text('Siswa ${a['student_id']}'),
                               subtitle:
                                   Text('${a['status'] ?? '-'}'),
-                              trailing: IconButton(
-                                tooltip: 'Grant',
-                                icon: const Icon(Icons.check_circle_outline),
-                                onPressed: () async {
-                                  final int appId =
-                                      (a['id'] as num).toInt();
-                                  await runMutation(
-                                      d, () => repo.grant(appId));
-                                  if (d.mounted) Navigator.of(d).pop();
-                                },
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  IconButton(
+                                    tooltip: 'Terapkan ke invoice',
+                                    icon: const Icon(
+                                        Icons.receipt_long_outlined),
+                                    onPressed: () async {
+                                      final Map<String, String>? f =
+                                          await showFormDialog(
+                                        d,
+                                        title: 'Terapkan ke Invoice',
+                                        fields: const <FormFieldDef>[
+                                          FormFieldDef(
+                                              key: 'invoice_id',
+                                              label: 'ID Invoice',
+                                              isNumber: true),
+                                        ],
+                                      );
+                                      if (f == null || !d.mounted) return;
+                                      final int appId =
+                                          (a['id'] as num).toInt();
+                                      await runMutation(
+                                        d,
+                                        () => repo.applyToInvoice(appId,
+                                            int.parse(f['invoice_id']!)),
+                                      );
+                                    },
+                                  ),
+                                  IconButton(
+                                    tooltip: 'Grant',
+                                    icon:
+                                        const Icon(Icons.check_circle_outline),
+                                    onPressed: () async {
+                                      final int appId =
+                                          (a['id'] as num).toInt();
+                                      await runMutation(
+                                          d, () => repo.grant(appId));
+                                      if (d.mounted) Navigator.of(d).pop();
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                         ],

@@ -78,4 +78,18 @@ class DapodikRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<Map<String, dynamic>> importStudents(String filePath) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.dapodikImport,
+        data: FormData.fromMap(<String, dynamic>{
+          'file': await MultipartFile.fromFile(filePath),
+        }),
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

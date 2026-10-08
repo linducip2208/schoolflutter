@@ -85,6 +85,38 @@ class DonationsPage extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                     '${CurrencyFormatter.compact(raised)} dari ${CurrencyFormatter.compact(target)}'),
+                if (!canManage && subdomain.isNotEmpty)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () async {
+                        final Map<String, String>? v = await showFormDialog(
+                          c,
+                          title: 'Donasi',
+                          fields: const <FormFieldDef>[
+                            FormFieldDef(key: 'donor_name', label: 'Nama'),
+                            FormFieldDef(key: 'donor_email', label: 'Email'),
+                            FormFieldDef(
+                                key: 'amount',
+                                label: 'Nominal (Rp)',
+                                isNumber: true),
+                          ],
+                        );
+                        if (v == null || !c.mounted) return;
+                        await runMutation(
+                          c,
+                          () => repo.donate(
+                            subdomain: subdomain,
+                            slug: e['slug']?.toString() ?? '',
+                            donorName: v['donor_name']!,
+                            donorEmail: v['donor_email']!,
+                            amount: int.parse(v['amount']!),
+                          ),
+                        );
+                      },
+                      child: const Text('Donasi'),
+                    ),
+                  ),
               ],
             ),
           ),

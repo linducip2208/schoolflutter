@@ -66,6 +66,8 @@ class Routes {
   static const String teacherPrestasi = '/teacher/prestasi';
   static const String teacherEmergency = '/teacher/emergency';
   static const String teacherBullying = '/teacher/bullying';
+  static const String teacherAttendanceTools = '/teacher/attendance-tools';
+  static const String teacherHafalanTargets = '/teacher/hafalan-targets';
 
   // Admin
   static const String adminDashboard = '/admin/dashboard';
@@ -119,6 +121,8 @@ class Routes {
   static const String adminEmergency = '/admin/emergency';
   static const String adminCalendar = '/admin/calendar';
   static const String adminFinanceTools = '/admin/finance-tools';
+  static const String adminAttendanceTools = '/admin/attendance-tools';
+  static const String adminHafalanTargets = '/admin/hafalan-targets';
 
   // Staff
   static const String staffDashboard = '/staff/dashboard';
@@ -158,13 +162,81 @@ class Routes {
   static const String superAnalytics = '/super/analytics';
   static const String superSystem = '/super/system';
 
+  // ===== Role shells (non-core backend roles) =====
+  static const String accountantFees = '/accountant/fees';
+  static const String accountantPayroll = '/accountant/payroll';
+  static const String accountantPayProvider = '/accountant/pay-provider';
+  static const String accountantDonasi = '/accountant/donasi';
+  static const String accountantProfile = '/accountant/profile';
+
+  static const String librarianLibrary = '/librarian/library';
+  static const String librarianProfile = '/librarian/profile';
+
+  static const String nurseVisits = '/nurse/visits';
+  static const String nurseProfile = '/nurse/profile';
+
+  static const String counselorCounseling = '/counselor/counseling';
+  static const String counselorDiscipline = '/counselor/discipline';
+  static const String counselorProfile = '/counselor/profile';
+
+  static const String principalDashboard = '/principal/dashboard';
+  static const String principalFees = '/principal/fees';
+  static const String principalChat = '/principal/chat';
+  static const String principalProfile = '/principal/profile';
+
+  static const String frontdeskVisitor = '/frontdesk/visitor';
+  static const String frontdeskAdmission = '/frontdesk/admission';
+  static const String frontdeskPpdb = '/frontdesk/ppdb';
+  static const String frontdeskProfile = '/frontdesk/profile';
+
+  static const String hrPayroll = '/hr/payroll';
+  static const String hrProfile = '/hr/profile';
+
+  static const String transportOpsManage = '/transport-ops/manage';
+  static const String transportOpsProfile = '/transport-ops/profile';
+
+  static const String hostelOpsHome = '/hostel-ops/home';
+  static const String hostelOpsProfile = '/hostel-ops/profile';
+
+  static const String procurementInventory = '/procurement/inventory';
+  static const String procurementProfile = '/procurement/profile';
+
+  static const String gateScan = '/gate/scan';
+  static const String gateEmergency = '/gate/emergency';
+  static const String gateProfile = '/gate/profile';
+
+  static const String visitorOpsHome = '/visitor-ops/home';
+  static const String visitorOpsProfile = '/visitor-ops/profile';
+
+  static const String schoolOpsCanteen = '/schoolops/canteen';
+  static const String schoolOpsVisitor = '/schoolops/visitor';
+  static const String schoolOpsDapodik = '/schoolops/dapodik';
+  static const String schoolOpsProfile = '/schoolops/profile';
+
+  static const String foundationHome = '/foundation/home';
+  static const String foundationProfile = '/foundation/profile';
+
   static String homeForRole(String role) {
     return switch (role) {
       'super_admin' => superDashboard,
       'student' => studentDashboard,
       'parent' => parentDashboard,
-      'teacher' => teacherDashboard,
-      'admin' || 'school_admin' => adminDashboard,
+      'teacher' || 'homeroom_teacher' => teacherDashboard,
+      'admin' => adminDashboard,
+      'school_admin' => schoolOpsCanteen,
+      'accountant' => accountantFees,
+      'librarian' => librarianLibrary,
+      'nurse' => nurseVisits,
+      'counselor' => counselorCounseling,
+      'principal' => principalDashboard,
+      'receptionist' => frontdeskVisitor,
+      'hr' => hrPayroll,
+      'transport_admin' => transportOpsManage,
+      'hostel_admin' => hostelOpsHome,
+      'procurement_admin' => procurementInventory,
+      'driver' || 'security' => gateScan,
+      'visitor_operator' => visitorOpsHome,
+      'foundation_admin' => foundationHome,
       _ => staffDashboard,
     };
   }

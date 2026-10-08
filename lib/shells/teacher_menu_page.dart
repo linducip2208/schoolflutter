@@ -20,6 +20,8 @@ class TeacherMenuPage extends StatelessWidget {
     _MenuEntry(icon: Icons.emoji_events_outlined, label: 'Prestasi', route: Routes.teacherPrestasi),
     _MenuEntry(icon: Icons.chat_outlined, label: 'Chat', route: Routes.teacherChat),
     _MenuEntry(icon: Icons.notifications_outlined, label: 'Notifikasi', route: Routes.notifications),
+    _MenuEntry(icon: Icons.lock_outlined, label: 'Kunci & Koreksi', route: Routes.teacherAttendanceTools),
+    _MenuEntry(icon: Icons.flag_outlined, label: 'Target Hafalan', route: Routes.teacherHafalanTargets),
     _MenuEntry(icon: Icons.sos_outlined, label: 'Darurat', route: Routes.teacherEmergency),
   ];
 

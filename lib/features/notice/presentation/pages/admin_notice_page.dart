@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../data/notice_repository.dart';
 
 class AdminNoticePage extends StatefulWidget {
@@ -23,6 +25,8 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final TextEditingController title = TextEditingController();
     final TextEditingController body = TextEditingController();
+    final TextEditingController publishAt = TextEditingController();
+    final TextEditingController roles = TextEditingController();
     bool sending = false;
     await showModalBottomSheet<void>(
       context: context,
@@ -59,6 +63,22 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
                       validator: (String? v) =>
                           Validators.required(v, label: 'Isi'),
                     ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: roles,
+                      decoration: const InputDecoration(
+                        labelText: 'Target role (opsional, koma)',
+                        hintText: 'student,parent,teacher',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: publishAt,
+                      decoration: const InputDecoration(
+                        labelText: 'Jadwal tayang (opsional)',
+                        hintText: '2026-10-15 07:00',
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
@@ -72,6 +92,14 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
                                   await _repo.create(
                                     title: title.text.trim(),
                                     body: body.text.trim(),
+                                    targetRoles: roles.text
+                                        .split(',')
+                                        .map((String s) => s.trim())
+                                        .where((String s) => s.isNotEmpty)
+                                        .toList(),
+                                    publishAt: publishAt.text.trim().isEmpty
+                                        ? null
+                                        : publishAt.text.trim(),
                                   );
                                   if (!c.mounted) return;
                                   Navigator.of(c).pop();
@@ -109,13 +137,21 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
 
   @override
   Widget build(BuildContext context) {
+    // notice.manage gate: principal & others read-only.
+    final String role =
+        context.watch<AuthBloc>().state.user?.role ?? 'admin';
+    final bool canManage = role == 'admin' ||
+        role == 'school_admin' ||
+        role == 'super_admin';
     return Scaffold(
       appBar: AppBar(title: const Text('Pengumuman')),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showCreateSheet,
-        icon: const Icon(Icons.add),
-        label: const Text('Buat'),
-      ),
+      floatingActionButton: canManage
+          ? FloatingActionButton.extended(
+              onPressed: _showCreateSheet,
+              icon: const Icon(Icons.add),
+              label: const Text('Buat'),
+            )
+          : null,
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
         builder:

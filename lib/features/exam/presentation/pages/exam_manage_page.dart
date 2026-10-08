@@ -75,16 +75,33 @@ class ExamManagePage extends StatelessWidget {
                     marks: int.tryParse(q['marks'] ?? '') ?? 10,
                   ),
                 );
+              } else if (v == 'ubah') {
+                final Map<String, String>? f = await showFormDialog(
+                  c,
+                  title: 'Ubah Ujian',
+                  fields: <FormFieldDef>[
+                    FormFieldDef(
+                        key: 'title',
+                        label: 'Judul',
+                        initial: e['title']?.toString()),
+                  ],
+                );
+                if (f == null || !c.mounted) return;
+                await runMutation(
+                  c,
+                  () => repo.update(id, f['title']!),
+                );
               } else if (v == 'hapus') {
                 if (c.mounted) {
                   await runMutation(c, () => repo.remove(id));
                 }
               }
             },
-            itemBuilder: (_) => const <PopupMenuItem<String>>[
-              PopupMenuItem<String>(value: 'soal', child: Text('Tambah soal')),
-              PopupMenuItem<String>(value: 'hapus', child: Text('Hapus')),
-            ],
+              itemBuilder: (_) => const <PopupMenuItem<String>>[
+                PopupMenuItem<String>(value: 'soal', child: Text('Tambah soal')),
+                PopupMenuItem<String>(value: 'ubah', child: Text('Ubah judul')),
+                PopupMenuItem<String>(value: 'hapus', child: Text('Hapus')),
+              ],
           ),
           onTap: () => _showSubmissions(c, repo, e),
         ),
