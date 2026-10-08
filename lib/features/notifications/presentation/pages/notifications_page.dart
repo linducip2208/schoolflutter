@@ -37,8 +37,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
       appBar: AppBar(title: const Text('Notifikasi')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
@@ -47,19 +47,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
           }
           final List<Map<String, dynamic>> list =
               snap.data ?? <Map<String, dynamic>>[];
-          if (list.isEmpty) return const AppEmpty(title: 'Belum ada notifikasi');
+          if (list.isEmpty)
+            return const AppEmpty(title: 'Belum ada notifikasi');
           return RefreshIndicator(
             onRefresh: () async => _reload(),
             child: ListView.separated(
               itemCount: list.length,
-              separatorBuilder: (_, __) =>
-                  const Divider(height: 1, indent: 72),
+              separatorBuilder: (_, __) => const Divider(height: 1, indent: 72),
               itemBuilder: (BuildContext c, int i) {
                 final Map<String, dynamic> n = list[i];
                 final bool unread = (n['read_at'] as String?) == null;
                 return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 6),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                   leading: CircleAvatar(
                     backgroundColor:
                         Theme.of(context).colorScheme.primaryContainer,

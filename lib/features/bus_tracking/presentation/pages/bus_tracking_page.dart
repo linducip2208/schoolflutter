@@ -13,7 +13,8 @@ import '../../../../core/widgets/app_loading.dart';
 class BusTrackingPage extends StatefulWidget {
   final int studentId;
   final String studentName;
-  const BusTrackingPage({super.key, required this.studentId, required this.studentName});
+  const BusTrackingPage(
+      {super.key, required this.studentId, required this.studentName});
 
   @override
   State<BusTrackingPage> createState() => _BusTrackingPageState();
@@ -74,7 +75,8 @@ class _BusTrackingPageState extends State<BusTrackingPage> {
       return const AppLoading();
     }
 
-    final Map<String, dynamic>? loc = _data!['location'] as Map<String, dynamic>?;
+    final Map<String, dynamic>? loc =
+        _data!['location'] as Map<String, dynamic>?;
     final Map<String, dynamic>? trip = _data!['trip'] as Map<String, dynamic>?;
 
     if (loc == null) {
@@ -107,26 +109,35 @@ class _BusTrackingPageState extends State<BusTrackingPage> {
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
                 const Icon(Icons.directions_bus, color: Colors.blue, size: 32),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(
-                      trip?['direction'] == 'pickup' ? 'Antar Jemput' : 'Antar Pulang',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    Text('Started: ${trip?['started_at'] ?? '-'}',
-                        style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                  ]),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          trip?['direction'] == 'pickup'
+                              ? 'Antar Jemput'
+                              : 'Antar Pulang',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        Text('Started: ${trip?['started_at'] ?? '-'}',
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12)),
+                      ]),
                 ),
               ]),
               const Divider(height: 24),
               _LocationRow(label: 'Latitude', value: '${loc['lat']}'),
               _LocationRow(label: 'Longitude', value: '${loc['lng']}'),
-              _LocationRow(label: 'Speed', value: '${loc['speed_kmh'] ?? '-'} km/h'),
-              _LocationRow(label: 'Last update', value: '${loc['recorded_at']}'),
+              _LocationRow(
+                  label: 'Speed', value: '${loc['speed_kmh'] ?? '-'} km/h'),
+              _LocationRow(
+                  label: 'Last update', value: '${loc['recorded_at']}'),
             ]),
           ),
         ),
@@ -138,7 +149,9 @@ class _BusTrackingPageState extends State<BusTrackingPage> {
             child: Row(children: [
               Icon(Icons.refresh, size: 16),
               SizedBox(width: 8),
-              Expanded(child: Text('Lokasi update otomatis tiap 10 detik', style: TextStyle(fontSize: 12))),
+              Expanded(
+                  child: Text('Lokasi update otomatis tiap 10 detik',
+                      style: TextStyle(fontSize: 12))),
             ]),
           ),
         ),
@@ -157,8 +170,11 @@ class _LocationRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(children: [
-        Expanded(child: Text(label, style: const TextStyle(color: Colors.grey))),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontFamily: 'monospace')),
+        Expanded(
+            child: Text(label, style: const TextStyle(color: Colors.grey))),
+        Text(value,
+            style: const TextStyle(
+                fontWeight: FontWeight.w500, fontFamily: 'monospace')),
       ]),
     );
   }

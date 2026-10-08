@@ -59,8 +59,12 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
         title: const Text('Batalkan transaksi?'),
         content: const Text('Pembayaran tidak akan diproses jika dibatalkan.'),
         actions: <Widget>[
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Batal')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Ya')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Batal')),
+          FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Ya')),
         ],
       ),
     );
@@ -104,24 +108,36 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
-            _StatusBadge(status: tx.status),
-            const SizedBox(height: 12),
-            Text(_formatRupiah(tx.amount),
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center),
-            const SizedBox(height: 4),
-            Text(tx.referenceNo,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
-                textAlign: TextAlign.center),
-            const SizedBox(height: 24),
-            if (tx.status == 'awaiting_payment') ..._buildAwaitingActions(tx),
-            if (tx.status == 'paid')
-              const Center(child: Text('Pembayaran berhasil. Terima kasih.')),
-            const Spacer(),
-            if (tx.status == 'awaiting_payment')
-              OutlinedButton(onPressed: _cancel, child: const Text('Batalkan transaksi')),
-          ]),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                _StatusBadge(status: tx.status),
+                const SizedBox(height: 12),
+                Text(_formatRupiah(tx.amount),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center),
+                const SizedBox(height: 4),
+                Text(tx.referenceNo,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontFamily: 'monospace'),
+                    textAlign: TextAlign.center),
+                const SizedBox(height: 24),
+                if (tx.status == 'awaiting_payment')
+                  ..._buildAwaitingActions(tx),
+                if (tx.status == 'paid')
+                  const Center(
+                      child: Text('Pembayaran berhasil. Terima kasih.')),
+                const Spacer(),
+                if (tx.status == 'awaiting_payment')
+                  OutlinedButton(
+                      onPressed: _cancel,
+                      child: const Text('Batalkan transaksi')),
+              ]),
         ),
       ),
     );
@@ -150,30 +166,38 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-              Text('Virtual Account ${tx.vaBankCode ?? ""}',
-                  style: Theme.of(context).textTheme.bodySmall),
-              Row(children: <Widget>[
-                Expanded(
-                  child: SelectableText(
-                    tx.vaNumber!,
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'monospace'),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.copy),
-                  onPressed: () => Clipboard.setData(ClipboardData(text: tx.vaNumber!)),
-                ),
-              ]),
-              Text('Transfer dari mobile/internet banking. Sistem otomatis update setelah pembayaran diterima.',
-                  style: Theme.of(context).textTheme.bodySmall),
-            ]),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Virtual Account ${tx.vaBankCode ?? ""}',
+                      style: Theme.of(context).textTheme.bodySmall),
+                  Row(children: <Widget>[
+                    Expanded(
+                      child: SelectableText(
+                        tx.vaNumber!,
+                        style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'monospace'),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.copy),
+                      onPressed: () =>
+                          Clipboard.setData(ClipboardData(text: tx.vaNumber!)),
+                    ),
+                  ]),
+                  Text(
+                      'Transfer dari mobile/internet banking. Sistem otomatis update setelah pembayaran diterima.',
+                      style: Theme.of(context).textTheme.bodySmall),
+                ]),
           ),
         ),
       ],
       if (tx.qrString != null) ...<Widget>[
         const SizedBox(height: 16),
-        const Center(child: Text('Scan QR di bawah dengan aplikasi pembayaran Anda')),
+        const Center(
+            child: Text('Scan QR di bawah dengan aplikasi pembayaran Anda')),
         const SizedBox(height: 12),
         Center(
           child: Card(
@@ -185,26 +209,31 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
           ),
         ),
       ],
-      if (tx.manualInstructions != null && tx.manualInstructions!.isNotEmpty) ...<Widget>[
+      if (tx.manualInstructions != null &&
+          tx.manualInstructions!.isNotEmpty) ...<Widget>[
         const SizedBox(height: 16),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-              const Text('Transfer ke salah satu rekening berikut:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              for (final dynamic acc in tx.manualInstructions!) ...<Widget>[
-                if (acc is Map<String, dynamic>) ...<Widget>[
-                  Text('${acc['bank_name'] ?? ''}',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  SelectableText(acc['account_number']?.toString() ?? '',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'monospace')),
-                  Text(acc['account_holder']?.toString() ?? ''),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text('Transfer ke salah satu rekening berikut:',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                ],
-              ],
-            ]),
+                  for (final dynamic acc in tx.manualInstructions!) ...<Widget>[
+                    if (acc is Map<String, dynamic>) ...<Widget>[
+                      Text('${acc['bank_name'] ?? ''}',
+                          style: Theme.of(context).textTheme.bodySmall),
+                      SelectableText(acc['account_number']?.toString() ?? '',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'monospace')),
+                      Text(acc['account_holder']?.toString() ?? ''),
+                      const SizedBox(height: 8),
+                    ],
+                  ],
+                ]),
           ),
         ),
       ],
@@ -223,13 +252,16 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ({Color color, String label}) cfg = switch (status) {
-      'paid'             => (color: Colors.green, label: 'Berhasil dibayar'),
-      'awaiting_payment' => (color: Colors.orange, label: 'Menunggu pembayaran'),
-      'expired'          => (color: Colors.grey, label: 'Kedaluwarsa'),
-      'failed'           => (color: Colors.red, label: 'Gagal'),
-      'cancelled'        => (color: Colors.grey, label: 'Dibatalkan'),
-      'refunded'         => (color: Colors.blue, label: 'Direfund'),
-      _                  => (color: Colors.blue, label: status),
+      'paid' => (color: Colors.green, label: 'Berhasil dibayar'),
+      'awaiting_payment' => (
+          color: Colors.orange,
+          label: 'Menunggu pembayaran'
+        ),
+      'expired' => (color: Colors.grey, label: 'Kedaluwarsa'),
+      'failed' => (color: Colors.red, label: 'Gagal'),
+      'cancelled' => (color: Colors.grey, label: 'Dibatalkan'),
+      'refunded' => (color: Colors.blue, label: 'Direfund'),
+      _ => (color: Colors.blue, label: status),
     };
     return Center(
       child: Container(

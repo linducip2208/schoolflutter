@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../api/api_client.dart';
+import '../api/api_endpoints.dart';
 import 'stores.dart';
 
 /// Offline outbox + sync engine.
@@ -23,8 +24,10 @@ class SyncEngine {
   KvStore _kv = InMemoryKvStore();
 
   /// POST executor (injectable for tests). Defaults to the shared Dio client.
-  Future<Response<dynamic>> Function(String path, Map<String, dynamic>? body, String idempotencyKey) _poster =
-      (String path, Map<String, dynamic>? body, String key) => ApiClient.dio.post<dynamic>(
+  Future<Response<dynamic>> Function(
+          String path, Map<String, dynamic>? body, String idempotencyKey)
+      _poster = (String path, Map<String, dynamic>? body, String key) =>
+          ApiClient.dio.post<dynamic>(
             path,
             data: body,
             options: Options(headers: <String, String>{'Idempotency-Key': key}),
@@ -52,7 +55,9 @@ class SyncEngine {
   void configureForTest({
     required MutationStore mutations,
     required KvStore kv,
-    Future<Response<dynamic>> Function(String path, Map<String, dynamic>? body, String idempotencyKey)? poster,
+    Future<Response<dynamic>> Function(
+            String path, Map<String, dynamic>? body, String idempotencyKey)?
+        poster,
     Future<bool> Function()? isOnline,
   }) {
     _mutations = mutations;
@@ -77,7 +82,9 @@ class SyncEngine {
     if (_started) return;
     _started = true;
     await _refreshPendingCount();
-    _connectivitySub = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> r) async {
+    _connectivitySub = Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> r) async {
       if (!r.contains(ConnectivityResult.none)) {
         await flush();
       }
@@ -98,7 +105,8 @@ class SyncEngine {
   /// The idempotency key is minted BEFORE the first attempt and reused for
   /// the queued replay, so a manual retry after a lost response cannot
   /// create a duplicate server-side (backend dedups on the key).
-  Future<Response<dynamic>> postMutation(String path, Map<String, dynamic>? body) async {
+  Future<Response<dynamic>> postMutation(
+      String path, Map<String, dynamic>? body) async {
     final String key = _newKey();
     if (await _isOnline()) {
       try {
@@ -140,12 +148,14 @@ class SyncEngine {
         } on DioException catch (e) {
           if (e.response != null && (e.response!.statusCode ?? 500) < 500) {
             // 4xx = server rejected it; retrying won't help → dead-letter.
-            await _mutations.markFailed(m.id, error: 'HTTP ${e.response!.statusCode}');
+            await _mutations.markFailed(m.id,
+                error: 'HTTP ${e.response!.statusCode}');
             continue;
           }
           final int attempts = m.attempts + 1;
           if (attempts >= maxAttempts) {
-            await _mutations.markFailed(m.id, error: e.message ?? 'sync failed');
+            await _mutations.markFailed(m.id,
+                error: e.message ?? 'sync failed');
           } else {
             await _mutations.markAttempt(
               m.id,
@@ -166,6 +176,32 @@ class SyncEngine {
     await _mutations.retryFailed();
     await _refreshPendingCount();
     await flush();
+  }
+
+  /// Batch replay for attendance/mark mutations via backend POST /sync/batch.
+  ///
+  /// Backend accepts max 200 records {type: attendance|mark, local_id, ...},
+  /// returns 200 (all ok) or 207 (partial). Individual non-batch mutations
+  /// continue via [flush]. Safe to call anytime; no-op when offline.
+  Future<Map<String, dynamic>> flushBatch({
+    required String type,
+    required List<Map<String, dynamic>> records,
+  }) async {
+    assert(
+      type == 'attendance' || type == 'mark',
+      'sync/batch only supports attendance|mark',
+    );
+    assert(records.length <= 200, 'sync/batch max 200 records');
+    final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+      ApiEndpoints.syncBatch,
+      data: <String, dynamic>{
+        'type': type,
+        'records': records,
+      },
+    );
+    final dynamic data = r.data;
+    if (data is Map) return Map<String, dynamic>.from(data);
+    return <String, dynamic>{'success': true};
   }
 
   Future<void> _refreshPendingCount() async {
@@ -218,11 +254,16 @@ String _newKey() =>
 /// Cache-key builder for GET endpoints.
 String cacheKey(String path, [Map<String, dynamic>? query]) {
   if (query == null || query.isEmpty) return 'GET $path';
-  final List<String> parts = query.entries.map((MapEntry<String, dynamic> e) => '${e.key}=${e.value}').toList()..sort();
+  final List<String> parts = query.entries
+      .map((MapEntry<String, dynamic> e) => '${e.key}=${e.value}')
+      .toList()
+    ..sort();
   return 'GET $path?${parts.join('&')}';
 }
 
 /// JSON list codec for [SyncEngine.getCached].
 String encodeList(List<Map<String, dynamic>> items) => json.encode(items);
 List<Map<String, dynamic>> decodeList(String raw) =>
-    (json.decode(raw) as List<dynamic>).map((dynamic e) => Map<String, dynamic>.from(e as Map)).toList();
+    (json.decode(raw) as List<dynamic>)
+        .map((dynamic e) => Map<String, dynamic>.from(e as Map))
+        .toList();

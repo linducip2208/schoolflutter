@@ -60,9 +60,12 @@ class Branding {
       displayName: json['display_name'] as String?,
       tagline: json['tagline'] as String?,
       colorPrimary: _hex(colors['primary']?.toString()),
-      colorSecondary: _hex(colors['secondary']?.toString(), const Color(0xFF64748B)),
-      colorSuccess: _hex(colors['success']?.toString(), const Color(0xFF16A34A)),
-      colorWarning: _hex(colors['warning']?.toString(), const Color(0xFFEAB308)),
+      colorSecondary:
+          _hex(colors['secondary']?.toString(), const Color(0xFF64748B)),
+      colorSuccess:
+          _hex(colors['success']?.toString(), const Color(0xFF16A34A)),
+      colorWarning:
+          _hex(colors['warning']?.toString(), const Color(0xFFEAB308)),
       colorDanger: _hex(colors['danger']?.toString(), const Color(0xFFDC2626)),
       logoPrimaryUrl: logos['primary'] as String?,
       logoSecondaryUrl: logos['secondary'] as String?,
@@ -78,7 +81,8 @@ class Branding {
         'display_name': displayName,
         'tagline': tagline,
         'colors': <String, String>{
-          'primary': '#${colorPrimary.toARGB32().toRadixString(16).padLeft(8, '0').substring(2)}',
+          'primary':
+              '#${colorPrimary.toARGB32().toRadixString(16).padLeft(8, '0').substring(2)}',
         },
         'cache_version': cacheVersion,
       };
@@ -97,15 +101,16 @@ class BrandingService {
     Branding? cachedBranding;
     if (cached != null) {
       try {
-        final Map<String, dynamic> j = json.decode(cached) as Map<String, dynamic>;
+        final Map<String, dynamic> j =
+            json.decode(cached) as Map<String, dynamic>;
         cachedBranding = Branding.fromJson(j);
         _current = cachedBranding;
       } catch (_) {}
     }
 
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.brandingPublic(subdomain));
+      final Response<dynamic> r = await ApiClient.dio
+          .get<dynamic>(ApiEndpoints.brandingPublic(subdomain));
       final Map<String, dynamic> data = unwrapMap(r.data);
       _current = Branding.fromJson(data);
       await sp.setString(_cacheKey, json.encode(data));
@@ -117,14 +122,15 @@ class BrandingService {
   }
 
   ThemeData buildTheme({Brightness brightness = Brightness.light}) {
-    final Branding b = _current ?? Branding(
-      colorPrimary: const Color(0xFF2563EB),
-      colorSecondary: const Color(0xFF64748B),
-      colorSuccess: const Color(0xFF16A34A),
-      colorWarning: const Color(0xFFEAB308),
-      colorDanger: const Color(0xFFDC2626),
-      splashBgColor: Colors.white,
-    );
+    final Branding b = _current ??
+        Branding(
+          colorPrimary: const Color(0xFF2563EB),
+          colorSecondary: const Color(0xFF64748B),
+          colorSuccess: const Color(0xFF16A34A),
+          colorWarning: const Color(0xFFEAB308),
+          colorDanger: const Color(0xFFDC2626),
+          splashBgColor: Colors.white,
+        );
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(

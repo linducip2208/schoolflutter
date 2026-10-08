@@ -71,8 +71,7 @@ class _OfflineBanner extends StatelessWidget {
     return StreamBuilder<List<ConnectivityResult>>(
       stream: Connectivity().onConnectivityChanged,
       initialData: const <ConnectivityResult>[ConnectivityResult.wifi],
-      builder: (BuildContext c,
-          AsyncSnapshot<List<ConnectivityResult>> snap) {
+      builder: (BuildContext c, AsyncSnapshot<List<ConnectivityResult>> snap) {
         final List<ConnectivityResult> results =
             snap.data ?? const <ConnectivityResult>[ConnectivityResult.wifi];
         final bool offline = results.contains(ConnectivityResult.none);
@@ -95,8 +94,8 @@ class _OfflineBanner extends StatelessWidget {
                         pending > 0
                             ? 'Offline — $pending perubahan menunggu sinkron'
                             : 'Offline — menampilkan data tersimpan',
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ),
                   ],

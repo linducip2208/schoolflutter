@@ -130,7 +130,8 @@ class _TeacherAttendancePageState extends State<TeacherAttendancePage> {
                               backgroundColor:
                                   AppColors.primary.withValues(alpha: 0.12),
                               child: Text(
-                                ((s['name'] as String?) ?? '?')[0].toUpperCase(),
+                                ((s['name'] as String?) ?? '?')[0]
+                                    .toUpperCase(),
                                 style: const TextStyle(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.w700),

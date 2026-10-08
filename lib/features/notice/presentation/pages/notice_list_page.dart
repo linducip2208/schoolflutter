@@ -24,8 +24,8 @@ class _NoticeListPageState extends State<NoticeListPage> {
       appBar: AppBar(title: const Text('Pengumuman')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
@@ -34,7 +34,8 @@ class _NoticeListPageState extends State<NoticeListPage> {
           }
           final List<Map<String, dynamic>> list =
               snap.data ?? <Map<String, dynamic>>[];
-          if (list.isEmpty) return const AppEmpty(title: 'Belum ada pengumuman');
+          if (list.isEmpty)
+            return const AppEmpty(title: 'Belum ada pengumuman');
           return RefreshIndicator(
             onRefresh: () async => _reload(),
             child: ListView.separated(

@@ -183,8 +183,7 @@ void main() {
             (AuthState s) => s.status == AuthStatus.loggingIn, 'loggingIn'),
         predicate<AuthState>(
           (AuthState s) =>
-              s.status == AuthStatus.authenticated &&
-              s.challengeId == null,
+              s.status == AuthStatus.authenticated && s.challengeId == null,
           'authenticated and challenge cleared',
         ),
       ],

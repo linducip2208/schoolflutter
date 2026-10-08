@@ -52,7 +52,14 @@ class AuthLocaleChanged extends AuthEvent {
 }
 
 // ── State
-enum AuthStatus { unknown, authenticated, unauthenticated, loggingIn, twoFactorRequired, error }
+enum AuthStatus {
+  unknown,
+  authenticated,
+  unauthenticated,
+  loggingIn,
+  twoFactorRequired,
+  error
+}
 
 class AuthState extends Equatable {
   const AuthState({
@@ -87,7 +94,8 @@ class AuthState extends Equatable {
       );
 
   @override
-  List<Object?> get props => <Object?>[status, user, school, errorMessage, challengeId];
+  List<Object?> get props =>
+      <Object?>[status, user, school, errorMessage, challengeId];
 }
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -111,12 +119,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         clearError: true,
       ));
     } else {
-      emit(state.copyWith(status: AuthStatus.unauthenticated, clearError: true));
+      emit(
+          state.copyWith(status: AuthStatus.unauthenticated, clearError: true));
     }
   }
 
-  Future<void> _onLogin(
-      AuthLoginRequested e, Emitter<AuthState> emit) async {
+  Future<void> _onLogin(AuthLoginRequested e, Emitter<AuthState> emit) async {
     emit(state.copyWith(status: AuthStatus.loggingIn, clearError: true));
     try {
       final AuthSession s = await _repo.login(
@@ -178,8 +186,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onLogout(
-      AuthLogoutRequested e, Emitter<AuthState> emit) async {
+  Future<void> _onLogout(AuthLogoutRequested e, Emitter<AuthState> emit) async {
     await _repo.logout();
     emit(const AuthState(status: AuthStatus.unauthenticated));
   }

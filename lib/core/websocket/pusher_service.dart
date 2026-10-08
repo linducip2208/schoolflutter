@@ -12,7 +12,8 @@ class PusherService {
 
   PusherChannelsFlutter? _client;
   bool _connected = false;
-  final Map<String, PusherEventHandler> _handlers = <String, PusherEventHandler>{};
+  final Map<String, PusherEventHandler> _handlers =
+      <String, PusherEventHandler>{};
 
   bool get isConnected => _connected;
 

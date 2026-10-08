@@ -7,7 +7,8 @@ import '../../../core/error/error_handler.dart';
 import '../../../core/sync/sync_engine.dart';
 
 class AttendanceRepository {
-  Future<List<Map<String, dynamic>>> mine({DateTime? from, DateTime? to}) async {
+  Future<List<Map<String, dynamic>>> mine(
+      {DateTime? from, DateTime? to}) async {
     final Map<String, dynamic> query = <String, dynamic>{
       if (from != null) 'from_date': from.toIso8601String().substring(0, 10),
       if (to != null) 'to_date': to.toIso8601String().substring(0, 10),

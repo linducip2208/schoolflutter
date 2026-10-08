@@ -26,8 +26,8 @@ class _ChatListPageState extends State<ChatListPage> {
       appBar: AppBar(title: const Text('Pesan')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
@@ -36,19 +36,19 @@ class _ChatListPageState extends State<ChatListPage> {
           }
           final List<Map<String, dynamic>> list =
               snap.data ?? <Map<String, dynamic>>[];
-          if (list.isEmpty) return const AppEmpty(title: 'Belum ada percakapan');
+          if (list.isEmpty)
+            return const AppEmpty(title: 'Belum ada percakapan');
           return RefreshIndicator(
             onRefresh: () async => _reload(),
             child: ListView.separated(
               itemCount: list.length,
-              separatorBuilder: (_, __) =>
-                  const Divider(height: 1, indent: 72),
+              separatorBuilder: (_, __) => const Divider(height: 1, indent: 72),
               itemBuilder: (BuildContext c, int i) {
                 final Map<String, dynamic> conv = list[i];
                 final int unread = (conv['unread_count'] as num?)?.toInt() ?? 0;
                 return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 8),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   leading: CircleAvatar(
                     backgroundColor: AppColors.primary.withValues(alpha: 0.12),
                     child: Text(

@@ -61,7 +61,8 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
       // The sender also receives its own broadcast (no socket_id exclusion
       // on mobile); ignore it — the sent echo is already in the list.
       final int? meId = context.read<AuthBloc>().state.user?.id;
-      final dynamic senderId = data['sender_id'] ?? (data['sender'] is Map ? (data['sender'] as Map)['id'] : null);
+      final dynamic senderId = data['sender_id'] ??
+          (data['sender'] is Map ? (data['sender'] as Map)['id'] : null);
       if (meId != null && senderId is num && senderId.toInt() == meId) return;
       if (mounted) {
         setState(() => _live.add(data));
@@ -103,8 +104,8 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     } on OfflineQueuedException catch (e) {
       if (!mounted) return;
       _input.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -197,11 +198,13 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                 if (snap.hasError) {
                   return AppError(
                       message: '${snap.error}',
-                      onRetry: () => setState(
-                          () => _future = _repo.messages(widget.conversationId)));
+                      onRetry: () => setState(() =>
+                          _future = _repo.messages(widget.conversationId)));
                 }
-                final List<Map<String, dynamic>> all =
-                    <Map<String, dynamic>>[...?snap.data, ..._live];
+                final List<Map<String, dynamic>> all = <Map<String, dynamic>>[
+                  ...?snap.data,
+                  ..._live
+                ];
                 if (all.isEmpty) {
                   return const AppEmpty(title: 'Belum ada pesan');
                 }
@@ -217,8 +220,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                         (m['sender'] is Map
                             ? (m['sender'] as Map)['id']
                             : m['user_id']);
-                    final bool mine =
-                        (rawSender as num?)?.toInt() == meId;
+                    final bool mine = (rawSender as num?)?.toInt() == meId;
                     final Color bg = mine
                         ? AppColors.primary
                         : Theme.of(context).colorScheme.surfaceContainerHighest;
@@ -242,8 +244,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                                 children: <Widget>[
                                   Text(m['body'] as String? ?? '',
                                       style: TextStyle(
-                                        color:
-                                            mine ? Colors.white : null,
+                                        color: mine ? Colors.white : null,
                                       )),
                                   if (m['file'] != null &&
                                       (m['file'] as String).isNotEmpty) ...[
@@ -350,8 +351,7 @@ class _AttachmentThumb extends StatelessWidget {
           Flexible(
             child: Text('Lampiran',
                 style: TextStyle(
-                    fontSize: 12,
-                    color: mine ? Colors.white70 : null)),
+                    fontSize: 12, color: mine ? Colors.white70 : null)),
           ),
         ],
       );
@@ -362,16 +362,14 @@ class _AttachmentThumb extends StatelessWidget {
         UploadRepository.displayUrl(file),
         width: 180,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image,
-            size: 40),
-        loadingBuilder: (BuildContext c, Widget child,
-            ImageChunkEvent? progress) {
+        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 40),
+        loadingBuilder:
+            (BuildContext c, Widget child, ImageChunkEvent? progress) {
           if (progress == null) return child;
           return const SizedBox(
             width: 180,
             height: 120,
-            child: Center(
-                child: CircularProgressIndicator(strokeWidth: 2)),
+            child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
           );
         },
       ),

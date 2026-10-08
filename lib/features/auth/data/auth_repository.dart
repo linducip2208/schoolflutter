@@ -45,7 +45,8 @@ class AuthRepository {
         },
       );
       if (r.statusCode == 202 && r.data is Map) {
-        final Map<String, dynamic> body = Map<String, dynamic>.from(r.data as Map);
+        final Map<String, dynamic> body =
+            Map<String, dynamic>.from(r.data as Map);
         final String? challengeId = body['challenge_id'] as String?;
         if (body['two_factor_required'] == true && challengeId != null) {
           throw TwoFactorRequired(challengeId);
@@ -91,23 +92,23 @@ class AuthRepository {
   }
 
   Future<AuthSession> _storeSession(Map<String, dynamic> body) async {
-      final String token = body['token'] as String;
-      final Map<String, dynamic> userMap =
-          Map<String, dynamic>.from(body['user'] as Map);
-      final Map<String, dynamic>? schoolMap = userMap['school'] is Map
-          ? Map<String, dynamic>.from(userMap['school'] as Map)
-          : null;
+    final String token = body['token'] as String;
+    final Map<String, dynamic> userMap =
+        Map<String, dynamic>.from(body['user'] as Map);
+    final Map<String, dynamic>? schoolMap = userMap['school'] is Map
+        ? Map<String, dynamic>.from(userMap['school'] as Map)
+        : null;
 
-      final UserModel user = UserModel.fromJson(userMap);
-      final SchoolModel school = schoolMap != null
-          ? SchoolModel.fromJson(schoolMap)
-          : SchoolModel(id: user.schoolId, name: '');
+    final UserModel user = UserModel.fromJson(userMap);
+    final SchoolModel school = schoolMap != null
+        ? SchoolModel.fromJson(schoolMap)
+        : SchoolModel(id: user.schoolId, name: '');
 
-      await AppStorage.saveToken(token);
-      await AppStorage.saveUser(user.toJson());
-      await AppStorage.saveSchool(school.toJson());
+    await AppStorage.saveToken(token);
+    await AppStorage.saveUser(user.toJson());
+    await AppStorage.saveSchool(school.toJson());
 
-      return AuthSession(user: user, school: school, token: token);
+    return AuthSession(user: user, school: school, token: token);
   }
 
   Future<void> forgotPassword(String email) async {

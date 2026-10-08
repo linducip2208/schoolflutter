@@ -79,12 +79,18 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-            Text(widget.invoiceTitle, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(_formatRupiah(widget.amountCents),
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-          ]),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(widget.invoiceTitle,
+                    style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(_formatRupiah(widget.amountCents),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+              ]),
         ),
         Expanded(
           child: FutureBuilder<List<PaymentMethod>>(
@@ -96,7 +102,8 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
               if (snap.hasError) {
                 return Center(child: Text('Gagal memuat: ${snap.error}'));
               }
-              final List<PaymentMethod> methods = snap.data ?? <PaymentMethod>[];
+              final List<PaymentMethod> methods =
+                  snap.data ?? <PaymentMethod>[];
               if (methods.isEmpty) {
                 return const Center(
                   child: Padding(
@@ -116,8 +123,11 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                   return ListTile(
                     onTap: _initiating ? null : () => _initiate(m),
                     leading: m.logoUrl != null
-                        ? Image.network(m.logoUrl!, width: 40, height: 40,
-                            errorBuilder: (_, __, ___) => const Icon(Icons.payments))
+                        ? Image.network(m.logoUrl!,
+                            width: 40,
+                            height: 40,
+                            errorBuilder: (_, __, ___) =>
+                                const Icon(Icons.payments))
                         : const Icon(Icons.payments, size: 32),
                     title: Text(m.displayName),
                     subtitle: m.feeFlat > 0 || m.feePercentBp > 0

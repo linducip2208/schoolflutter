@@ -86,8 +86,8 @@ class _LibraryPageState extends State<LibraryPage> {
                       child: ListTile(
                         leading: const Icon(Icons.menu_book_outlined),
                         title: Text(b['title'] as String? ?? '-'),
-                        subtitle: Text(
-                            '${b['author'] ?? '-'} • ${b['code'] ?? ''}'),
+                        subtitle:
+                            Text('${b['author'] ?? '-'} • ${b['code'] ?? ''}'),
                         trailing: Text('Stok: ${b['available_qty'] ?? 0}',
                             style: Theme.of(context).textTheme.bodySmall),
                       ),

@@ -27,12 +27,13 @@ class ProfilePage extends StatelessWidget {
                 CircleAvatar(
                   radius: 36,
                   backgroundColor: AppColors.primary.withValues(alpha: 0.12),
-                  backgroundImage: user?.avatarUrl != null &&
-                          user!.avatarUrl!.isNotEmpty
-                      ? NetworkImage(user.avatarUrl!)
-                      : null,
+                  backgroundImage:
+                      user?.avatarUrl != null && user!.avatarUrl!.isNotEmpty
+                          ? NetworkImage(user.avatarUrl!)
+                          : null,
                   child: user?.avatarUrl == null || user!.avatarUrl!.isEmpty
-                      ? const Icon(Icons.person, size: 36, color: AppColors.primary)
+                      ? const Icon(Icons.person,
+                          size: 36, color: AppColors.primary)
                       : null,
                 ),
                 const SizedBox(width: 16),
@@ -165,7 +166,9 @@ class ProfilePage extends StatelessWidget {
         builder: (BuildContext c, void Function(void Function()) setS) =>
             Padding(
           padding: EdgeInsets.fromLTRB(
-            16, 16, 16,
+            16,
+            16,
+            16,
             MediaQuery.of(c).viewInsets.bottom + 16,
           ),
           child: Form(
@@ -211,7 +214,8 @@ class ProfilePage extends StatelessWidget {
                               Navigator.of(c).pop();
                               ScaffoldMessenger.of(c).showSnackBar(
                                 const SnackBar(
-                                    content: Text('Kata sandi berhasil diubah')),
+                                    content:
+                                        Text('Kata sandi berhasil diubah')),
                               );
                             } catch (e) {
                               if (!c.mounted) return;

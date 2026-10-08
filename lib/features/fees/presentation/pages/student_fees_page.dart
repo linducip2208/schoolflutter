@@ -27,8 +27,8 @@ class _StudentFeesPageState extends State<StudentFeesPage> {
     try {
       final Map<String, dynamic> r = await _repo.initiatePayment(id);
       final String? url = (r['redirect_url'] ??
-              r['payment_url'] ??
-              r['payment_link']) as String?;
+          r['payment_url'] ??
+          r['payment_link']) as String?;
       if (url != null && url.isNotEmpty) {
         await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
       } else if (mounted) {
@@ -51,8 +51,8 @@ class _StudentFeesPageState extends State<StudentFeesPage> {
       appBar: AppBar(title: const Text('Tagihan')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }

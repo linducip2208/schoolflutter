@@ -24,8 +24,8 @@ class _HostelPageState extends State<HostelPage> {
       appBar: AppBar(title: const Text('Asrama')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
@@ -44,9 +44,9 @@ class _HostelPageState extends State<HostelPage> {
               itemBuilder: (BuildContext c, int i) {
                 final Map<String, dynamic> h = list[i];
                 final int totalRooms = (h['rooms_count'] as num?)?.toInt() ?? 0;
-                final int occupied = (h['occupied_count'] as num?)?.toInt() ?? 0;
-                final double pct =
-                    totalRooms == 0 ? 0 : occupied / totalRooms;
+                final int occupied =
+                    (h['occupied_count'] as num?)?.toInt() ?? 0;
+                final double pct = totalRooms == 0 ? 0 : occupied / totalRooms;
                 return Card(
                   child: Padding(
                     padding: const EdgeInsets.all(14),
@@ -67,8 +67,9 @@ class _HostelPageState extends State<HostelPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(h['name'] as String? ?? '-',
-                                      style:
-                                          Theme.of(context).textTheme.titleLarge),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge),
                                   Text(
                                     '${h['type'] ?? 'mixed'} • ${h['address'] ?? ''}',
                                     style:
@@ -82,8 +83,7 @@ class _HostelPageState extends State<HostelPage> {
                         const SizedBox(height: 12),
                         LinearProgressIndicator(
                           value: pct,
-                          backgroundColor:
-                              AppColors.borderLight,
+                          backgroundColor: AppColors.borderLight,
                           color: pct > 0.85
                               ? AppColors.danger
                               : AppColors.secondary,

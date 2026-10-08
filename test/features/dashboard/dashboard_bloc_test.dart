@@ -15,12 +15,12 @@ void main() {
     blocTest<DashboardBloc, DashboardState>(
       'load student dashboard → loading then loaded',
       setUp: () {
-        when(() => repo.fetch('student')).thenAnswer((_) async =>
-            <String, dynamic>{
-              'class_name': '10A',
-              'pending_tasks': 3,
-              'attendance_pct': 95,
-            });
+        when(() => repo.fetch('student'))
+            .thenAnswer((_) async => <String, dynamic>{
+                  'class_name': '10A',
+                  'pending_tasks': 3,
+                  'attendance_pct': 95,
+                });
       },
       build: () => DashboardBloc(repo),
       act: (DashboardBloc b) => b.add(const DashboardLoadRequested('student')),
@@ -62,8 +62,8 @@ void main() {
     blocTest<DashboardBloc, DashboardState>(
       'refresh re-fetches the same role',
       setUp: () {
-        when(() => repo.fetch('teacher')).thenAnswer((_) async =>
-            <String, dynamic>{'classes_today': 3});
+        when(() => repo.fetch('teacher'))
+            .thenAnswer((_) async => <String, dynamic>{'classes_today': 3});
       },
       build: () => DashboardBloc(repo),
       act: (DashboardBloc b) =>

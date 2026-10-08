@@ -32,7 +32,9 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
           builder: (BuildContext c, void Function(void Function()) setS) {
             return Padding(
               padding: EdgeInsets.fromLTRB(
-                16, 16, 16,
+                16,
+                16,
+                16,
                 MediaQuery.of(c).viewInsets.bottom + 16,
               ),
               child: Form(
@@ -88,8 +90,8 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
                                 width: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
                                 ),
                               )
                             : const Text('Publikasikan'),
@@ -116,8 +118,8 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
@@ -126,7 +128,8 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
           }
           final List<Map<String, dynamic>> list =
               snap.data ?? <Map<String, dynamic>>[];
-          if (list.isEmpty) return const AppEmpty(title: 'Belum ada pengumuman');
+          if (list.isEmpty)
+            return const AppEmpty(title: 'Belum ada pengumuman');
           return RefreshIndicator(
             onRefresh: () async => _reload(),
             child: ListView.separated(

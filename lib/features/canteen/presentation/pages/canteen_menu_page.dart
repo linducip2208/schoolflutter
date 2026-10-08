@@ -1,12 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/api/api_client.dart';
-import '../../../../core/api/api_endpoints.dart';
-import '../../../../core/error/error_handler.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../data/canteen_repository.dart';
 
 class CanteenMenuPage extends StatefulWidget {
   final int studentId;
@@ -17,10 +14,12 @@ class CanteenMenuPage extends StatefulWidget {
 }
 
 class _CanteenMenuPageState extends State<CanteenMenuPage> {
+  final CanteenRepository _repo = CanteenRepository();
   late Future<Map<String, dynamic>> _menuFuture;
   Future<Map<String, dynamic>>? _walletFuture;
   final Map<int, int> _cart = <int, int>{};
-  final Map<int, Map<String, dynamic>> _menuById = <int, Map<String, dynamic>>{};
+  final Map<int, Map<String, dynamic>> _menuById =
+      <int, Map<String, dynamic>>{};
 
   @override
   void initState() {
@@ -30,29 +29,18 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
   }
 
   Future<Map<String, dynamic>> _loadMenu() async {
-    try {
-      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(ApiEndpoints.canteenMenu);
-      final Map<String, dynamic> body = r.data is Map<String, dynamic>
-          ? r.data as Map<String, dynamic>
-          : <String, dynamic>{};
-      final List<dynamic> items = body['items'] as List<dynamic>? ?? <dynamic>[];
-      for (final dynamic m in items) {
-        if (m is Map<String, dynamic>) _menuById[m['id'] as int] = m;
+    final Map<String, dynamic> body = await _repo.menu();
+    final List<dynamic> items = body['items'] as List<dynamic>? ?? <dynamic>[];
+    for (final dynamic m in items) {
+      if (m is Map<String, dynamic>) {
+        final dynamic id = m['id'];
+        if (id is int) _menuById[id] = m;
       }
-      return body;
-    } on DioException catch (e) {
-      throw mapDioError(e);
     }
+    return body;
   }
 
-  Future<Map<String, dynamic>> _loadWallet() async {
-    try {
-      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(ApiEndpoints.canteenWallet(widget.studentId));
-      return r.data is Map<String, dynamic> ? r.data as Map<String, dynamic> : <String, dynamic>{};
-    } on DioException catch (e) {
-      throw mapDioError(e);
-    }
-  }
+  Future<Map<String, dynamic>> _loadWallet() => _repo.wallet(widget.studentId);
 
   void _reload() => setState(() {
         _menuFuture = _loadMenu();
@@ -71,25 +59,25 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
   Future<void> _placeOrder() async {
     if (_cart.isEmpty) return;
     try {
-      final List<Map<String, dynamic>> items = _cart.entries.map((MapEntry<int, int> e) => <String, dynamic>{
-        'menu_item_id': e.key,
-        'qty': e.value,
-      }).toList();
+      final List<Map<String, dynamic>> items = _cart.entries
+          .map((MapEntry<int, int> e) => <String, dynamic>{
+                'menu_item_id': e.key,
+                'qty': e.value,
+              })
+          .toList();
 
-      await ApiClient.dio.post<dynamic>(ApiEndpoints.canteenOrder, data: <String, dynamic>{
-        'student_id': widget.studentId,
-        'items': items,
-        'source': 'preorder',
-      });
+      await _repo.order(studentId: widget.studentId, items: items);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Order berhasil!')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Order berhasil!')));
       setState(() {
         _cart.clear();
         _walletFuture = _loadWallet();
       });
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Gagal: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Gagal: $e')));
     }
   }
 
@@ -125,8 +113,10 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
           if (snap.hasError) {
             return AppError(message: '${snap.error}', onRetry: _reload);
           }
-          final List<dynamic> items = snap.data?['items'] as List<dynamic>? ?? <dynamic>[];
-          if (items.isEmpty) return const AppEmpty(title: 'Menu kosong hari ini');
+          final List<dynamic> items =
+              snap.data?['items'] as List<dynamic>? ?? <dynamic>[];
+          if (items.isEmpty)
+            return const AppEmpty(title: 'Menu kosong hari ini');
 
           return ListView.separated(
             itemCount: items.length,
@@ -137,13 +127,17 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
               final int qty = _cart[id] ?? 0;
               return ListTile(
                 title: Text(m['name']?.toString() ?? '-'),
-                subtitle: Text(CurrencyFormatter.idr((m['price'] as num?)?.toInt() ?? 0)),
+                subtitle: Text(
+                    CurrencyFormatter.idr((m['price'] as num?)?.toInt() ?? 0)),
                 trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                   IconButton(
                     icon: const Icon(Icons.remove_circle_outline),
-                    onPressed: qty > 0 ? () => setState(() => _cart[id] = qty - 1) : null,
+                    onPressed: qty > 0
+                        ? () => setState(() => _cart[id] = qty - 1)
+                        : null,
                   ),
-                  Text('$qty', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('$qty',
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   IconButton(
                     icon: const Icon(Icons.add_circle_outline),
                     onPressed: () => setState(() => _cart[id] = qty + 1),
@@ -161,7 +155,8 @@ class _CanteenMenuPageState extends State<CanteenMenuPage> {
                 padding: const EdgeInsets.all(12),
                 child: FilledButton(
                   onPressed: _placeOrder,
-                  child: Text('Checkout — Rp ${(_cartTotal / 100).toStringAsFixed(0)}'),
+                  child:
+                      Text('Checkout — ${CurrencyFormatter.idr(_cartTotal)}'),
                 ),
               ),
             ),

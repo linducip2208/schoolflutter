@@ -48,7 +48,8 @@ import '../../shells/teacher_shell.dart';
 import 'routes.dart';
 
 class AppRouter {
-  AppRouter._(this._authBloc) : _rootNavigatorKey = GlobalKey<NavigatorState>() {
+  AppRouter._(this._authBloc)
+      : _rootNavigatorKey = GlobalKey<NavigatorState>() {
     config = _build();
   }
 
@@ -95,16 +96,36 @@ class AppRouter {
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               StudentShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.studentDashboard, builder: (_, __) => const StudentDashboardPage()),
-            GoRoute(path: Routes.studentTimetable, builder: (_, __) => const TimetablePage()),
-            GoRoute(path: Routes.studentClassroom, builder: (_, __) => const ClassroomPage()),
-            GoRoute(path: Routes.studentAttendance, builder: (_, __) => const StudentAttendancePage()),
-            GoRoute(path: Routes.studentExam, builder: (_, __) => const ExamListPage()),
-            GoRoute(path: Routes.studentMarks, builder: (_, __) => const MarksPage()),
-            GoRoute(path: Routes.studentFees, builder: (_, __) => const StudentFeesPage()),
-            GoRoute(path: Routes.studentLibrary, builder: (_, __) => const LibraryPage()),
-            GoRoute(path: Routes.studentChat, builder: (_, __) => const ChatListPage()),
-            GoRoute(path: Routes.studentProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.studentDashboard,
+                builder: (_, __) => const StudentDashboardPage()),
+            GoRoute(
+                path: Routes.studentTimetable,
+                builder: (_, __) => const TimetablePage()),
+            GoRoute(
+                path: Routes.studentClassroom,
+                builder: (_, __) => const ClassroomPage()),
+            GoRoute(
+                path: Routes.studentAttendance,
+                builder: (_, __) => const StudentAttendancePage()),
+            GoRoute(
+                path: Routes.studentExam,
+                builder: (_, __) => const ExamListPage()),
+            GoRoute(
+                path: Routes.studentMarks,
+                builder: (_, __) => const MarksPage()),
+            GoRoute(
+                path: Routes.studentFees,
+                builder: (_, __) => const StudentFeesPage()),
+            GoRoute(
+                path: Routes.studentLibrary,
+                builder: (_, __) => const LibraryPage()),
+            GoRoute(
+                path: Routes.studentChat,
+                builder: (_, __) => const ChatListPage()),
+            GoRoute(
+                path: Routes.studentProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
 
@@ -113,12 +134,24 @@ class AppRouter {
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               ParentShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.parentDashboard, builder: (_, __) => const ParentDashboardPage()),
-            GoRoute(path: Routes.parentMarks, builder: (_, __) => const MarksPage()),
-            GoRoute(path: Routes.parentAttendance, builder: (_, __) => const StudentAttendancePage()),
-            GoRoute(path: Routes.parentFees, builder: (_, __) => const StudentFeesPage()),
-            GoRoute(path: Routes.parentChat, builder: (_, __) => const ChatListPage()),
-            GoRoute(path: Routes.parentProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.parentDashboard,
+                builder: (_, __) => const ParentDashboardPage()),
+            GoRoute(
+                path: Routes.parentMarks,
+                builder: (_, __) => const MarksPage()),
+            GoRoute(
+                path: Routes.parentAttendance,
+                builder: (_, __) => const StudentAttendancePage()),
+            GoRoute(
+                path: Routes.parentFees,
+                builder: (_, __) => const StudentFeesPage()),
+            GoRoute(
+                path: Routes.parentChat,
+                builder: (_, __) => const ChatListPage()),
+            GoRoute(
+                path: Routes.parentProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
 
@@ -127,12 +160,24 @@ class AppRouter {
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               TeacherShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.teacherDashboard, builder: (_, __) => const TeacherDashboardPage()),
-            GoRoute(path: Routes.teacherAttendance, builder: (_, __) => const TeacherAttendancePage()),
-            GoRoute(path: Routes.teacherClassroom, builder: (_, __) => const ClassroomPage()),
-            GoRoute(path: Routes.teacherExam, builder: (_, __) => const ExamListPage()),
-            GoRoute(path: Routes.teacherChat, builder: (_, __) => const ChatListPage()),
-            GoRoute(path: Routes.teacherProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.teacherDashboard,
+                builder: (_, __) => const TeacherDashboardPage()),
+            GoRoute(
+                path: Routes.teacherAttendance,
+                builder: (_, __) => const TeacherAttendancePage()),
+            GoRoute(
+                path: Routes.teacherClassroom,
+                builder: (_, __) => const ClassroomPage()),
+            GoRoute(
+                path: Routes.teacherExam,
+                builder: (_, __) => const ExamListPage()),
+            GoRoute(
+                path: Routes.teacherChat,
+                builder: (_, __) => const ChatListPage()),
+            GoRoute(
+                path: Routes.teacherProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
 
@@ -141,12 +186,24 @@ class AppRouter {
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               AdminShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.adminDashboard, builder: (_, __) => const AdminDashboardPage()),
-            GoRoute(path: Routes.adminAdmissions, builder: (_, __) => const AdmissionPage()),
-            GoRoute(path: Routes.adminFees, builder: (_, __) => const AdminFeesPage()),
-            GoRoute(path: Routes.adminPayroll, builder: (_, __) => const PayrollPage()),
-            GoRoute(path: Routes.adminNotice, builder: (_, __) => const AdminNoticePage()),
-            GoRoute(path: Routes.adminProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.adminDashboard,
+                builder: (_, __) => const AdminDashboardPage()),
+            GoRoute(
+                path: Routes.adminAdmissions,
+                builder: (_, __) => const AdmissionPage()),
+            GoRoute(
+                path: Routes.adminFees,
+                builder: (_, __) => const AdminFeesPage()),
+            GoRoute(
+                path: Routes.adminPayroll,
+                builder: (_, __) => const PayrollPage()),
+            GoRoute(
+                path: Routes.adminNotice,
+                builder: (_, __) => const AdminNoticePage()),
+            GoRoute(
+                path: Routes.adminProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
 
@@ -155,14 +212,21 @@ class AppRouter {
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               StaffShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.staffDashboard, builder: (_, __) => const StaffDashboardPage()),
-            GoRoute(path: Routes.staffProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.staffDashboard,
+                builder: (_, __) => const StaffDashboardPage()),
+            GoRoute(
+                path: Routes.staffProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
 
         // ── Common
-        GoRoute(path: Routes.notice, builder: (_, __) => const NoticeListPage()),
-        GoRoute(path: Routes.notifications, builder: (_, __) => const NotificationsPage()),
+        GoRoute(
+            path: Routes.notice, builder: (_, __) => const NoticeListPage()),
+        GoRoute(
+            path: Routes.notifications,
+            builder: (_, __) => const NotificationsPage()),
         GoRoute(
           path: Routes.chatConversation,
           builder: (BuildContext c, GoRouterState s) => ChatConversationPage(
@@ -170,13 +234,15 @@ class AppRouter {
           ),
         ),
         GoRoute(path: Routes.hostel, builder: (_, __) => const HostelPage()),
-        GoRoute(path: Routes.transport, builder: (_, __) => const TransportPage()),
+        GoRoute(
+            path: Routes.transport, builder: (_, __) => const TransportPage()),
 
         // ===== Phase 8 — Student Lifecycle =====
         GoRoute(
           path: Routes.ppdbRegister,
           builder: (_, GoRouterState s) {
-            final String subdomain = s.uri.queryParameters['subdomain'] ?? 'demo';
+            final String subdomain =
+                s.uri.queryParameters['subdomain'] ?? 'demo';
             return PpdbRegisterPage(subdomain: subdomain);
           },
         ),
@@ -197,17 +263,21 @@ class AppRouter {
         GoRoute(
           path: Routes.wellnessCheckin,
           builder: (_, GoRouterState s) {
-            final int? studentId = int.tryParse(s.uri.queryParameters['student_id'] ?? '');
+            final int? studentId =
+                int.tryParse(s.uri.queryParameters['student_id'] ?? '');
             return WellnessCheckinPage(studentId: studentId ?? 0);
           },
         ),
 
         // ===== Phase 9 — Teaching Tools =====
-        GoRoute(path: Routes.studyAssistant, builder: (_, __) => const StudyAssistantPage()),
+        GoRoute(
+            path: Routes.studyAssistant,
+            builder: (_, __) => const StudyAssistantPage()),
         GoRoute(
           path: Routes.hafalanInput,
           builder: (_, GoRouterState s) {
-            final int? studentId = int.tryParse(s.uri.queryParameters['student_id'] ?? '');
+            final int? studentId =
+                int.tryParse(s.uri.queryParameters['student_id'] ?? '');
             return HafalanInputPage(studentId: studentId ?? 0);
           },
         ),

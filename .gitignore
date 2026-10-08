@@ -20,6 +20,7 @@ ios/firebase_app_id_file.json
 # Secrets
 .env
 .env.*
+!*.example
 android/key.properties
 android/app/*.jks
 android/app/*.keystore
@@ -33,4 +34,5 @@ ios/Flutter/flutter_export_environment.sh
 ios/Pods/
 ios/Runner.xcworkspace/xcuserdata/
 android/.gradle/
+android/.kotlin/
 android/local.properties

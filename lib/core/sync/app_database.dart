@@ -45,6 +45,7 @@ class AppDatabase extends _$AppDatabase {
 LazyDatabase _open() {
   return LazyDatabase(() async {
     final Directory dir = await getApplicationDocumentsDirectory();
-    return NativeDatabase.createInBackground(File(p.join(dir.path, 'eschool.sqlite')));
+    return NativeDatabase.createInBackground(
+        File(p.join(dir.path, 'eschool.sqlite')));
   });
 }

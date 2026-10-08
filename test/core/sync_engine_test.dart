@@ -43,7 +43,8 @@ void main() {
     expect(SyncEngine.backoffForAttempt(100), const Duration(seconds: 3600));
   });
 
-  test('offline postMutation enqueues and throws OfflineQueuedException', () async {
+  test('offline postMutation enqueues and throws OfflineQueuedException',
+      () async {
     engine.configureForTest(
       mutations: mutations,
       kv: kv,
@@ -51,7 +52,8 @@ void main() {
     );
 
     await expectLater(
-      engine.postMutation('/chat/conversations/1/send', <String, String>{'body': 'halo'}),
+      engine.postMutation(
+          '/chat/conversations/1/send', <String, String>{'body': 'halo'}),
       throwsA(isA<OfflineQueuedException>()),
     );
     expect(await mutations.pendingCount(), 1);
@@ -163,7 +165,8 @@ void main() {
       isOnline: () async => false,
       poster: (_, __, ___) async => okResponse(),
     );
-    final List<Map<String, dynamic>> offline = await engine.getCached<List<Map<String, dynamic>>>(
+    final List<Map<String, dynamic>> offline =
+        await engine.getCached<List<Map<String, dynamic>>>(
       cacheKey: 'GET /t',
       ttl: const Duration(minutes: 15),
       network: () async => throw StateError('must not hit network'),
@@ -177,7 +180,8 @@ void main() {
       kv: kv,
       isOnline: () async => true,
     );
-    final List<Map<String, dynamic>> fresh = await engine.getCached<List<Map<String, dynamic>>>(
+    final List<Map<String, dynamic>> fresh =
+        await engine.getCached<List<Map<String, dynamic>>>(
       cacheKey: 'GET /t',
       ttl: const Duration(minutes: 15),
       network: () async => <Map<String, dynamic>>[
@@ -190,7 +194,8 @@ void main() {
     expect((await kv.read('GET /t'))?.body, '[{"a":2}]');
   });
 
-  test('queued mutation replays with its stored key after process death', () async {
+  test('queued mutation replays with its stored key after process death',
+      () async {
     final List<String> seenKeys = <String>[];
     engine.configureForTest(
       mutations: mutations,
@@ -204,11 +209,13 @@ void main() {
 
     // Offline: queued with key K (thrown to caller).
     await expectLater(
-      engine.postMutation('/chat/conversations/9/send', <String, String>{'body': 'hi'}),
+      engine.postMutation(
+          '/chat/conversations/9/send', <String, String>{'body': 'hi'}),
       throwsA(isA<OfflineQueuedException>()),
     );
-    final String storedKey =
-        (await mutations.dueMutations(now: DateTime.now())).single.idempotencyKey;
+    final String storedKey = (await mutations.dueMutations(now: DateTime.now()))
+        .single
+        .idempotencyKey;
 
     // Simulate app restart: a FRESH engine over the same durable store
     // replays with the stored key K (no duplicate server-side).

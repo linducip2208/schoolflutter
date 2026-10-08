@@ -51,7 +51,8 @@ class _TeacherDashboardView extends StatelessWidget {
                     avatarUrl: user?.avatarUrl,
                   ),
                   if (state.status == DashboardStatus.loading)
-                    const Padding(padding: EdgeInsets.all(24), child: AppLoading())
+                    const Padding(
+                        padding: EdgeInsets.all(24), child: AppLoading())
                   else if (state.status == DashboardStatus.error)
                     AppError(
                       message: state.errorMessage ?? 'Gagal memuat',
@@ -111,7 +112,8 @@ class _TeacherDashboardView extends StatelessWidget {
               color: AppColors.warning.withValues(alpha: 0.08),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                side: BorderSide(color: AppColors.warning.withValues(alpha: 0.3)),
+                side:
+                    BorderSide(color: AppColors.warning.withValues(alpha: 0.3)),
               ),
               child: ListTile(
                 leading: const Icon(Icons.warning_amber_rounded,
@@ -139,17 +141,16 @@ class _TeacherDashboardView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
               child: Card(
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 8),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   leading: CircleAvatar(
-                    backgroundColor:
-                        AppColors.primary.withValues(alpha: 0.12),
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.12),
                     child: const Icon(Icons.school_outlined,
                         color: AppColors.primary),
                   ),
                   title: Text('${s['class_name']} • ${s['subject']}'),
-                  subtitle: Text(
-                      '${s['start']} - ${s['end']} • ${s['room'] ?? '-'}'),
+                  subtitle:
+                      Text('${s['start']} - ${s['end']} • ${s['room'] ?? '-'}'),
                   trailing: TextButton(
                     onPressed: () => context.push(Routes.teacherAttendance),
                     child: const Text('Absen'),

@@ -1,13 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/api/api_client.dart';
-import '../../../../core/api/api_endpoints.dart';
-import '../../../../core/api/response_unwrap.dart';
-import '../../../../core/error/error_handler.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../data/payroll_repository.dart';
 
 class PayrollPage extends StatefulWidget {
   const PayrollPage({super.key});
@@ -17,17 +13,10 @@ class PayrollPage extends StatefulWidget {
 }
 
 class _PayrollPageState extends State<PayrollPage> {
+  final PayrollRepository _repo = PayrollRepository();
   late Future<List<Map<String, dynamic>>> _future = _fetch();
 
-  Future<List<Map<String, dynamic>>> _fetch() async {
-    try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.payrollSlips);
-      return unwrapList(r.data);
-    } on DioException catch (e) {
-      throw mapDioError(e);
-    }
-  }
+  Future<List<Map<String, dynamic>>> _fetch() => _repo.slips();
 
   void _reload() => setState(() => _future = _fetch());
 
@@ -37,8 +26,8 @@ class _PayrollPageState extends State<PayrollPage> {
       appBar: AppBar(title: const Text('Penggajian')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
@@ -61,7 +50,8 @@ class _PayrollPageState extends State<PayrollPage> {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(14),
                     title: Text(p['employee_name'] as String? ?? '-'),
-                    subtitle: Text('${p['period'] ?? '-'} • ${p['role'] ?? ''}'),
+                    subtitle:
+                        Text('${p['period'] ?? '-'} • ${p['role'] ?? ''}'),
                     trailing: Text(CurrencyFormatter.compact(net),
                         style: const TextStyle(fontWeight: FontWeight.w700)),
                   ),

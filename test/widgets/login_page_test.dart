@@ -8,7 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockAuthBloc extends MockBloc<AuthEvent, AuthState> implements AuthBloc {}
+class _MockAuthBloc extends MockBloc<AuthEvent, AuthState>
+    implements AuthBloc {}
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -38,7 +39,8 @@ void main() {
       status: AuthStatus.unauthenticated,
     ));
 
-    await tester.pumpWidget(_wrap(const LoginPage(), bloc, _MockAuthRepository()));
+    await tester
+        .pumpWidget(_wrap(const LoginPage(), bloc, _MockAuthRepository()));
 
     expect(find.text('Email'), findsOneWidget);
     expect(find.text('Kata Sandi'), findsOneWidget);
@@ -53,7 +55,8 @@ void main() {
       status: AuthStatus.unauthenticated,
     ));
 
-    await tester.pumpWidget(_wrap(const LoginPage(), bloc, _MockAuthRepository()));
+    await tester
+        .pumpWidget(_wrap(const LoginPage(), bloc, _MockAuthRepository()));
 
     await tester.tap(find.text('Masuk'));
     await tester.pump();
@@ -69,7 +72,8 @@ void main() {
       status: AuthStatus.unauthenticated,
     ));
 
-    await tester.pumpWidget(_wrap(const LoginPage(), bloc, _MockAuthRepository()));
+    await tester
+        .pumpWidget(_wrap(const LoginPage(), bloc, _MockAuthRepository()));
 
     await tester.enterText(find.byType(TextFormField).at(1), 'budi@school.id');
     await tester.enterText(find.byType(TextFormField).at(2), 'secret123');

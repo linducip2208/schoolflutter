@@ -117,8 +117,7 @@ class _TwoFactorPageState extends State<TwoFactorPage> {
                     buildWhen: (AuthState p, AuthState c) =>
                         p.status != c.status,
                     builder: (BuildContext c, AuthState state) {
-                      final bool busy =
-                          state.status == AuthStatus.loggingIn;
+                      final bool busy = state.status == AuthStatus.loggingIn;
                       return SizedBox(
                         width: double.infinity,
                         child: FilledButton(
@@ -127,8 +126,8 @@ class _TwoFactorPageState extends State<TwoFactorPage> {
                               ? const SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(
-                                      strokeWidth: 2),
+                                  child:
+                                      CircularProgressIndicator(strokeWidth: 2),
                                 )
                               : const Text('Verifikasi'),
                         ),

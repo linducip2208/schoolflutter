@@ -8,9 +8,7 @@ dynamic unwrap(dynamic body) {
 List<Map<String, dynamic>> unwrapList(dynamic body) {
   final dynamic raw = unwrap(body);
   if (raw is List) {
-    return raw
-        .map((dynamic e) => Map<String, dynamic>.from(e as Map))
-        .toList();
+    return raw.map((dynamic e) => Map<String, dynamic>.from(e as Map)).toList();
   }
   return const <Map<String, dynamic>>[];
 }

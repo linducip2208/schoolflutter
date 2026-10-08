@@ -31,15 +31,16 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
       appBar: AppBar(title: const Text('Kehadiran')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
           if (snap.hasError) {
             return AppError(message: '${snap.error}', onRetry: _reload);
           }
-          final List<Map<String, dynamic>> list = snap.data ?? <Map<String, dynamic>>[];
+          final List<Map<String, dynamic>> list =
+              snap.data ?? <Map<String, dynamic>>[];
           if (list.isEmpty) {
             return const AppEmpty(title: 'Belum ada catatan kehadiran');
           }

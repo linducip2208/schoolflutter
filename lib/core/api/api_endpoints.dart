@@ -85,8 +85,7 @@ class ApiEndpoints {
   static const String myFeeInvoices = '/fee/invoices/me';
   static String invoicePaymentLink(int invoiceId) =>
       '/fee/invoices/$invoiceId/payment-link';
-  static String invoicePay(int invoiceId) =>
-      '/fee/invoices/$invoiceId/pay';
+  static String invoicePay(int invoiceId) => '/fee/invoices/$invoiceId/pay';
 
   // ── Payroll
   static const String payrollSlips = '/payroll/slips';
@@ -196,6 +195,52 @@ class ApiEndpoints {
   static String publicEventList(String subdomain) =>
       '/public/events/$subdomain';
   static String eventRsvp(int eventId) => '/events/$eventId/rsvp';
+
+  // ── LMS (mobile)
+  static const String lmsCourses = '/lms/courses';
+  static String lmsCourseDetail(int courseId) => '/lms/courses/$courseId';
+  static const String lmsEnroll = '/lms/enroll';
+  static const String lmsProgress = '/lms/progress';
+  static const String lmsCompleteLesson = '/lms/complete-lesson';
+  static const String lmsQuizzes = '/lms/quizzes';
+  static const String lmsQuizSubmit = '/lms/quiz/submit';
+  static String lmsCertificate(int enrollmentId) =>
+      '/lms/enrollments/$enrollmentId/certificate';
+
+  // ── Offline sync batch (backend replay, max 200 records)
+  static const String syncBatch = '/sync/batch';
+
+  // ── Emergency
+  static const String emergencyPanic = '/emergency/panic';
+  static const String emergencyRecent = '/emergency/recent';
+  static const String emergencyContacts = '/emergency/contacts';
+
+  // ── QR attendance
+  static const String qrScan = '/qr/scan';
+
+  // ── Counseling / wellness / discipline
+  static const String counselingSessions = '/counseling/sessions';
+  static const String wellnessAtRisk = '/wellness/at-risk';
+  static String disciplineSummary(int studentId) =>
+      '/discipline/students/$studentId/summary';
+
+  // ── Medical (staff view)
+  static const String medicalVisits = '/medical/visits';
+  static String medicalRecord(int studentId) =>
+      '/medical/students/$studentId/record';
+
+  // ── Reading progress
+  static const String readingProgress = '/reading/progress';
+
+  // ── Achievements / scholarships
+  static const String achievementBadges = '/achievements/badges';
+  static const String scholarshipPrograms = '/scholarship/programs';
+
+  // ── Extracurricular
+  static const String ekskul = '/ekskul';
+
+  // ── Calendar
+  static const String calendarIcal = '/calendar/ical';
 
   // ── Branding
   static String brandingPublicSubdomain(String subdomain) =>

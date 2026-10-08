@@ -105,8 +105,8 @@ Future<void> main() async {
       child: MultiBlocProvider(
         providers: <BlocProvider<dynamic>>[
           BlocProvider<AuthBloc>(
-            create: (BuildContext ctx) =>
-                AuthBloc(ctx.read<AuthRepository>())..add(const AuthBootRequested()),
+            create: (BuildContext ctx) => AuthBloc(ctx.read<AuthRepository>())
+              ..add(const AuthBootRequested()),
           ),
         ],
         child: const EschoolApp(),

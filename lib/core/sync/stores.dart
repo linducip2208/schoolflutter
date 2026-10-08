@@ -54,9 +54,13 @@ abstract class MutationStore {
     Map<String, dynamic>? body,
     String? idempotencyKey,
   });
-  Future<List<QueuedMutation>> dueMutations({required DateTime now, int limit = 25});
+  Future<List<QueuedMutation>> dueMutations(
+      {required DateTime now, int limit = 25});
   Future<void> markDone(int id);
-  Future<void> markAttempt(int id, {required int attempts, required DateTime nextRetryAt, required String error});
+  Future<void> markAttempt(int id,
+      {required int attempts,
+      required DateTime nextRetryAt,
+      required String error});
   Future<void> markFailed(int id, {required String error});
   Future<void> retryFailed();
   Future<int> pendingCount();
@@ -72,7 +76,9 @@ class DriftKvStore implements KvStore {
 
   @override
   Future<CachedEntry?> read(String key) async {
-    final KvCacheData? row = await (db.select(db.kvCache)..where((KvCache t) => t.key.equals(key))).getSingleOrNull();
+    final KvCacheData? row = await (db.select(db.kvCache)
+          ..where((KvCache t) => t.key.equals(key)))
+        .getSingleOrNull();
     if (row == null) return null;
     return CachedEntry(body: row.body, updatedAt: row.updatedAt);
   }
@@ -80,7 +86,8 @@ class DriftKvStore implements KvStore {
   @override
   Future<void> write(String key, String body) async {
     await db.into(db.kvCache).insertOnConflictUpdate(
-          KvCacheCompanion.insert(key: key, body: body, updatedAt: DateTime.now()),
+          KvCacheCompanion.insert(
+              key: key, body: body, updatedAt: DateTime.now()),
         );
   }
 
@@ -123,18 +130,23 @@ class DriftMutationStore implements MutationStore {
             idempotencyKey: key,
           ),
         );
-    final MutationQueueData row =
-        await (db.select(db.mutationQueue)..where((MutationQueue t) => t.id.equals(id))).getSingle();
+    final MutationQueueData row = await (db.select(db.mutationQueue)
+          ..where((MutationQueue t) => t.id.equals(id)))
+        .getSingle();
     return _map(row);
   }
 
   @override
-  Future<List<QueuedMutation>> dueMutations({required DateTime now, int limit = 25}) async {
+  Future<List<QueuedMutation>> dueMutations(
+      {required DateTime now, int limit = 25}) async {
     final List<MutationQueueData> rows = await (db.select(db.mutationQueue)
           ..where((MutationQueue t) =>
               t.status.equals('pending') &
-              (t.nextRetryAt.isNull() | t.nextRetryAt.isSmallerOrEqualValue(now)))
-          ..orderBy(<OrderClauseGenerator<MutationQueue>>[(MutationQueue t) => OrderingTerm.asc(t.id)])
+              (t.nextRetryAt.isNull() |
+                  t.nextRetryAt.isSmallerOrEqualValue(now)))
+          ..orderBy(<OrderClauseGenerator<MutationQueue>>[
+            (MutationQueue t) => OrderingTerm.asc(t.id)
+          ])
           ..limit(limit))
         .get();
     return rows.map(_map).toList();
@@ -142,37 +154,50 @@ class DriftMutationStore implements MutationStore {
 
   @override
   Future<void> markDone(int id) async {
-    await (db.delete(db.mutationQueue)..where((MutationQueue t) => t.id.equals(id))).go();
+    await (db.delete(db.mutationQueue)
+          ..where((MutationQueue t) => t.id.equals(id)))
+        .go();
   }
 
   @override
-  Future<void> markAttempt(int id, {required int attempts, required DateTime nextRetryAt, required String error}) async {
-    await (db.update(db.mutationQueue)..where((MutationQueue t) => t.id.equals(id))).write(
-          MutationQueueCompanion(
-            attempts: Value<int>(attempts),
-            nextRetryAt: Value<DateTime?>(nextRetryAt),
-            lastError: Value<String?>(error),
-          ),
-        );
+  Future<void> markAttempt(int id,
+      {required int attempts,
+      required DateTime nextRetryAt,
+      required String error}) async {
+    await (db.update(db.mutationQueue)
+          ..where((MutationQueue t) => t.id.equals(id)))
+        .write(
+      MutationQueueCompanion(
+        attempts: Value<int>(attempts),
+        nextRetryAt: Value<DateTime?>(nextRetryAt),
+        lastError: Value<String?>(error),
+      ),
+    );
   }
 
   @override
   Future<void> markFailed(int id, {required String error}) async {
-    await (db.update(db.mutationQueue)..where((MutationQueue t) => t.id.equals(id))).write(
-          MutationQueueCompanion(status: const Value<String>('failed'), lastError: Value<String?>(error)),
-        );
+    await (db.update(db.mutationQueue)
+          ..where((MutationQueue t) => t.id.equals(id)))
+        .write(
+      MutationQueueCompanion(
+          status: const Value<String>('failed'),
+          lastError: Value<String?>(error)),
+    );
   }
 
   @override
   Future<void> retryFailed() async {
-    await (db.update(db.mutationQueue)..where((MutationQueue t) => t.status.equals('failed'))).write(
-          MutationQueueCompanion(
-            status: const Value<String>('pending'),
-            attempts: const Value<int>(0),
-            nextRetryAt: Value<DateTime?>(DateTime.now()),
-            lastError: const Value<String?>(null),
-          ),
-        );
+    await (db.update(db.mutationQueue)
+          ..where((MutationQueue t) => t.status.equals('failed')))
+        .write(
+      MutationQueueCompanion(
+        status: const Value<String>('pending'),
+        attempts: const Value<int>(0),
+        nextRetryAt: Value<DateTime?>(DateTime.now()),
+        lastError: const Value<String?>(null),
+      ),
+    );
   }
 
   @override
@@ -189,7 +214,9 @@ class DriftMutationStore implements MutationStore {
   Future<List<QueuedMutation>> failedMutations() async {
     final List<MutationQueueData> rows = await (db.select(db.mutationQueue)
           ..where((MutationQueue t) => t.status.equals('failed'))
-          ..orderBy(<OrderClauseGenerator<MutationQueue>>[(MutationQueue t) => OrderingTerm.desc(t.id)]))
+          ..orderBy(<OrderClauseGenerator<MutationQueue>>[
+            (MutationQueue t) => OrderingTerm.desc(t.id)
+          ]))
         .get();
     return rows.map(_map).toList();
   }
@@ -223,7 +250,11 @@ class InMemoryMutationStore implements MutationStore {
   int _seq = 0;
 
   @override
-  Future<QueuedMutation> enqueue({required String method, required String path, Map<String, dynamic>? body, String? idempotencyKey}) async {
+  Future<QueuedMutation> enqueue(
+      {required String method,
+      required String path,
+      Map<String, dynamic>? body,
+      String? idempotencyKey}) async {
     final QueuedMutation m = QueuedMutation(
       id: ++_seq,
       method: method,
@@ -241,10 +272,12 @@ class InMemoryMutationStore implements MutationStore {
   }
 
   @override
-  Future<List<QueuedMutation>> dueMutations({required DateTime now, int limit = 25}) async {
+  Future<List<QueuedMutation>> dueMutations(
+      {required DateTime now, int limit = 25}) async {
     final List<QueuedMutation> due = _rows
         .where((QueuedMutation m) =>
-            m.status == 'pending' && (m.nextRetryAt == null || !m.nextRetryAt!.isAfter(now)))
+            m.status == 'pending' &&
+            (m.nextRetryAt == null || !m.nextRetryAt!.isAfter(now)))
         .toList()
       ..sort((QueuedMutation a, QueuedMutation b) => a.id.compareTo(b.id));
     return due.take(limit).toList();
@@ -257,15 +290,26 @@ class InMemoryMutationStore implements MutationStore {
   }
 
   @override
-  Future<void> markDone(int id) async => _rows.removeWhere((QueuedMutation e) => e.id == id);
+  Future<void> markDone(int id) async =>
+      _rows.removeWhere((QueuedMutation e) => e.id == id);
 
   @override
-  Future<void> markAttempt(int id, {required int attempts, required DateTime nextRetryAt, required String error}) async {
+  Future<void> markAttempt(int id,
+      {required int attempts,
+      required DateTime nextRetryAt,
+      required String error}) async {
     final QueuedMutation m = _rows.firstWhere((QueuedMutation e) => e.id == id);
     _replace(QueuedMutation(
-      id: m.id, method: m.method, path: m.path, body: m.body,
-      idempotencyKey: m.idempotencyKey, attempts: attempts,
-      nextRetryAt: nextRetryAt, lastError: error, status: m.status, createdAt: m.createdAt,
+      id: m.id,
+      method: m.method,
+      path: m.path,
+      body: m.body,
+      idempotencyKey: m.idempotencyKey,
+      attempts: attempts,
+      nextRetryAt: nextRetryAt,
+      lastError: error,
+      status: m.status,
+      createdAt: m.createdAt,
     ));
   }
 
@@ -273,25 +317,41 @@ class InMemoryMutationStore implements MutationStore {
   Future<void> markFailed(int id, {required String error}) async {
     final QueuedMutation m = _rows.firstWhere((QueuedMutation e) => e.id == id);
     _replace(QueuedMutation(
-      id: m.id, method: m.method, path: m.path, body: m.body,
-      idempotencyKey: m.idempotencyKey, attempts: m.attempts,
-      nextRetryAt: m.nextRetryAt, lastError: error, status: 'failed', createdAt: m.createdAt,
+      id: m.id,
+      method: m.method,
+      path: m.path,
+      body: m.body,
+      idempotencyKey: m.idempotencyKey,
+      attempts: m.attempts,
+      nextRetryAt: m.nextRetryAt,
+      lastError: error,
+      status: 'failed',
+      createdAt: m.createdAt,
     ));
   }
 
   @override
   Future<void> retryFailed() async {
-    for (final QueuedMutation m in _rows.where((QueuedMutation e) => e.status == 'failed').toList()) {
+    for (final QueuedMutation m
+        in _rows.where((QueuedMutation e) => e.status == 'failed').toList()) {
       _replace(QueuedMutation(
-        id: m.id, method: m.method, path: m.path, body: m.body,
-        idempotencyKey: m.idempotencyKey, attempts: 0,
-        nextRetryAt: DateTime.now(), lastError: null, status: 'pending', createdAt: m.createdAt,
+        id: m.id,
+        method: m.method,
+        path: m.path,
+        body: m.body,
+        idempotencyKey: m.idempotencyKey,
+        attempts: 0,
+        nextRetryAt: DateTime.now(),
+        lastError: null,
+        status: 'pending',
+        createdAt: m.createdAt,
       ));
     }
   }
 
   @override
-  Future<int> pendingCount() async => _rows.where((QueuedMutation e) => e.status == 'pending').length;
+  Future<int> pendingCount() async =>
+      _rows.where((QueuedMutation e) => e.status == 'pending').length;
 
   @override
   Future<List<QueuedMutation>> failedMutations() async =>

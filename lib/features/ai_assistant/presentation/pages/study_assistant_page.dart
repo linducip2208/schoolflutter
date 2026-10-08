@@ -39,10 +39,12 @@ class _StudyAssistantPageState extends State<StudyAssistantPage> {
       final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
         ApiEndpoints.aiStudyAssistant,
         data: <String, dynamic>{
-          'messages': _messages.map((_ChatMessage m) => <String, String>{
-                'role': m.role,
-                'content': m.content,
-              }).toList(),
+          'messages': _messages
+              .map((_ChatMessage m) => <String, String>{
+                    'role': m.role,
+                    'content': m.content,
+                  })
+              .toList(),
           'temperature': 0.7,
           'max_tokens': 1024,
         },
@@ -101,13 +103,17 @@ class _StudyAssistantPageState extends State<StudyAssistantPage> {
                     final _ChatMessage m = _messages[i];
                     final bool isUser = m.role == 'user';
                     return Align(
-                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isUser ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.all(12),
-                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.75),
                         decoration: BoxDecoration(
-                          color: isUser ? Colors.blue.shade100 : Colors.grey.shade200,
+                          color: isUser
+                              ? Colors.blue.shade100
+                              : Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: SelectableText(m.content),

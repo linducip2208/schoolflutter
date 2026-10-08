@@ -11,7 +11,8 @@ import '../../../../core/widgets/app_loading.dart';
 class ClinicVisitsPage extends StatefulWidget {
   final int studentId;
   final String studentName;
-  const ClinicVisitsPage({super.key, required this.studentId, required this.studentName});
+  const ClinicVisitsPage(
+      {super.key, required this.studentId, required this.studentName});
 
   @override
   State<ClinicVisitsPage> createState() => _ClinicVisitsPageState();
@@ -44,14 +45,16 @@ class _ClinicVisitsPageState extends State<ClinicVisitsPage> {
       appBar: AppBar(title: Text('🏥 UKS — ${widget.studentName}')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
           if (snap.hasError) {
             return AppError(message: '${snap.error}', onRetry: _reload);
           }
-          final List<Map<String, dynamic>> visits = snap.data ?? <Map<String, dynamic>>[];
+          final List<Map<String, dynamic>> visits =
+              snap.data ?? <Map<String, dynamic>>[];
           if (visits.isEmpty) {
             return const AppEmpty(title: 'Tidak ada riwayat kunjungan UKS');
           }
@@ -62,17 +65,23 @@ class _ClinicVisitsPageState extends State<ClinicVisitsPage> {
               final Map<String, dynamic> v = visits[i];
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: (v['sent_home'] == true) ? Colors.orange : Colors.blue,
-                  child: const Icon(Icons.medical_services, color: Colors.white, size: 18),
+                  backgroundColor:
+                      (v['sent_home'] == true) ? Colors.orange : Colors.blue,
+                  child: const Icon(Icons.medical_services,
+                      color: Colors.white, size: 18),
                 ),
                 title: Text(v['symptoms']?.toString() ?? '-'),
-                subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('Diagnosis: ${v['diagnosis'] ?? '-'}'),
-                  Text(v['visit_at']?.toString() ?? '-',
-                      style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                ]),
+                subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Diagnosis: ${v['diagnosis'] ?? '-'}'),
+                      Text(v['visit_at']?.toString() ?? '-',
+                          style: const TextStyle(
+                              fontSize: 11, color: Colors.grey)),
+                    ]),
                 trailing: v['sent_home'] == true
-                    ? const Chip(label: Text('Pulang', style: TextStyle(fontSize: 10)))
+                    ? const Chip(
+                        label: Text('Pulang', style: TextStyle(fontSize: 10)))
                     : null,
                 isThreeLine: true,
               );

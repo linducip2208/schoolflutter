@@ -70,8 +70,8 @@ class _List extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: future,
-      builder: (BuildContext c,
-          AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+      builder:
+          (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const AppLoading();
         }
@@ -82,9 +82,8 @@ class _List extends StatelessWidget {
             snap.data ?? <Map<String, dynamic>>[];
         if (list.isEmpty) {
           return AppEmpty(
-            title: kind == 'assignment'
-                ? 'Belum ada tugas'
-                : 'Belum ada materi',
+            title:
+                kind == 'assignment' ? 'Belum ada tugas' : 'Belum ada materi',
           );
         }
         return RefreshIndicator(

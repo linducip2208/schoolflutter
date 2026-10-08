@@ -24,8 +24,8 @@ class _MarksPageState extends State<MarksPage> {
       appBar: AppBar(title: const Text('Nilai')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
@@ -64,8 +64,7 @@ class _MarksPageState extends State<MarksPage> {
                                       Theme.of(context).textTheme.titleLarge),
                               const SizedBox(height: 4),
                               Text(m['exam_name'] as String? ?? '-',
-                                  style:
-                                      Theme.of(context).textTheme.bodySmall),
+                                  style: Theme.of(context).textTheme.bodySmall),
                             ],
                           ),
                         ),

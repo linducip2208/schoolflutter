@@ -114,8 +114,7 @@ class _ParentDashboardView extends StatelessWidget {
           )
         else
           ...children.map((dynamic raw) {
-            final Map<String, dynamic> child =
-                raw as Map<String, dynamic>;
+            final Map<String, dynamic> child = raw as Map<String, dynamic>;
             final num pct = (child['attendance_pct'] as num?) ?? 0;
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
@@ -128,8 +127,8 @@ class _ParentDashboardView extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           CircleAvatar(
-                            backgroundColor: AppColors.secondary
-                                .withValues(alpha: 0.12),
+                            backgroundColor:
+                                AppColors.secondary.withValues(alpha: 0.12),
                             child: const Icon(Icons.child_care_outlined,
                                 color: AppColors.secondary),
                           ),
@@ -139,9 +138,8 @@ class _ParentDashboardView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(child['name'] as String? ?? '-',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge),
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge),
                                 Text(
                                   '${child['class_name'] ?? '-'}',
                                   style: Theme.of(context).textTheme.bodySmall,

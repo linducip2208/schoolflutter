@@ -20,8 +20,7 @@ class DateFormatter {
     return timeago.format(d, locale: 'id');
   }
 
-  static String dayName(DateTime d) =>
-      DateFormat('EEEE', 'id_ID').format(d);
+  static String dayName(DateTime d) => DateFormat('EEEE', 'id_ID').format(d);
 
   static String monthYear(DateTime d) =>
       DateFormat('MMMM yyyy', 'id_ID').format(d);

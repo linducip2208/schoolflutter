@@ -18,8 +18,8 @@ class ExamRepository {
 
   Future<List<Map<String, dynamic>>> questions(int examId) async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.examQuestions(examId));
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.examQuestions(examId));
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

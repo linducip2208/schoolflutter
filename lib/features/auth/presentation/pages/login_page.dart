@@ -34,9 +34,8 @@ class _LoginPageState extends State<LoginPage> {
     context.read<AuthBloc>().add(AuthLoginRequested(
           email: _email.text.trim(),
           password: _password.text,
-          schoolCode: _schoolCode.text.trim().isEmpty
-              ? null
-              : _schoolCode.text.trim(),
+          schoolCode:
+              _schoolCode.text.trim().isEmpty ? null : _schoolCode.text.trim(),
         ));
   }
 
@@ -45,8 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
         listener: (BuildContext c, AuthState state) {
-          if (state.status == AuthStatus.error &&
-              state.errorMessage != null) {
+          if (state.status == AuthStatus.error && state.errorMessage != null) {
             ScaffoldMessenger.of(c)
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
@@ -120,8 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () =>
-                          context.push(Routes.forgotPassword),
+                      onPressed: () => context.push(Routes.forgotPassword),
                       child: const Text('Lupa kata sandi?'),
                     ),
                   ),
@@ -130,8 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                     buildWhen: (AuthState p, AuthState c) =>
                         p.status != c.status,
                     builder: (BuildContext c, AuthState state) {
-                      final bool loading =
-                          state.status == AuthStatus.loggingIn;
+                      final bool loading = state.status == AuthStatus.loggingIn;
                       return SizedBox(
                         width: double.infinity,
                         height: 52,

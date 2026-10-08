@@ -192,8 +192,7 @@ class _ScheduleTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(time,
-                        style: Theme.of(context).textTheme.bodySmall),
+                    Text(time, style: Theme.of(context).textTheme.bodySmall),
                     const SizedBox(height: 2),
                     Text(subject,
                         style: Theme.of(context).textTheme.titleLarge),

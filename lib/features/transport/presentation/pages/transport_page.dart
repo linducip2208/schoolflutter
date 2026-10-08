@@ -65,8 +65,8 @@ class _RouteList extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: future,
-      builder: (BuildContext c,
-          AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+      builder:
+          (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const AppLoading();
         }
@@ -89,8 +89,7 @@ class _RouteList extends StatelessWidget {
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(14),
                   leading: CircleAvatar(
-                    backgroundColor:
-                        AppColors.info.withValues(alpha: 0.12),
+                    backgroundColor: AppColors.info.withValues(alpha: 0.12),
                     child: const Icon(Icons.alt_route_outlined,
                         color: AppColors.info),
                   ),
@@ -121,8 +120,8 @@ class _VehicleList extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: future,
-      builder: (BuildContext c,
-          AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+      builder:
+          (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const AppLoading();
         }

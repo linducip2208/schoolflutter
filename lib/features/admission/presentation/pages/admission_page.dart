@@ -1,13 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
-import '../../../../core/api/api_client.dart';
-import '../../../../core/api/api_endpoints.dart';
-import '../../../../core/api/response_unwrap.dart';
-import '../../../../core/error/error_handler.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../data/admission_repository.dart';
 
 class AdmissionPage extends StatefulWidget {
   const AdmissionPage({super.key});
@@ -17,17 +13,10 @@ class AdmissionPage extends StatefulWidget {
 }
 
 class _AdmissionPageState extends State<AdmissionPage> {
+  final AdmissionRepository _repo = AdmissionRepository();
   late Future<List<Map<String, dynamic>>> _future = _fetch();
 
-  Future<List<Map<String, dynamic>>> _fetch() async {
-    try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.admission);
-      return unwrapList(r.data);
-    } on DioException catch (e) {
-      throw mapDioError(e);
-    }
-  }
+  Future<List<Map<String, dynamic>>> _fetch() => _repo.list();
 
   void _reload() => setState(() => _future = _fetch());
 
@@ -37,8 +26,8 @@ class _AdmissionPageState extends State<AdmissionPage> {
       appBar: AppBar(title: const Text('Pendaftaran Siswa Baru')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const AppLoading();
           }
@@ -68,7 +57,8 @@ class _AdmissionPageState extends State<AdmissionPage> {
                           color: AppColors.primary),
                     ),
                     title: Text(e['name'] as String? ?? '-'),
-                    subtitle: Text('${e['phone'] ?? '-'} • ${e['source'] ?? '-'}'),
+                    subtitle:
+                        Text('${e['phone'] ?? '-'} • ${e['source'] ?? '-'}'),
                     trailing: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),

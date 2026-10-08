@@ -46,8 +46,7 @@ class StatCard extends StatelessWidget {
                       .headlineMedium
                       ?.copyWith(fontWeight: FontWeight.w700)),
               const SizedBox(height: 4),
-              Text(label,
-                  style: Theme.of(context).textTheme.bodySmall),
+              Text(label, style: Theme.of(context).textTheme.bodySmall),
               if (subtitle != null) ...<Widget>[
                 const SizedBox(height: 4),
                 Text(subtitle!,

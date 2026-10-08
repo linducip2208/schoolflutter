@@ -41,8 +41,8 @@ class PaymentRepository {
 
   Future<Map<String, dynamic>> show(String referenceNo) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.paymentShow(referenceNo));
+      final Response<dynamic> r = await ApiClient.dio
+          .get<dynamic>(ApiEndpoints.paymentShow(referenceNo));
       return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
