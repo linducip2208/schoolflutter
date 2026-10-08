@@ -42,4 +42,57 @@ class PpdbRepository {
       throw mapDioError(e);
     }
   }
+
+  /// Admin: daftar pendaftar (`role:admin`).
+  Future<List<Map<String, dynamic>>> adminApplications() async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.ppdbAdminApplications,
+      );
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> verify(int id) async {
+    try {
+      await ApiClient.dio.post<dynamic>(ApiEndpoints.ppdbVerify(id));
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> accept(int id, {String? note}) async {
+    try {
+      await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.ppdbAccept(id),
+        data: <String, dynamic>{if (note != null) 'note': note},
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> reject(int id, String note) async {
+    try {
+      await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.ppdbReject(id),
+        data: <String, dynamic>{'note': note},
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> reports() async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.ppdbReports,
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

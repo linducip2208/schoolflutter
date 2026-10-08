@@ -28,10 +28,10 @@ class AdminShell extends StatelessWidget {
       route: Routes.adminFees,
     ),
     ShellNavItem(
-      icon: Icons.campaign_outlined,
-      activeIcon: Icons.campaign,
-      label: 'Pengumuman',
-      route: Routes.adminNotice,
+      icon: Icons.grid_view_outlined,
+      activeIcon: Icons.grid_view,
+      label: 'Menu',
+      route: Routes.adminMenu,
     ),
     ShellNavItem(
       icon: Icons.person_outline,

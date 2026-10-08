@@ -34,6 +34,12 @@ class StudentShell extends StatelessWidget {
       route: Routes.studentChat,
     ),
     ShellNavItem(
+      icon: Icons.grid_view_outlined,
+      activeIcon: Icons.grid_view,
+      label: 'Menu',
+      route: Routes.studentMenu,
+    ),
+    ShellNavItem(
       icon: Icons.person_outline,
       activeIcon: Icons.person,
       label: 'Profil',

@@ -49,4 +49,47 @@ class LibraryRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<List<Map<String, dynamic>>> categories() async {
+    try {
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.libraryCategories);
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> storeBook({
+    required int categoryId,
+    required String title,
+    String? author,
+    int? quantity,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.libraryStoreBook,
+        data: <String, dynamic>{
+          'book_category_id': categoryId,
+          'title': title,
+          if (author != null && author.isNotEmpty) 'author': author,
+          if (quantity != null) 'total_quantity': quantity,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<int> markOverdue() async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio
+          .post<dynamic>(ApiEndpoints.libraryMarkOverdue);
+      final Map<String, dynamic> body = unwrapMap(r.data);
+      return (body['marked'] as num?)?.toInt() ?? 0;
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

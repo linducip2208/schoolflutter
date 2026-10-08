@@ -7,7 +7,7 @@ void main() {
     test('canonical production URL is pinned', () {
       expect(
         AppConfig.prodApiBaseUrl,
-        'https://eschool.whitelabel.co.id/api/v1',
+        'https://sikadpro.whitelabel.co.id/api/v1',
       );
     });
     test('no legacy hosts in canonical URLs', () {
@@ -17,12 +17,12 @@ void main() {
         AppConfig.apiDocsUrl,
       ]) {
         expect(u, isNot(contains('sikadpro.app')));
-        expect(u, isNot(contains('sikadpro.whitelabel')));
+        expect(u, isNot(contains('eschool.whitelabel')));
       }
     });
     test('website + docs URLs', () {
-      expect(AppConfig.websiteUrl, 'https://eschool.whitelabel.co.id');
-      expect(AppConfig.apiDocsUrl, 'https://eschool.whitelabel.co.id/api-docs');
+      expect(AppConfig.websiteUrl, 'https://sikadpro.whitelabel.co.id');
+      expect(AppConfig.apiDocsUrl, 'https://sikadpro.whitelabel.co.id/api-docs');
     });
     test('dev defaults remain environment-aware', () {
       expect(

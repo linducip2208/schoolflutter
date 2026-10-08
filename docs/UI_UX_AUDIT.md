@@ -33,6 +33,6 @@ pinning/biometric, Flutter UX-only guards by design).
 
 ## Deltas this pass
 - `AppSpacing`/`AppRadius` tokens; About website tile; privacy/terms →
-  eschool.whitelabel.co.id; README/.env.example prod URL canonical.
+  sikadpro.whitelabel.co.id; README/.env.example prod URL canonical.
 - Gap kept honest: no fake search (API has none global), no chart
   decoration, no exam-answer persistence beyond backend contract.

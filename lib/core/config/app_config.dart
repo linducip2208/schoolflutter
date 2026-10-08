@@ -23,15 +23,15 @@ class AppConfig {
   /// Runtime value still comes from --dart-define=API_BASE_URL; this const
   /// pins the canonical production URL so nothing drifts to legacy hosts.
   static const String prodApiBaseUrl =
-      'https://eschool.whitelabel.co.id/api/v1';
+      'https://sikadpro.whitelabel.co.id/api/v1';
 
   /// Local development defaults (emulator / iOS simulator / host).
   static const String devApiBaseUrlEmulator = 'http://10.0.2.2:8000/api/v1';
   static const String devApiBaseUrlIos = 'http://127.0.0.1:8000/api/v1';
 
   /// Public website + API docs.
-  static const String websiteUrl = 'https://eschool.whitelabel.co.id';
-  static const String apiDocsUrl = 'https://eschool.whitelabel.co.id/api-docs';
+  static const String websiteUrl = 'https://sikadpro.whitelabel.co.id';
+  static const String apiDocsUrl = 'https://sikadpro.whitelabel.co.id/api-docs';
 
   static bool get isProductionUrl => apiBaseUrl == prodApiBaseUrl;
 

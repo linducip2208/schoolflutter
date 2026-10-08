@@ -6,6 +6,39 @@ import '../../../core/api/response_unwrap.dart';
 import '../../../core/error/error_handler.dart';
 
 class HafalanRepository {
+  Future<List<Map<String, dynamic>>> targets() async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.hafalanTargets,
+      );
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> storeTarget({
+    required String name,
+    required List<String> ranges,
+    required String startDate,
+    required String deadline,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.hafalanTargets,
+        data: <String, dynamic>{
+          'name': name,
+          'target_ranges': ranges,
+          'start_date': startDate,
+          'deadline': deadline,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<Map<String, dynamic>> summary(int studentId) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(

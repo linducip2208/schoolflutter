@@ -16,6 +16,55 @@ class MarksRepository {
     }
   }
 
+  /// Input nilai batch. Backend: `POST /marks/bulk`
+  /// `{marks:[{student_id,subject_id,semester_id,exam_id?,
+  /// obtained_marks,total_marks}]}` → `{saved:N}`.
+  Future<int> bulk(List<Map<String, dynamic>> marks) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.marksBulk,
+        data: <String, dynamic>{'marks': marks},
+      );
+      final Map<String, dynamic> body = unwrapMap(r.data);
+      return (body['saved'] as num?)?.toInt() ?? marks.length;
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> gradeSystems() async {
+    try {
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.gradeSystems);
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  /// Generate raport `{semester_id}` → `{generated:N}`.
+  Future<int> generateReportCards(int semesterId) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.reportCardsGenerate,
+        data: <String, dynamic>{'semester_id': semesterId},
+      );
+      final Map<String, dynamic> body = unwrapMap(r.data);
+      return (body['generated'] as num?)?.toInt() ?? 0;
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> publishReportCard(int reportCardId) async {
+    try {
+      await ApiClient.dio
+          .post<dynamic>(ApiEndpoints.reportCardPublish(reportCardId));
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Map<String, dynamic> _normalize(Map<String, dynamic> raw) {
     final num obtained = (raw['obtained_marks'] as num?) ?? 0;
     final num total = (raw['total_marks'] as num?) ?? 100;

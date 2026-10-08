@@ -44,4 +44,57 @@ class ClassroomRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<Map<String, dynamic>> storeAssignment({
+    required int lessonId,
+    required String title,
+    required String dueDate,
+    String? instructions,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.classroomStoreAssignment,
+        data: <String, dynamic>{
+          'lesson_id': lessonId,
+          'title': title,
+          'due_date': dueDate,
+          if (instructions != null && instructions.isNotEmpty)
+            'instructions': instructions,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> submissions(int assignmentId) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.assignmentSubmissions(assignmentId),
+      );
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> gradeSubmission(
+    int submissionId,
+    int marks, {
+    String? feedback,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.classroomGradeSubmission(submissionId),
+        data: <String, dynamic>{
+          'marks': marks,
+          if (feedback != null && feedback.isNotEmpty) 'feedback': feedback,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

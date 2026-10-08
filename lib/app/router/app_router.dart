@@ -41,7 +41,55 @@ import '../../features/ai_assistant/presentation/pages/study_assistant_page.dart
 import '../../features/hafalan/presentation/pages/hafalan_input_page.dart';
 import '../../features/canteen/presentation/pages/canteen_menu_page.dart';
 import '../../features/daily_report/presentation/pages/daily_report_viewer_page.dart';
+import '../../features/superadmin/presentation/pages/super_dashboard_page.dart';
+import '../../features/superadmin/presentation/pages/super_schools_page.dart';
+import '../../features/superadmin/presentation/pages/super_plans_page.dart';
+import '../../features/superadmin/presentation/pages/super_analytics_page.dart';
+import '../../features/superadmin/presentation/pages/super_system_page.dart';
+import '../../features/exam/presentation/pages/exam_manage_page.dart';
+import '../../features/exam/presentation/pages/question_bank_page.dart';
+import '../../features/lessonplan/presentation/pages/lessonplan_page.dart';
+import '../../features/curriculum/presentation/pages/curriculum_page.dart';
+import '../../features/marks/presentation/pages/marks_bulk_page.dart';
+import '../../features/academic/presentation/pages/academic_years_page.dart';
+import '../../features/ppdb/presentation/pages/ppdb_verify_page.dart';
+import '../../features/events/presentation/pages/events_page.dart';
+import '../../features/events/presentation/pages/calendar_page.dart';
+import '../../features/donations/presentation/pages/donations_page.dart';
+import '../../features/achievements/presentation/pages/achievements_page.dart';
+import '../../features/scholarships/presentation/pages/scholarships_page.dart';
+import '../../features/career/presentation/pages/career_page.dart';
+import '../../features/ekskul/presentation/pages/ekskul_page.dart';
+import '../../features/inventory/presentation/pages/inventory_page.dart';
+import '../../features/visitors/presentation/pages/visitors_page.dart';
+import '../../features/canteen/presentation/pages/canteen_merchant_page.dart';
+import '../../features/transport/presentation/pages/transport_admin_page.dart';
+import '../../features/dapodik/presentation/pages/dapodik_page.dart';
+import '../../features/medical/presentation/pages/medical_manage_page.dart';
+import '../../features/discipline/presentation/pages/discipline_page.dart';
+import '../../features/counseling/presentation/pages/counseling_page.dart';
+import '../../features/counseling/presentation/pages/bullying_report_page.dart';
+import '../../features/bus_tracking/presentation/pages/idgate_page.dart';
+import '../../features/liveclass/presentation/pages/liveclass_page.dart';
+import '../../features/ai_assistant/presentation/pages/ai_tools_page.dart';
+import '../../features/ai_assistant/presentation/pages/ai_providers_page.dart';
+import '../../features/payment/presentation/pages/payment_providers_page.dart';
+import '../../features/branding/presentation/pages/branding_page.dart';
+import '../../features/importexport/presentation/pages/import_export_page.dart';
+import '../../features/analytics/presentation/pages/risk_analytics_page.dart';
+import '../../features/foundation/presentation/pages/foundation_page.dart';
+import '../../features/daily_report/presentation/pages/daily_report_admin_page.dart';
+import '../../features/alumni/presentation/pages/alumni_page.dart';
+import '../../features/lms/presentation/pages/lms_courses_page.dart';
+import '../../features/emergency/presentation/pages/emergency_page.dart';
+import '../../features/fees/presentation/pages/finance_tools_page.dart';
+import '../../features/parent/presentation/pages/children_list_page.dart';
+import '../../shells/teacher_menu_page.dart';
+import '../../shells/student_menu_page.dart';
+import '../../shells/parent_menu_page.dart';
+import '../../shells/admin_menu_page.dart';
 import '../../shells/admin_shell.dart';
+import '../../shells/super_admin_shell.dart';
 import '../../shells/parent_shell.dart';
 import '../../shells/staff_shell.dart';
 import '../../shells/student_shell.dart';
@@ -127,6 +175,49 @@ class AppRouter {
             GoRoute(
                 path: Routes.studentProfile,
                 builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.studentMenu,
+                builder: (_, __) => const StudentMenuPage()),
+            GoRoute(
+                path: Routes.studentEkskul,
+                builder: (_, __) => const EkskulPage()),
+            GoRoute(
+                path: Routes.studentEvent,
+                builder: (_, __) => const EventsPage()),
+            GoRoute(
+                path: Routes.studentBeasiswa,
+                builder: (_, __) => const ScholarshipsPage()),
+            GoRoute(
+                path: Routes.studentKarier,
+                builder: (_, __) => const CareerPage()),
+            GoRoute(
+                path: Routes.studentPrestasi,
+                builder: (_, __) => const AchievementsPage()),
+            GoRoute(
+                path: Routes.studentLms,
+                builder: (_, __) => const LmsCoursesPage()),
+            GoRoute(
+                path: Routes.studentLive,
+                builder: (_, __) => const LiveClassPage()),
+            GoRoute(
+                path: Routes.studentAi,
+                builder: (_, __) => const AiToolsPage()),
+            GoRoute(
+                path: Routes.studentEmergency,
+                builder: (_, __) => const EmergencyPage()),
+            GoRoute(
+                path: Routes.studentBullying,
+                builder: (_, __) => const BullyingReportPage()),
+            GoRoute(
+                path: Routes.studentCalendar,
+                builder: (_, __) => const CalendarPage()),
+            GoRoute(
+              path: Routes.studentBus,
+              builder: (_, GoRouterState s) => BusTrackingPage(
+                studentId: int.parse(s.pathParameters['studentId']!),
+                studentName: s.uri.queryParameters['name'] ?? 'Saya',
+              ),
+            ),
           ],
         ),
 
@@ -153,6 +244,24 @@ class AppRouter {
             GoRoute(
                 path: Routes.parentProfile,
                 builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.parentMenu,
+                builder: (_, __) => const ParentMenuPage()),
+            GoRoute(
+                path: Routes.parentChildren,
+                builder: (_, __) => const ChildrenListPage()),
+            GoRoute(
+                path: Routes.parentEvent,
+                builder: (_, __) => const EventsPage()),
+            GoRoute(
+                path: Routes.parentDonasi,
+                builder: (_, __) => const DonationsPage()),
+            GoRoute(
+                path: Routes.parentBullying,
+                builder: (_, __) => const BullyingReportPage()),
+            GoRoute(
+                path: Routes.parentEmergency,
+                builder: (_, __) => const EmergencyPage()),
           ],
         ),
 
@@ -179,6 +288,39 @@ class AppRouter {
             GoRoute(
                 path: Routes.teacherProfile,
                 builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.teacherMenu,
+                builder: (_, __) => const TeacherMenuPage()),
+            GoRoute(
+                path: Routes.teacherRpp,
+                builder: (_, __) => const LessonPlanPage()),
+            GoRoute(
+                path: Routes.teacherBankSoal,
+                builder: (_, __) => const QuestionBankPage()),
+            GoRoute(
+                path: Routes.teacherNilai,
+                builder: (_, __) => const MarksBulkPage()),
+            GoRoute(
+                path: Routes.teacherLive,
+                builder: (_, __) => const LiveClassPage()),
+            GoRoute(
+                path: Routes.teacherAi,
+                builder: (_, __) => const AiToolsPage()),
+            GoRoute(
+                path: Routes.teacherKurikulum,
+                builder: (_, __) => const CurriculumPage()),
+            GoRoute(
+                path: Routes.teacherDisiplin,
+                builder: (_, __) => const DisciplinePage()),
+            GoRoute(
+                path: Routes.teacherPrestasi,
+                builder: (_, __) => const AchievementsPage()),
+            GoRoute(
+                path: Routes.teacherEmergency,
+                builder: (_, __) => const EmergencyPage()),
+            GoRoute(
+                path: Routes.teacherBullying,
+                builder: (_, __) => const BullyingReportPage()),
           ],
         ),
 
@@ -205,6 +347,156 @@ class AppRouter {
             GoRoute(
                 path: Routes.adminProfile,
                 builder: (_, __) => const ProfilePage()),
+            // Admin module hub + role-agnostic working-screen aliases.
+            GoRoute(
+                path: Routes.adminMenu,
+                builder: (_, __) => const AdminMenuPage()),
+            GoRoute(
+                path: Routes.adminAttendance,
+                builder: (_, __) => const TeacherAttendancePage()),
+            GoRoute(
+                path: Routes.adminClassroom,
+                builder: (_, __) => const ClassroomPage()),
+            GoRoute(
+                path: Routes.adminLibrary,
+                builder: (_, __) => const LibraryPage()),
+            GoRoute(
+                path: Routes.adminChat,
+                builder: (_, __) => const ChatListPage()),
+            GoRoute(
+                path: Routes.adminPpdb,
+                builder: (_, __) => const PpdbVerifyPage()),
+            GoRoute(
+                path: Routes.adminTahunAjaran,
+                builder: (_, __) => const AcademicYearsPage()),
+            GoRoute(
+                path: Routes.adminExamManage,
+                builder: (_, __) => const ExamManagePage()),
+            GoRoute(
+                path: Routes.adminBankSoal,
+                builder: (_, __) => const QuestionBankPage()),
+            GoRoute(
+                path: Routes.adminRpp,
+                builder: (_, __) => const LessonPlanPage()),
+            GoRoute(
+                path: Routes.adminKurikulum,
+                builder: (_, __) => const CurriculumPage()),
+            GoRoute(
+                path: Routes.adminNilaiBatch,
+                builder: (_, __) => const MarksBulkPage()),
+            GoRoute(
+                path: Routes.adminEvent,
+                builder: (_, __) => const EventsPage()),
+            GoRoute(
+                path: Routes.adminDonasi,
+                builder: (_, __) => const DonationsPage()),
+            GoRoute(
+                path: Routes.adminPrestasi,
+                builder: (_, __) => const AchievementsPage()),
+            GoRoute(
+                path: Routes.adminBeasiswa,
+                builder: (_, __) => const ScholarshipsPage()),
+            GoRoute(
+                path: Routes.adminKarier,
+                builder: (_, __) => const CareerPage()),
+            GoRoute(
+                path: Routes.adminEkskul,
+                builder: (_, __) => const EkskulPage()),
+            GoRoute(
+                path: Routes.adminInventaris,
+                builder: (_, __) => const InventoryPage()),
+            GoRoute(
+                path: Routes.adminVisitor,
+                builder: (_, __) => const VisitorsPage()),
+            GoRoute(
+                path: Routes.adminKantin,
+                builder: (_, __) => const CanteenMerchantPage()),
+            GoRoute(
+                path: Routes.adminTransportManage,
+                builder: (_, __) => const TransportAdminPage()),
+            GoRoute(
+                path: Routes.adminDapodik,
+                builder: (_, __) => const DapodikPage()),
+            GoRoute(
+                path: Routes.adminMedis,
+                builder: (_, __) => const MedicalManagePage()),
+            GoRoute(
+                path: Routes.adminDisiplin,
+                builder: (_, __) => const DisciplinePage()),
+            GoRoute(
+                path: Routes.adminKonseling,
+                builder: (_, __) => const CounselingPage()),
+            GoRoute(
+                path: Routes.adminGate,
+                builder: (_, __) => const IdGatePage()),
+            GoRoute(
+                path: Routes.adminLive,
+                builder: (_, __) => const LiveClassPage()),
+            GoRoute(
+                path: Routes.adminAiTools,
+                builder: (_, __) => const AiToolsPage()),
+            GoRoute(
+                path: Routes.adminAiProvider,
+                builder: (_, __) => const AiProvidersPage()),
+            GoRoute(
+                path: Routes.adminPayProvider,
+                builder: (_, __) => const PaymentProvidersPage()),
+            GoRoute(
+                path: Routes.adminBranding,
+                builder: (_, __) => const BrandingPage()),
+            GoRoute(
+                path: Routes.adminImportExport,
+                builder: (_, __) => const ImportExportPage()),
+            GoRoute(
+                path: Routes.adminRisiko,
+                builder: (_, __) => const RiskAnalyticsPage()),
+            GoRoute(
+                path: Routes.adminYayasan,
+                builder: (_, __) => const FoundationPage()),
+            GoRoute(
+                path: Routes.adminLaporanHarian,
+                builder: (_, __) => const DailyReportAdminPage()),
+            GoRoute(
+                path: Routes.adminAlumni,
+                builder: (_, __) => const AlumniPage()),
+            GoRoute(
+                path: Routes.adminLms,
+                builder: (_, __) => const LmsCoursesPage()),
+            GoRoute(
+                path: Routes.adminEmergency,
+                builder: (_, __) => const EmergencyPage()),
+            GoRoute(
+                path: Routes.adminCalendar,
+                builder: (_, __) => const CalendarPage()),
+            GoRoute(
+                path: Routes.adminFinanceTools,
+                builder: (_, __) => const FinanceToolsPage()),
+          ],
+        ),
+
+        // ── Super Admin (platform operator)
+        ShellRoute(
+          builder: (BuildContext c, GoRouterState s, Widget child) =>
+              SuperAdminShell(location: s.uri.path, child: child),
+          routes: <RouteBase>[
+            GoRoute(
+                path: Routes.superDashboard,
+                builder: (_, __) => const SuperDashboardPage()),
+            GoRoute(
+                path: Routes.superSchools,
+                builder: (_, __) => const SuperSchoolsPage()),
+            GoRoute(
+                path: Routes.superProfile,
+                builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.superPlans,
+                builder: (_, __) => const SuperPlansPage()),
+            GoRoute(
+                path: Routes.superAnalytics,
+                builder: (_, __) => const SuperAnalyticsPage()),
+            GoRoute(
+                path: Routes.superSystem,
+                builder: (_, __) => const SuperSystemPage()),
           ],
         ),
 
@@ -344,6 +636,7 @@ class AppRouter {
 
   /// Returns the role required by a path prefix, or null for shared routes.
   static String? _roleForPrefix(String loc) {
+    if (loc.startsWith('/super/')) return 'super_admin';
     if (loc.startsWith('/student/')) return 'student';
     if (loc.startsWith('/parent/')) return 'parent';
     if (loc.startsWith('/teacher/')) return 'teacher';
@@ -353,6 +646,9 @@ class AppRouter {
   }
 
   static bool _roleMatches(String role, String required) {
+    // super_admin has full platform access (backend policies grant
+    // super_admin bypass on every school-scoped check).
+    if (role == 'super_admin') return true;
     if (role == required) return true;
     // school_admin is an admin; /staff/* is the generic fallback shell
     // for every other back-office role (principal, nurse, librarian,

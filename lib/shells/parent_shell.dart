@@ -34,6 +34,12 @@ class ParentShell extends StatelessWidget {
       route: Routes.parentFees,
     ),
     ShellNavItem(
+      icon: Icons.grid_view_outlined,
+      activeIcon: Icons.grid_view,
+      label: 'Menu',
+      route: Routes.parentMenu,
+    ),
+    ShellNavItem(
       icon: Icons.person_outline,
       activeIcon: Icons.person,
       label: 'Profil',

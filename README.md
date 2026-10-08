@@ -56,16 +56,16 @@ dev/CI, TIDAK untuk Play Store).
 
 ```bash
 flutter build apk --release \
-  --dart-define=API_BASE_URL=https://eschool.whitelabel.co.id/api/v1 \
+  --dart-define=API_BASE_URL=https://sikadpro.whitelabel.co.id/api/v1 \
   --dart-define=APP_ENV=production
 
 flutter build appbundle --release \
-  --dart-define=API_BASE_URL=https://eschool.whitelabel.co.id/api/v1 \
+  --dart-define=API_BASE_URL=https://sikadpro.whitelabel.co.id/api/v1 \
   --dart-define=APP_ENV=production
 
 # iOS — hanya di macOS dengan Xcode:
 flutter build ipa --release \
-  --dart-define=API_BASE_URL=https://eschool.whitelabel.co.id/api/v1 \
+  --dart-define=API_BASE_URL=https://sikadpro.whitelabel.co.id/api/v1 \
   --dart-define=APP_ENV=production
 ```
 

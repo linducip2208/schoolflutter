@@ -5,35 +5,36 @@ Canonical source: `lib/core/config/app_config.dart`
 
 | Environment | API base | Notes |
 |---|---|---|
-| Production | `https://eschool.whitelabel.co.id/api/v1` | `--dart-define=API_BASE_URL=…` + `APP_ENV=production` |
+| Production | `https://sikadpro.whitelabel.co.id/api/v1` | `--dart-define=API_BASE_URL=…` + `APP_ENV=production` |
 | Dev (Android emulator) | `http://10.0.2.2:8000/api/v1` | default dart-define |
 | Dev (iOS simulator) | `http://127.0.0.1:8000/api/v1` | `devApiBaseUrlIos` |
-| Website | `https://eschool.whitelabel.co.id` | About → Website |
-| API docs | `https://eschool.whitelabel.co.id/api-docs` | "Sikad Pro API Documentation" |
+| Website | `https://sikadpro.whitelabel.co.id` | About → Website |
+| API docs | `https://sikadpro.whitelabel.co.id/api-docs` | "Sikad Pro API Documentation" |
 
 Builds:
 
 ```bash
 flutter build apk --release \
-  --dart-define=API_BASE_URL=https://eschool.whitelabel.co.id/api/v1 \
+  --dart-define=API_BASE_URL=https://sikadpro.whitelabel.co.id/api/v1 \
   --dart-define=APP_ENV=production
 
 flutter build appbundle --release \
-  --dart-define=API_BASE_URL=https://eschool.whitelabel.co.id/api/v1 \
+  --dart-define=API_BASE_URL=https://sikadpro.whitelabel.co.id/api/v1 \
   --dart-define=APP_ENV=production
 ```
 
-## Live health check (2026-10-08, read-only GET)
+## Live health check (2026-10-09, read-only GET, host `sikadpro.whitelabel.co.id`)
 
 - `GET /api/v1/health` → 200 `{"status":"ok","time":"…+07:00"}`
-  (HTTPS+TLS OK, envelope `{status,time}`, Asia/Jakarta).
+  (HTTPS+TLS OK, envelope `{status,time}`, Asia/Jakarta, IP 160.19.166.149).
 - `GET /api-docs` → 200 "Sikad Pro API Documentation".
-- `GET /api/v1/auth/me` (no token) → 500. Expected 401 (route is
-  `auth:sanctum` + `school.access` + `subscription.active`); the 500
-  suggests the school/subscription middleware throws on guest instead of
-  returning 401. Logged as backend observation P2 — Flutter maps it to a
-  friendly ServerException, login flow unaffected. No destructive request
-  was sent; no production data created.
+- `POST /api/v1/auth/login {}` → 422 validation (`email`/`password`
+  required) — routing + validator live.
+- `GET /api/v1/auth/me` (no token) → 401 `Unauthenticated` — auth guard
+  benar (catatan 2026-10-08 sempat 500, kini 401 sesuai kontrak).
+- `eschool.whitelabel.co.id` (213.163.195.102) MATI: HTTPS gagal
+  `SEC_E_WRONG_PRINCIPAL`, HTTP 80 hanya halaman parkir cPanel 404.
+  Jangan dipakai sebagai API base.
 
 ## Contract notes
 
@@ -44,5 +45,5 @@ flutter build appbundle --release \
 - Pagination: Laravel `paginate()` (`data/total/per_page`).
 - Money: IDR integer whole rupiah. Timezone: Asia/Jakarta.
 - No legacy hosts remain in code/config (`api.sikadpro.app`,
-  `sikadpro.whitelabel.co.id` removed; Firebase project id
+  `eschool.whitelabel.co.id` removed; Firebase project id
   `sikadpro-saas` and Android applicationId unchanged by design).

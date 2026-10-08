@@ -77,4 +77,49 @@ class AttendanceRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<void> lock(int sectionId) async {
+    try {
+      await ApiClient.dio.post<dynamic>(ApiEndpoints.attendanceLock(sectionId));
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> reopen(int sectionId) async {
+    try {
+      await ApiClient.dio
+          .post<dynamic>(ApiEndpoints.attendanceReopen(sectionId));
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> corrections() async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio
+          .get<dynamic>(ApiEndpoints.attendanceCorrections);
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> approveCorrection(int id) async {
+    try {
+      await ApiClient.dio
+          .post<dynamic>(ApiEndpoints.attendanceApproveCorrection(id));
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> rejectCorrection(int id) async {
+    try {
+      await ApiClient.dio
+          .post<dynamic>(ApiEndpoints.attendanceRejectCorrection(id));
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

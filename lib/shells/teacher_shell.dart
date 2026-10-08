@@ -34,6 +34,12 @@ class TeacherShell extends StatelessWidget {
       route: Routes.teacherExam,
     ),
     ShellNavItem(
+      icon: Icons.grid_view_outlined,
+      activeIcon: Icons.grid_view,
+      label: 'Menu',
+      route: Routes.teacherMenu,
+    ),
+    ShellNavItem(
       icon: Icons.person_outline,
       activeIcon: Icons.person,
       label: 'Profil',

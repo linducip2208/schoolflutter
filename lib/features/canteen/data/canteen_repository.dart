@@ -59,4 +59,55 @@ class CanteenRepository {
       throw mapDioError(e);
     }
   }
+
+  /// Merchant: pesanan hari ini (`canteen.manage`).
+  Future<List<Map<String, dynamic>>> ordersToday() async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.canteenOrdersToday,
+      );
+      final dynamic body = r.data;
+      if (body is Map && body['data'] is List) {
+        return (body['data'] as List)
+            .map((dynamic e) => Map<String, dynamic>.from(e as Map))
+            .toList();
+      }
+      if (body is List) {
+        return body
+            .map((dynamic e) => Map<String, dynamic>.from(e as Map))
+            .toList();
+      }
+      return const <Map<String, dynamic>>[];
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> updateOrderStatus(int orderId, String status) async {
+    try {
+      await ApiClient.dio.put<dynamic>(
+        ApiEndpoints.canteenOrderStatus(orderId),
+        data: <String, dynamic>{'status': status},
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> transactions(int studentId) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.canteenTransactions(studentId),
+      );
+      final dynamic body = r.data;
+      if (body is Map && body['data'] is List) {
+        return (body['data'] as List)
+            .map((dynamic e) => Map<String, dynamic>.from(e as Map))
+            .toList();
+      }
+      return const <Map<String, dynamic>>[];
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

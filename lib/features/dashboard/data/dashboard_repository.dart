@@ -9,6 +9,7 @@ class DashboardRepository {
   Future<Map<String, dynamic>> fetch(String role) async {
     try {
       final String path = switch (role) {
+        'super_admin' => ApiEndpoints.superDashboard,
         'teacher' => ApiEndpoints.teacherDashboard,
         'parent' => ApiEndpoints.parentDashboard,
         'admin' || 'school_admin' => ApiEndpoints.adminDashboard,

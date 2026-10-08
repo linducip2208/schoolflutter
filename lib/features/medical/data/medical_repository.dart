@@ -38,4 +38,54 @@ class MedicalRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<List<Map<String, dynamic>>> allVisits() async {
+    try {
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.medicalVisits);
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> storeVisit({
+    required int studentId,
+    required String symptoms,
+    String? diagnosis,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.medicalStoreVisit,
+        data: <String, dynamic>{
+          'student_id': studentId,
+          'symptoms': symptoms,
+          if (diagnosis != null && diagnosis.isNotEmpty)
+            'diagnosis': diagnosis,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> storeVaccination({
+    required int studentId,
+    required String vaccineName,
+    required String vaccinatedAt,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.medicalStoreVaccination(studentId),
+        data: <String, dynamic>{
+          'vaccine_name': vaccineName,
+          'vaccinated_at': vaccinatedAt,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

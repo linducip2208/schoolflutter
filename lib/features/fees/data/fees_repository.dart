@@ -41,6 +41,67 @@ class FeesRepository {
     }
   }
 
+  Future<List<Map<String, dynamic>>> structures() async {
+    try {
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.feeStructures);
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> storeStructure({
+    required String name,
+    required String frequency,
+    required int amount,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.feeStructures,
+        data: <String, dynamic>{
+          'name': name,
+          'frequency': frequency,
+          'amount': amount,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  /// Generate invoice sebulan (`{period: YYYY-MM}` → `{generated:N}`).
+  Future<int> generateMonthly(String period) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.feeGenerateMonthly,
+        data: <String, dynamic>{'period': period},
+      );
+      final Map<String, dynamic> body = unwrapMap(r.data);
+      return (body['generated'] as num?)?.toInt() ?? 0;
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  /// Catat pembayaran manual (`fee.payment`).
+  Future<Map<String, dynamic>> recordPayment({
+    required int invoiceId,
+    required int amount,
+    String method = 'cash',
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.invoicePay(invoiceId),
+        data: <String, dynamic>{'amount': amount, 'payment_method': method},
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Map<String, dynamic> _normalize(Map<String, dynamic> raw) {
     return <String, dynamic>{
       ...raw,

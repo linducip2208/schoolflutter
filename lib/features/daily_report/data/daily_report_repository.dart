@@ -16,4 +16,25 @@ class DailyReportRepository {
       throw mapDioError(e);
     }
   }
+
+  /// Admin: generate laporan harian (`role:admin`).
+  Future<Map<String, dynamic>> generate(Map<String, dynamic> payload) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.dailyReportGenerate,
+        data: payload,
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> send(int id) async {
+    try {
+      await ApiClient.dio.post<dynamic>(ApiEndpoints.dailyReportSend(id));
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

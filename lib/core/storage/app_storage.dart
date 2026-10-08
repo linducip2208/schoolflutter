@@ -1,3 +1,4 @@
+import 'dart:async' show TimeoutException;
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,6 +13,15 @@ class AppStorage {
   );
   static SharedPreferences? _prefs;
 
+  /// In-memory mirrors: secure-storage I/O can hang indefinitely on devices
+  /// with a broken keystore (no timeout inside the plugin). The mirrors keep
+  /// the session usable for the app lifetime when that happens.
+  static String? _memToken;
+  static String? _memUser;
+  static String? _memSchool;
+
+  static const Duration _secureTimeout = Duration(seconds: 10);
+
   static const String _kToken = 'auth_token';
   static const String _kUser = 'auth_user';
   static const String _kSchool = 'auth_school';
@@ -24,32 +34,101 @@ class AppStorage {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  // ── Auth (secure)
-  static Future<String?> getToken() => _secure.read(key: _kToken);
-  static Future<void> saveToken(String token) =>
-      _secure.write(key: _kToken, value: token);
-  static Future<void> deleteToken() => _secure.delete(key: _kToken);
+  // ── Auth (secure, with timeout + in-memory fallback).
+  // Every secure read/write is bounded: a hanging keystore must never
+  // freeze API calls (interceptors await these on every request).
+  static Future<String?> getToken() async {
+    if (_memToken != null) return _memToken;
+    try {
+      final String? v = await _secure.read(key: _kToken).timeout(
+            _secureTimeout,
+          );
+      if (v != null) _memToken = v;
+      return v;
+    } on TimeoutException {
+      return _memToken;
+    } catch (_) {
+      return _memToken;
+    }
+  }
+
+  static Future<void> saveToken(String token) async {
+    _memToken = token;
+    try {
+      await _secure.write(key: _kToken, value: token).timeout(_secureTimeout);
+    } catch (_) {
+      // best effort — memory mirror keeps the session alive.
+    }
+  }
+
+  static Future<void> deleteToken() async {
+    _memToken = null;
+    try {
+      await _secure.delete(key: _kToken).timeout(_secureTimeout);
+    } catch (_) {}
+  }
 
   static Future<Map<String, dynamic>?> getUser() async {
-    final String? raw = await _secure.read(key: _kUser);
-    return raw == null ? null : json.decode(raw) as Map<String, dynamic>;
+    if (_memUser != null) {
+      return json.decode(_memUser!) as Map<String, dynamic>;
+    }
+    try {
+      final String? raw =
+          await _secure.read(key: _kUser).timeout(_secureTimeout);
+      if (raw == null) return null;
+      _memUser = raw;
+      return json.decode(raw) as Map<String, dynamic>;
+    } on TimeoutException {
+      return null;
+    } catch (_) {
+      return null;
+    }
   }
 
-  static Future<void> saveUser(Map<String, dynamic> user) =>
-      _secure.write(key: _kUser, value: json.encode(user));
+  static Future<void> saveUser(Map<String, dynamic> user) async {
+    final String raw = json.encode(user);
+    _memUser = raw;
+    try {
+      await _secure.write(key: _kUser, value: raw).timeout(_secureTimeout);
+    } catch (_) {}
+  }
 
   static Future<Map<String, dynamic>?> getSchool() async {
-    final String? raw = await _secure.read(key: _kSchool);
-    return raw == null ? null : json.decode(raw) as Map<String, dynamic>;
+    if (_memSchool != null) {
+      return json.decode(_memSchool!) as Map<String, dynamic>;
+    }
+    try {
+      final String? raw =
+          await _secure.read(key: _kSchool).timeout(_secureTimeout);
+      if (raw == null) return null;
+      _memSchool = raw;
+      return json.decode(raw) as Map<String, dynamic>;
+    } on TimeoutException {
+      return null;
+    } catch (_) {
+      return null;
+    }
   }
 
-  static Future<void> saveSchool(Map<String, dynamic> school) =>
-      _secure.write(key: _kSchool, value: json.encode(school));
+  static Future<void> saveSchool(Map<String, dynamic> school) async {
+    final String raw = json.encode(school);
+    _memSchool = raw;
+    try {
+      await _secure.write(key: _kSchool, value: raw).timeout(_secureTimeout);
+    } catch (_) {}
+  }
 
   static Future<void> clearAuth() async {
-    await _secure.delete(key: _kToken);
-    await _secure.delete(key: _kUser);
-    await _secure.delete(key: _kSchool);
+    _memToken = null;
+    _memUser = null;
+    _memSchool = null;
+    try {
+      await Future.wait(<Future<void>>[
+        _secure.delete(key: _kToken),
+        _secure.delete(key: _kUser),
+        _secure.delete(key: _kSchool),
+      ]).timeout(_secureTimeout);
+    } catch (_) {}
   }
 
   // ── Misc (prefs)
