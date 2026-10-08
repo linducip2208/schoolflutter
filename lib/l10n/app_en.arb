@@ -29,5 +29,14 @@
   "retry": "Retry",
   "settings": "Settings",
   "language": "Language",
-  "changePassword": "Change password"
+  "changePassword": "Change password",
+  "welcomeTitle": "Welcome to eSchool",
+  "welcomeSubtitle": "Integrated school digital platform",
+  "welcomeDescription": "Supporting academics, communication, and school operations.",
+  "welcomeStart": "Get Started",
+  "welcomeContact": "Contact Us via WhatsApp",
+  "welcomeClose": "Close",
+  "about": "About eSchool",
+  "contactUs": "Contact Us",
+  "appVersion": "App version"
 }

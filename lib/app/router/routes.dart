@@ -52,6 +52,7 @@ class Routes {
   static const String chatConversation = '/chat/:conversationId';
   static const String hostel = '/hostel';
   static const String transport = '/transport';
+  static const String about = '/about';
 
   // ===== Phase 8-11 routes =====
 

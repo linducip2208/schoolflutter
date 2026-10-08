@@ -29,5 +29,14 @@
   "retry": "Coba lagi",
   "settings": "Pengaturan",
   "language": "Bahasa",
-  "changePassword": "Ubah kata sandi"
+  "changePassword": "Ubah kata sandi",
+  "welcomeTitle": "Selamat Datang di eSchool",
+  "welcomeSubtitle": "Platform digital sekolah terpadu",
+  "welcomeDescription": "Mendukung kegiatan akademik, komunikasi, dan operasional sekolah.",
+  "welcomeStart": "Mulai Menggunakan",
+  "welcomeContact": "Hubungi Kami via WhatsApp",
+  "welcomeClose": "Tutup",
+  "about": "Tentang eSchool",
+  "contactUs": "Hubungi Kami",
+  "appVersion": "Versi aplikasi"
 }

@@ -116,3 +116,30 @@ test/
 Backend Laravel 13 (PHP 8.3) dengan endpoint `/api/v1/*`, auth Laravel
 Sanctum (Bearer token).Timezone user-facing default `Asia/Jakarta`.
 Lihat `docs/` di repo backend untuk referensi lengkap.
+
+## First Launch & Support
+
+- Popup "Selamat Datang di eSchool" muncul **sekali** per install
+  (`first_launch_popup_seen` di SharedPreferences; tidak muncul ulang saat
+  login/logout/refresh). Implementasi: `lib/core/widgets/welcome_popup.dart`.
+- Kontak WhatsApp terpusat di `lib/core/config/app_contact.dart`:
+  081296052010 → 6281296052010 → `https://wa.me/6281296052010`.
+  Jangan hardcode nomor di widget.
+- Settings → Tentang eSchool → Hubungi Kami memakai config yang sama
+  (`lib/features/profile/presentation/pages/about_page.dart`, route `/about`).
+
+## Testing
+
+```bash
+flutter analyze
+flutter test
+flutter test --coverage
+flutter test test/core/welcome_popup_test.dart  # 12 popup tests
+```
+
+## Docs
+
+- `docs/PRODUCTION_AUDIT.md` — audit sebelumnya (85/100)
+- `docs/API_FEATURE_MATRIX.md` — matriks endpoint × role × offline
+- `docs/FINAL_AUDIT.md` — audit final enterprise
+- `docs/FINAL_SCORE.md` — skor final 93/100 + daftar P0–P3

@@ -97,4 +97,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changePassword => 'Change password';
+
+  @override
+  String get welcomeTitle => 'Welcome to eSchool';
+
+  @override
+  String get welcomeSubtitle => 'Integrated school digital platform';
+
+  @override
+  String get welcomeDescription =>
+      'Supporting academics, communication, and school operations.';
+
+  @override
+  String get welcomeStart => 'Get Started';
+
+  @override
+  String get welcomeContact => 'Contact Us via WhatsApp';
+
+  @override
+  String get welcomeClose => 'Close';
+
+  @override
+  String get about => 'About eSchool';
+
+  @override
+  String get contactUs => 'Contact Us';
+
+  @override
+  String get appVersion => 'App version';
 }

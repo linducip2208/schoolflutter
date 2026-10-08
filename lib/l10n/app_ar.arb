@@ -29,5 +29,14 @@
   "retry": "إعادة المحاولة",
   "settings": "الإعدادات",
   "language": "اللغة",
-  "changePassword": "تغيير كلمة المرور"
+  "changePassword": "تغيير كلمة المرور",
+  "welcomeTitle": "مرحباً بك في eSchool",
+  "welcomeSubtitle": "منصة مدرسية رقمية متكاملة",
+  "welcomeDescription": "تدعم الأنشطة الأكاديمية والتواصل والعمليات المدرسية.",
+  "welcomeStart": "ابدأ الاستخدام",
+  "welcomeContact": "تواصل معنا عبر واتساب",
+  "welcomeClose": "إغلاق",
+  "about": "عن eSchool",
+  "contactUs": "تواصل معنا",
+  "appVersion": "إصدار التطبيق"
 }

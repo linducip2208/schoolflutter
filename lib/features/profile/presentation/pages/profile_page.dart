@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router/routes.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -102,6 +104,12 @@ class ProfilePage extends StatelessWidget {
                   title: const Text('Bahasa'),
                   trailing: Text(_localeLabel(user?.locale ?? 'id')),
                   onTap: () => _showLocaleSheet(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.info_outline),
+                  title: const Text('Tentang eSchool'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(Routes.about),
                 ),
               ],
             ),

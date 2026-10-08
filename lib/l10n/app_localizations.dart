@@ -279,6 +279,60 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Ubah kata sandi'**
   String get changePassword;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Selamat Datang di eSchool'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Platform digital sekolah terpadu'**
+  String get welcomeSubtitle;
+
+  /// No description provided for @welcomeDescription.
+  ///
+  /// In id, this message translates to:
+  /// **'Mendukung kegiatan akademik, komunikasi, dan operasional sekolah.'**
+  String get welcomeDescription;
+
+  /// No description provided for @welcomeStart.
+  ///
+  /// In id, this message translates to:
+  /// **'Mulai Menggunakan'**
+  String get welcomeStart;
+
+  /// No description provided for @welcomeContact.
+  ///
+  /// In id, this message translates to:
+  /// **'Hubungi Kami via WhatsApp'**
+  String get welcomeContact;
+
+  /// No description provided for @welcomeClose.
+  ///
+  /// In id, this message translates to:
+  /// **'Tutup'**
+  String get welcomeClose;
+
+  /// No description provided for @about.
+  ///
+  /// In id, this message translates to:
+  /// **'Tentang eSchool'**
+  String get about;
+
+  /// No description provided for @contactUs.
+  ///
+  /// In id, this message translates to:
+  /// **'Hubungi Kami'**
+  String get contactUs;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In id, this message translates to:
+  /// **'Versi aplikasi'**
+  String get appVersion;
 }
 
 class _AppLocalizationsDelegate

@@ -28,6 +28,7 @@ import '../../features/notice/presentation/pages/admin_notice_page.dart';
 import '../../features/notice/presentation/pages/notice_list_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/about_page.dart';
 import '../../features/payroll/presentation/pages/payroll_page.dart';
 import '../../features/admission/presentation/pages/admission_page.dart';
 import '../../features/timetable/presentation/pages/timetable_page.dart';
@@ -236,6 +237,7 @@ class AppRouter {
         GoRoute(path: Routes.hostel, builder: (_, __) => const HostelPage()),
         GoRoute(
             path: Routes.transport, builder: (_, __) => const TransportPage()),
+        GoRoute(path: Routes.about, builder: (_, __) => const AboutPage()),
 
         // ===== Phase 8 — Student Lifecycle =====
         GoRoute(

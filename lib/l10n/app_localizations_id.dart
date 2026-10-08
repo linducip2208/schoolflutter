@@ -97,4 +97,32 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get changePassword => 'Ubah kata sandi';
+
+  @override
+  String get welcomeTitle => 'Selamat Datang di eSchool';
+
+  @override
+  String get welcomeSubtitle => 'Platform digital sekolah terpadu';
+
+  @override
+  String get welcomeDescription =>
+      'Mendukung kegiatan akademik, komunikasi, dan operasional sekolah.';
+
+  @override
+  String get welcomeStart => 'Mulai Menggunakan';
+
+  @override
+  String get welcomeContact => 'Hubungi Kami via WhatsApp';
+
+  @override
+  String get welcomeClose => 'Tutup';
+
+  @override
+  String get about => 'Tentang eSchool';
+
+  @override
+  String get contactUs => 'Hubungi Kami';
+
+  @override
+  String get appVersion => 'Versi aplikasi';
 }

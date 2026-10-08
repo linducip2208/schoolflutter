@@ -97,4 +97,32 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get changePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get welcomeTitle => 'مرحباً بك في eSchool';
+
+  @override
+  String get welcomeSubtitle => 'منصة مدرسية رقمية متكاملة';
+
+  @override
+  String get welcomeDescription =>
+      'تدعم الأنشطة الأكاديمية والتواصل والعمليات المدرسية.';
+
+  @override
+  String get welcomeStart => 'ابدأ الاستخدام';
+
+  @override
+  String get welcomeContact => 'تواصل معنا عبر واتساب';
+
+  @override
+  String get welcomeClose => 'إغلاق';
+
+  @override
+  String get about => 'عن eSchool';
+
+  @override
+  String get contactUs => 'تواصل معنا';
+
+  @override
+  String get appVersion => 'إصدار التطبيق';
 }

@@ -18,6 +18,7 @@ class AppStorage {
   static const String _kFcmToken = 'fcm_token';
   static const String _kLocale = 'locale';
   static const String _kThemeMode = 'theme_mode';
+  static const String _kFirstLaunchSeen = 'first_launch_popup_seen';
 
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -63,4 +64,11 @@ class AppStorage {
   static String? getFcmToken() => _prefs?.getString(_kFcmToken);
   static Future<void> saveFcmToken(String token) async =>
       _prefs?.setString(_kFcmToken, token);
+
+  // ── First-launch welcome popup (install-local state, NOT auth state).
+  // Shown once per device install; never on login/logout/token refresh.
+  static bool getFirstLaunchSeen() =>
+      _prefs?.getBool(_kFirstLaunchSeen) ?? false;
+  static Future<void> setFirstLaunchSeen() async =>
+      _prefs?.setBool(_kFirstLaunchSeen, true);
 }
