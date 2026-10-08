@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/config/app_contact.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
@@ -117,11 +118,19 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                     const Divider(height: 1),
                     ListTile(
+                      leading: const Icon(Icons.public_outlined),
+                      title: const Text('Website'),
+                      subtitle: const Text(AppConfig.websiteUrl),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => _openUrl(AppConfig.websiteUrl),
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
                       leading: const Icon(Icons.privacy_tip_outlined),
                       title: const Text('Kebijakan Privasi'),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () => _openUrl(
-                        'https://sikadpro.whitelabel.co.id/privacy',
+                        '${AppConfig.websiteUrl}/privacy',
                       ),
                     ),
                     const Divider(height: 1),
@@ -130,7 +139,7 @@ class _AboutPageState extends State<AboutPage> {
                       title: const Text('Syarat & Ketentuan'),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () => _openUrl(
-                        'https://sikadpro.whitelabel.co.id/terms',
+                        '${AppConfig.websiteUrl}/terms',
                       ),
                     ),
                   ],
