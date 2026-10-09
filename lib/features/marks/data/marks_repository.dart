@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
@@ -11,6 +15,46 @@ class MarksRepository {
       final Response<dynamic> r =
           await ApiClient.dio.get<dynamic>(ApiEndpoints.myMarks);
       return unwrapList(r.data).map(_normalize).toList();
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> byStudent(int studentId) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.marksByStudent(studentId),
+      );
+      return unwrapList(r.data).map(_normalize).toList();
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> reportCards(int studentId) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.reportCardByStudent(studentId),
+      );
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  /// Downloads report PDF to temp storage and opens it.
+  Future<String> downloadReportPdf(int reportCardId) async {
+    try {
+      final Response<List<int>> r = await ApiClient.dio.get<List<int>>(
+        ApiEndpoints.reportCardPdf(reportCardId),
+        options: Options(responseType: ResponseType.bytes),
+      );
+      final Directory dir = await getTemporaryDirectory();
+      final String file =
+          '${dir.path}/rapor-$reportCardId-${DateTime.now().millisecondsSinceEpoch}.pdf';
+      await File(file).writeAsBytes(r.data ?? <int>[]);
+      await OpenFilex.open(file);
+      return file;
     } on DioException catch (e) {
       throw mapDioError(e);
     }

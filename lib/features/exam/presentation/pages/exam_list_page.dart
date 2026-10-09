@@ -5,7 +5,10 @@ import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
 import '../../data/exam_repository.dart';
+import 'exam_attempt_page.dart';
 
+/// Daftar ujian + mulai attempt.
+/// Backend: `GET /exams` (title, subject relasi, start_at).
 class ExamListPage extends StatefulWidget {
   const ExamListPage({super.key});
 
@@ -18,6 +21,12 @@ class _ExamListPageState extends State<ExamListPage> {
   late Future<List<Map<String, dynamic>>> _future = _repo.list();
 
   void _reload() => setState(() => _future = _repo.list());
+
+  String _subjectName(Map<String, dynamic> e) {
+    final dynamic s = e['subject'];
+    if (s is Map) return s['name']?.toString() ?? '-';
+    return e['subject_name']?.toString() ?? '-';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +56,8 @@ class _ExamListPageState extends State<ExamListPage> {
               itemBuilder: (BuildContext c, int i) {
                 final Map<String, dynamic> e = list[i];
                 final String status = e['status'] as String? ?? 'scheduled';
+                final int id = (e['id'] as num).toInt();
+                final String title = e['title'] as String? ?? '-';
                 return Card(
                   child: Padding(
                     padding: const EdgeInsets.all(14),
@@ -57,7 +68,7 @@ class _ExamListPageState extends State<ExamListPage> {
                           children: <Widget>[
                             Expanded(
                               child: Text(
-                                e['name'] as String? ?? '-',
+                                title,
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                             ),
@@ -65,15 +76,57 @@ class _ExamListPageState extends State<ExamListPage> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Text(e['subject'] as String? ?? '-',
+                        Text(_subjectName(e),
                             style: Theme.of(context).textTheme.bodySmall),
                         const SizedBox(height: 4),
-                        if (e['scheduled_at'] != null)
+                        if (e['start_at'] != null)
                           Text(
                             DateFormatter.dateTime(
-                                DateTime.parse(e['scheduled_at'] as String)),
+                                DateTime.parse(e['start_at'] as String)),
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            TextButton.icon(
+                              icon: const Icon(Icons.visibility_outlined,
+                                  size: 18),
+                              label: const Text('Hasil'),
+                              onPressed: () async {
+                                try {
+                                  final Map<String, dynamic> res =
+                                      await _repo.examResult(id);
+                                  if (!c.mounted) return;
+                                  ScaffoldMessenger.of(c).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Skor ${res['score'] ?? res['total_score'] ?? '-'} • ${res['status'] ?? '-'}')),
+                                  );
+                                } catch (err) {
+                                  if (!c.mounted) return;
+                                  ScaffoldMessenger.of(c).showSnackBar(
+                                      SnackBar(content: Text(err.toString())));
+                                }
+                              },
+                            ),
+                            FilledButton.tonalIcon(
+                              icon: const Icon(Icons.play_arrow_outlined,
+                                  size: 18),
+                              label: const Text('Mulai'),
+                              onPressed: () async {
+                                final bool? done =
+                                    await Navigator.of(c).push<bool>(
+                                  MaterialPageRoute<bool>(
+                                    builder: (_) => ExamAttemptPage(
+                                        examId: id, title: title),
+                                  ),
+                                );
+                                if (done == true) _reload();
+                              },
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

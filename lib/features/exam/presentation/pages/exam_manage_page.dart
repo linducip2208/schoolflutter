@@ -21,7 +21,8 @@ class ExamManagePage extends StatelessWidget {
           context,
           title: 'Ujian Baru',
           fields: const <FormFieldDef>[
-            FormFieldDef(key: 'class_section_id', label: 'ID Rombel', isNumber: true),
+            FormFieldDef(
+                key: 'class_section_id', label: 'ID Rombel', isNumber: true),
             FormFieldDef(key: 'subject_id', label: 'ID Mapel', isNumber: true),
             FormFieldDef(key: 'title', label: 'Judul'),
             FormFieldDef(
@@ -61,7 +62,11 @@ class ExamManagePage extends StatelessWidget {
                         label: 'Tipe',
                         options: <String>['mcq', 'true_false', 'essay']),
                     FormFieldDef(key: 'correct_answer', label: 'Kunci Jawaban'),
-                    FormFieldDef(key: 'marks', label: 'Bobot', isNumber: true, initial: '10'),
+                    FormFieldDef(
+                        key: 'marks',
+                        label: 'Bobot',
+                        isNumber: true,
+                        initial: '10'),
                   ],
                 );
                 if (q == null || !c.mounted) return;
@@ -97,11 +102,11 @@ class ExamManagePage extends StatelessWidget {
                 }
               }
             },
-              itemBuilder: (_) => const <PopupMenuItem<String>>[
-                PopupMenuItem<String>(value: 'soal', child: Text('Tambah soal')),
-                PopupMenuItem<String>(value: 'ubah', child: Text('Ubah judul')),
-                PopupMenuItem<String>(value: 'hapus', child: Text('Hapus')),
-              ],
+            itemBuilder: (_) => const <PopupMenuItem<String>>[
+              PopupMenuItem<String>(value: 'soal', child: Text('Tambah soal')),
+              PopupMenuItem<String>(value: 'ubah', child: Text('Ubah judul')),
+              PopupMenuItem<String>(value: 'hapus', child: Text('Hapus')),
+            ],
           ),
           onTap: () => _showSubmissions(c, repo, e),
         ),

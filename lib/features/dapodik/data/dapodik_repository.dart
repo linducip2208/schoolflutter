@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
@@ -32,8 +36,8 @@ class DapodikRepository {
 
   Future<Map<String, dynamic>> testConnection() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .post<dynamic>(ApiEndpoints.dapodikTest);
+      final Response<dynamic> r =
+          await ApiClient.dio.post<dynamic>(ApiEndpoints.dapodikTest);
       return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -88,6 +92,24 @@ class DapodikRepository {
         }),
       );
       return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  /// Export CSV siswa Dapodik → buka file.
+  Future<String> exportStudents() async {
+    try {
+      final Response<List<int>> r = await ApiClient.dio.get<List<int>>(
+        ApiEndpoints.dapodikExport,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      final Directory dir = await getTemporaryDirectory();
+      final String file =
+          '${dir.path}/dapodik-${DateTime.now().millisecondsSinceEpoch}.csv';
+      await File(file).writeAsBytes(r.data ?? <int>[]);
+      await OpenFilex.open(file);
+      return file;
     } on DioException catch (e) {
       throw mapDioError(e);
     }

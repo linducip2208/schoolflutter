@@ -18,12 +18,14 @@ class QuestionBankRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> items({int? subjectId}) async {
+  Future<List<Map<String, dynamic>>> items(
+      {int? subjectId, int page = 1}) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
         ApiEndpoints.qbItems,
         queryParameters: <String, dynamic>{
           if (subjectId != null) 'subject_id': subjectId,
+          'page': page,
         },
       );
       return unwrapList(r.data);

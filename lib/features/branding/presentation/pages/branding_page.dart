@@ -39,8 +39,7 @@ class _BrandingPageState extends State<BrandingPage> {
       appBar: AppBar(title: const Text('Branding')),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _future,
-        builder:
-            (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
+        builder: (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const Padding(
                 padding: EdgeInsets.all(24), child: AppLoading());
@@ -70,18 +69,25 @@ class _BrandingPageState extends State<BrandingPage> {
                     title: 'Ubah Branding',
                     fields: <FormFieldDef>[
                       FormFieldDef(
-                          key: 'name',
-                          label: 'Nama sekolah',
-                          initial: d['name']?.toString()),
+                          key: 'display_name',
+                          label: 'Nama tampil sekolah',
+                          initial: d['display_name']?.toString()),
                       FormFieldDef(
-                          key: 'primary_color',
+                          key: 'color_primary',
                           label: 'Warna primer (hex)',
-                          initial: d['primary_color']?.toString()),
+                          hint: '#2563EB',
+                          initial: d['color_primary']?.toString()),
                     ],
                   );
                   if (v == null || !context.mounted) return;
-                  final bool ok = await runMutation(
-                      context, () => _repo.update(v));
+                  final Map<String, String> payload = <String, String>{
+                    if (v['display_name']!.isNotEmpty)
+                      'display_name': v['display_name']!,
+                    if (v['color_primary']!.isNotEmpty)
+                      'color_primary': v['color_primary']!,
+                  };
+                  final bool ok =
+                      await runMutation(context, () => _repo.update(payload));
                   if (ok) _reload();
                 },
               ),
@@ -94,8 +100,8 @@ class _BrandingPageState extends State<BrandingPage> {
                       await FilePicker.platform.pickFiles(type: FileType.image);
                   final String? path = picked?.files.single.path;
                   if (path == null || !context.mounted) return;
-                  final bool ok = await runMutation(
-                      context, () => _repo.uploadLogo(path));
+                  final bool ok =
+                      await runMutation(context, () => _repo.uploadLogo(path));
                   if (ok) _reload();
                 },
               ),

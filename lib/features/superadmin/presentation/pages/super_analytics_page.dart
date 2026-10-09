@@ -45,8 +45,8 @@ class _SuperAnalyticsPageState extends State<SuperAnalyticsPage> {
       appBar: AppBar(title: const Text('Analitik Platform')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const Padding(
                 padding: EdgeInsets.all(24), child: AppLoading());
@@ -70,9 +70,9 @@ class _SuperAnalyticsPageState extends State<SuperAnalyticsPage> {
           double maxY = 0;
           for (int i = 0; i < items.length; i++) {
             final num cents = (items[i]['amount_cents'] ??
-                    items[i]['amount'] ??
-                    items[i]['revenue'] ??
-                    0) as num;
+                items[i]['amount'] ??
+                items[i]['revenue'] ??
+                0) as num;
             final double v = cents.toDouble() / 100;
             if (v > maxY) maxY = v;
             spots.add(FlSpot(i.toDouble(), v));
@@ -88,8 +88,8 @@ class _SuperAnalyticsPageState extends State<SuperAnalyticsPage> {
                     height: 220,
                     child: BarChart(
                       BarChartData(
-                        gridData:
-                            const FlGridData(show: true, drawVerticalLine: false),
+                        gridData: const FlGridData(
+                            show: true, drawVerticalLine: false),
                         borderData: FlBorderData(show: false),
                         titlesData: const FlTitlesData(
                           show: true,
@@ -104,8 +104,7 @@ class _SuperAnalyticsPageState extends State<SuperAnalyticsPage> {
                               x: i,
                               barRods: <BarChartRodData>[
                                 BarChartRodData(
-                                    toY: spots[i].y,
-                                    color: AppColors.primary),
+                                    toY: spots[i].y, color: AppColors.primary),
                               ],
                             ),
                         ],
@@ -117,8 +116,7 @@ class _SuperAnalyticsPageState extends State<SuperAnalyticsPage> {
               for (final Map<String, dynamic> e in items)
                 ListTile(
                   dense: true,
-                  title: Text(
-                      '${e['month'] ?? e['label'] ?? '-'}'),
+                  title: Text('${e['month'] ?? e['label'] ?? '-'}'),
                   trailing: Text(CurrencyFormatter.compact(
                       (((e['amount_cents'] ?? e['amount'] ?? 0) as num)
                                   .toDouble() /

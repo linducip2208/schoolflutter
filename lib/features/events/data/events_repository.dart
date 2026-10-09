@@ -8,10 +8,12 @@ import '../../../core/error/error_handler.dart';
 /// Event sekolah + RSVP. Backend: `EventController`
 /// (`GET /events` adminList, `POST /events`, `/{id}/rsvp`, check-in).
 class EventsRepository {
-  Future<List<Map<String, dynamic>>> list() async {
+  Future<List<Map<String, dynamic>>> list({int page = 1}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.eventsAdmin);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.eventsAdmin,
+        queryParameters: <String, dynamic>{'page': page},
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

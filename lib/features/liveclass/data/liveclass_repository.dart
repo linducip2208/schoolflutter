@@ -7,10 +7,14 @@ import '../../../core/error/error_handler.dart';
 
 /// Live class. Backend: `LiveClassController` (`/live-class/*`).
 class LiveClassRepository {
-  Future<List<Map<String, dynamic>>> sessions() async {
+  Future<List<Map<String, dynamic>>> sessions({int page = 1}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.liveSessions);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.liveSessions,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

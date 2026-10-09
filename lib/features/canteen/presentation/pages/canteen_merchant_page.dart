@@ -32,7 +32,8 @@ class CanteenMerchantPage extends StatelessWidget {
           child: ListTile(
             leading: const Icon(Icons.fastfood_outlined),
             title: Text('Order #$id • ${CurrencyFormatter.compact(total)}'),
-            subtitle: Text('Status ${e['status'] ?? '-'} • Siswa ${e['student_id'] ?? '-'}'),
+            subtitle: Text(
+                'Status ${e['status'] ?? '-'} • Siswa ${e['student_id'] ?? '-'}'),
             trailing: PopupMenuButton<String>(
               onSelected: (String v) async {
                 await runMutation(c, () => repo.updateOrderStatus(id, v));

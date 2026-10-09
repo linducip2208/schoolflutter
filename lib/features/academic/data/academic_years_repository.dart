@@ -46,4 +46,34 @@ class AcademicYearsRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<List<Map<String, dynamic>>> holidays() async {
+    try {
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.holidays);
+      return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> storeHoliday({
+    required String title,
+    required String date,
+    String? type,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.holidays,
+        data: <String, dynamic>{
+          'title': title,
+          'date': date,
+          if (type != null) 'type': type,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

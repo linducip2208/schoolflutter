@@ -70,6 +70,7 @@ dependencies:
   drift: 2.34.0
   sqlite3_flutter_libs: ^0.6.0+eol
   path: ^1.9.1
+  geolocator: ^14.0.2
 
 dev_dependencies:
   flutter_test:

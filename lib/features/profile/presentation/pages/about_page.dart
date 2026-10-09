@@ -7,7 +7,7 @@ import '../../../../core/config/app_contact.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
 
-/// Settings → Tentang eSchool → Hubungi Kami.
+/// Settings → Tentang Sikad Pro → Hubungi Kami.
 /// Reuses [SupportContact] (same source of truth as welcome popup).
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -43,7 +43,7 @@ class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tentang eSchool')),
+      appBar: AppBar(title: const Text('Tentang Sikad Pro')),
       body: FutureBuilder<PackageInfo>(
         future: _info,
         builder: (BuildContext c, AsyncSnapshot<PackageInfo> snap) {
@@ -58,7 +58,7 @@ class _AboutPageState extends State<AboutPage> {
           }
           final PackageInfo info = snap.data ??
               PackageInfo(
-                appName: 'eSchool',
+                appName: 'Sikad Pro',
                 packageName: '',
                 version: '-',
                 buildNumber: '-',

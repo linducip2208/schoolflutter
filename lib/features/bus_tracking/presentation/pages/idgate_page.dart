@@ -60,7 +60,8 @@ class IdGatePage extends StatelessWidget {
                   context,
                   title: 'Putar QR',
                   fields: const <FormFieldDef>[
-                    FormFieldDef(key: 'card_id', label: 'ID Kartu', isNumber: true),
+                    FormFieldDef(
+                        key: 'card_id', label: 'ID Kartu', isNumber: true),
                   ],
                 );
                 if (v == null || !context.mounted) return;

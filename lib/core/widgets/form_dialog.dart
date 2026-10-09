@@ -29,7 +29,8 @@ Future<Map<String, String>?> showFormDialog(
   required String title,
   required List<FormFieldDef> fields,
 }) {
-  final Map<String, TextEditingController> controllers = <String, TextEditingController>{
+  final Map<String, TextEditingController> controllers =
+      <String, TextEditingController>{
     for (final FormFieldDef f in fields)
       f.key: TextEditingController(text: f.initial ?? ''),
   };
@@ -78,9 +79,9 @@ Future<Map<String, String>?> showFormDialog(
                                 ? 'Wajib diisi'
                                 : null;
                           },
-                          ),
-                      ),
-              ],
+                        ),
+                ),
+            ],
           ),
         ),
       ),

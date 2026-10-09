@@ -45,6 +45,10 @@ abstract class KvStore {
   Future<CachedEntry?> read(String key);
   Future<void> write(String key, String body);
   Future<void> invalidate(String key);
+
+  /// Clears all cached rows (called on logout/session-expiry so the next
+  /// user on a shared device never sees the previous user's data).
+  Future<void> clear();
 }
 
 abstract class MutationStore {
@@ -66,6 +70,9 @@ abstract class MutationStore {
   Future<int> pendingCount();
   Future<List<QueuedMutation>> failedMutations();
   Future<void> delete(int id);
+
+  /// Clears the whole outbox (logout/session-expiry).
+  Future<void> clear();
 }
 
 // ── Drift implementations (production) ──────────────────────────────
@@ -94,6 +101,11 @@ class DriftKvStore implements KvStore {
   @override
   Future<void> invalidate(String key) async {
     await (db.delete(db.kvCache)..where((KvCache t) => t.key.equals(key))).go();
+  }
+
+  @override
+  Future<void> clear() async {
+    await db.delete(db.kvCache).go();
   }
 }
 
@@ -223,6 +235,11 @@ class DriftMutationStore implements MutationStore {
 
   @override
   Future<void> delete(int id) => markDone(id);
+
+  @override
+  Future<void> clear() async {
+    await db.delete(db.mutationQueue).go();
+  }
 }
 
 String _newKey() =>
@@ -243,6 +260,9 @@ class InMemoryKvStore implements KvStore {
 
   @override
   Future<void> invalidate(String key) async => _map.remove(key);
+
+  @override
+  Future<void> clear() async => _map.clear();
 }
 
 class InMemoryMutationStore implements MutationStore {
@@ -359,4 +379,7 @@ class InMemoryMutationStore implements MutationStore {
 
   @override
   Future<void> delete(int id) => markDone(id);
+
+  @override
+  Future<void> clear() async => _rows.clear();
 }

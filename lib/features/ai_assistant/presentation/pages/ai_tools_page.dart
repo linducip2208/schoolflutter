@@ -46,8 +46,8 @@ class _AiToolsPageState extends State<AiToolsPage> {
         res = await _repo.gradeEssay(
             'Nilai essay berikut dengan rubrik 0-100 dan beri feedback:\n$text');
       } else if (_mode == 'rpp') {
-        res = await _repo.generateLessonPlan(
-            'Buatkan draf RPP dari materi berikut:\n$text');
+        res = await _repo
+            .generateLessonPlan('Buatkan draf RPP dari materi berikut:\n$text');
       } else if (_mode == 'soal') {
         res = await _repo.generateLessonPlan(
             'Buatkan 5 soal pilihan ganda + 2 essay dari materi berikut:\n$text');
@@ -57,7 +57,10 @@ class _AiToolsPageState extends State<AiToolsPage> {
       }
       if (mounted) {
         setState(() {
-          _output = (res['answer'] ?? res['content'] ?? res['message'] ?? res.toString())
+          _output = (res['answer'] ??
+                  res['content'] ??
+                  res['message'] ??
+                  res.toString())
               .toString();
         });
       }

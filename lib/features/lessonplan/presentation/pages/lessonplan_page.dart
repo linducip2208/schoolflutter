@@ -21,11 +21,19 @@ class LessonPlanPage extends StatelessWidget {
           context,
           title: 'RPP Baru',
           fields: const <FormFieldDef>[
-            FormFieldDef(key: 'class_section_id', label: 'ID Rombel', isNumber: true),
+            FormFieldDef(
+                key: 'class_section_id', label: 'ID Rombel', isNumber: true),
             FormFieldDef(key: 'subject_id', label: 'ID Mapel', isNumber: true),
             FormFieldDef(key: 'title', label: 'Judul'),
-            FormFieldDef(key: 'lesson_date', label: 'Tanggal (YYYY-MM-DD)', hint: '2026-10-15'),
-            FormFieldDef(key: 'duration_minutes', label: 'Durasi (menit)', isNumber: true, initial: '90'),
+            FormFieldDef(
+                key: 'lesson_date',
+                label: 'Tanggal (YYYY-MM-DD)',
+                hint: '2026-10-15'),
+            FormFieldDef(
+                key: 'duration_minutes',
+                label: 'Durasi (menit)',
+                isNumber: true,
+                initial: '90'),
             FormFieldDef(key: 'objective', label: 'Tujuan pembelajaran'),
             FormFieldDef(key: 'material', label: 'Ringkasan materi'),
             FormFieldDef(key: 'activity', label: 'Aktivitas'),

@@ -7,7 +7,7 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home: SplashPage()));
 
-    expect(find.text('eSchool'), findsOneWidget);
+    expect(find.text('Sikad Pro'), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(find.byIcon(Icons.school_rounded), findsOneWidget);
   });

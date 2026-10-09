@@ -16,26 +16,80 @@ class StudentMenuPage extends StatelessWidget {
         context.watch<AuthBloc>().state.user?.studentIds ?? const <int>[];
     final int? sid = studentIds.isNotEmpty ? studentIds.first : null;
     final List<_MenuEntry> entries = <_MenuEntry>[
-      const _MenuEntry(icon: Icons.grade_outlined, label: 'Nilai', route: Routes.studentMarks),
-      const _MenuEntry(icon: Icons.fact_check_outlined, label: 'Absensi', route: Routes.studentAttendance),
-      const _MenuEntry(icon: Icons.menu_book_outlined, label: 'Perpus', route: Routes.studentLibrary),
-      const _MenuEntry(icon: Icons.sports_soccer_outlined, label: 'Ekskul', route: Routes.studentEkskul),
-      const _MenuEntry(icon: Icons.event_outlined, label: 'Event', route: Routes.studentEvent),
-      const _MenuEntry(icon: Icons.school_outlined, label: 'Beasiswa', route: Routes.studentBeasiswa),
-      const _MenuEntry(icon: Icons.work_outline, label: 'Karier', route: Routes.studentKarier),
-      const _MenuEntry(icon: Icons.emoji_events_outlined, label: 'Prestasi', route: Routes.studentPrestasi),
-      const _MenuEntry(icon: Icons.play_lesson_outlined, label: 'LMS', route: Routes.studentLms),
-      const _MenuEntry(icon: Icons.quiz_outlined, label: 'Kuis', route: Routes.studentQuizzes),
-      const _MenuEntry(icon: Icons.videocam_outlined, label: 'Live Class', route: Routes.studentLive),
-      const _MenuEntry(icon: Icons.auto_awesome_outlined, label: 'AI', route: Routes.studentAi),
-      const _MenuEntry(icon: Icons.campaign_outlined, label: 'Pengumuman', route: Routes.notice),
-      const _MenuEntry(icon: Icons.notifications_outlined, label: 'Notifikasi', route: Routes.notifications),
-      const _MenuEntry(icon: Icons.report_outlined, label: 'Lapor Bullying', route: Routes.studentBullying),
-      const _MenuEntry(icon: Icons.sos_outlined, label: 'Darurat', route: Routes.studentEmergency),
+      const _MenuEntry(
+          icon: Icons.grade_outlined,
+          label: 'Nilai',
+          route: Routes.studentMarks),
+      const _MenuEntry(
+          icon: Icons.fact_check_outlined,
+          label: 'Absensi',
+          route: Routes.studentAttendance),
+      const _MenuEntry(
+          icon: Icons.menu_book_outlined,
+          label: 'Perpus',
+          route: Routes.studentLibrary),
+      const _MenuEntry(
+          icon: Icons.sports_soccer_outlined,
+          label: 'Ekskul',
+          route: Routes.studentEkskul),
+      const _MenuEntry(
+          icon: Icons.event_outlined,
+          label: 'Event',
+          route: Routes.studentEvent),
+      const _MenuEntry(
+          icon: Icons.school_outlined,
+          label: 'Beasiswa',
+          route: Routes.studentBeasiswa),
+      const _MenuEntry(
+          icon: Icons.work_outline,
+          label: 'Karier',
+          route: Routes.studentKarier),
+      const _MenuEntry(
+          icon: Icons.emoji_events_outlined,
+          label: 'Prestasi',
+          route: Routes.studentPrestasi),
+      const _MenuEntry(
+          icon: Icons.play_lesson_outlined,
+          label: 'LMS',
+          route: Routes.studentLms),
+      const _MenuEntry(
+          icon: Icons.quiz_outlined,
+          label: 'Kuis',
+          route: Routes.studentQuizzes),
+      const _MenuEntry(
+          icon: Icons.videocam_outlined,
+          label: 'Live Class',
+          route: Routes.studentLive),
+      const _MenuEntry(
+          icon: Icons.auto_awesome_outlined,
+          label: 'AI',
+          route: Routes.studentAi),
+      const _MenuEntry(
+          icon: Icons.campaign_outlined,
+          label: 'Pengumuman',
+          route: Routes.notice),
+      const _MenuEntry(
+          icon: Icons.notifications_outlined,
+          label: 'Notifikasi',
+          route: Routes.notifications),
+      const _MenuEntry(
+          icon: Icons.report_outlined,
+          label: 'Lapor Bullying',
+          route: Routes.studentBullying),
+      const _MenuEntry(
+          icon: Icons.sos_outlined,
+          label: 'Darurat',
+          route: Routes.studentEmergency),
       if (sid != null)
-        _MenuEntry(icon: Icons.fastfood_outlined, label: 'Kantin', route: '/student/canteen/$sid'),
+        _MenuEntry(
+            icon: Icons.fastfood_outlined,
+            label: 'Kantin',
+            route: '/student/canteen/$sid'),
       if (sid != null)
-        _MenuEntry(icon: Icons.directions_bus_outlined, label: 'Bus', route: '/student/bus/$sid'),
+        _MenuEntry(
+            icon: Icons.directions_bus_outlined,
+            label: 'Bus',
+            route: '/student/bus/$sid'),
     ];
     return Scaffold(
       appBar: AppBar(title: const Text('Menu Siswa')),
@@ -55,8 +109,7 @@ class StudentMenuPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Icon(e.icon,
-                        size: 32,
-                        color: Theme.of(context).colorScheme.primary),
+                        size: 32, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(height: 8),
                     Text(e.label,
                         style: Theme.of(context)

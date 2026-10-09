@@ -3,7 +3,7 @@ class AppConfig {
 
   static const String appName = String.fromEnvironment(
     'APP_NAME',
-    defaultValue: 'eSchool',
+    defaultValue: 'Sikad Pro',
   );
 
   static const String appEnv = String.fromEnvironment(

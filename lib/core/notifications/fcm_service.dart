@@ -21,8 +21,8 @@ class FcmService {
 
   static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
     'eschool_default',
-    'eSchool Notifications',
-    description: 'Default channel untuk notifikasi eSchool',
+    'Sikad Pro Notifications',
+    description: 'Default channel untuk notifikasi Sikad Pro',
     importance: Importance.high,
   );
 
@@ -67,9 +67,8 @@ class FcmService {
 
     RemoteMessage? initial;
     try {
-      initial = await _fcm
-          .getInitialMessage()
-          .timeout(const Duration(seconds: 10));
+      initial =
+          await _fcm.getInitialMessage().timeout(const Duration(seconds: 10));
     } on TimeoutException {
       initial = null;
     }
@@ -87,9 +86,8 @@ class FcmService {
   Future<void> _refreshToken() async {
     try {
       // Network call to Firebase; bounded so offline devices still start.
-      final String? t = await _fcm
-          .getToken()
-          .timeout(const Duration(seconds: 20));
+      final String? t =
+          await _fcm.getToken().timeout(const Duration(seconds: 20));
       if (t == null) return;
       await AppStorage.saveFcmToken(t);
       await _registerToBackend(t);

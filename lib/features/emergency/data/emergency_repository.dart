@@ -11,8 +11,9 @@ class EmergencyRepository {
       await ApiClient.dio.post<dynamic>(
         ApiEndpoints.emergencyPanic,
         data: <String, dynamic>{
-          if (lat != null) 'lat': lat,
-          if (lng != null) 'lng': lng,
+          // Backend requires latitude/longitude (numeric, validated).
+          if (lat != null) 'latitude': lat,
+          if (lng != null) 'longitude': lng,
           if (message != null && message.isNotEmpty) 'message': message,
         },
       );
@@ -41,11 +42,12 @@ class EmergencyRepository {
     }
   }
 
+  /// Gate scan: backend expects `token` (+ optional device_info).
   Future<Map<String, dynamic>> qrScan(String payload) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
         ApiEndpoints.qrScan,
-        data: <String, dynamic>{'payload': payload},
+        data: <String, dynamic>{'token': payload},
       );
       return unwrapMap(r.data);
     } on DioException catch (e) {

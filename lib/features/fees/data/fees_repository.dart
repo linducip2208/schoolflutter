@@ -16,12 +16,13 @@ class FeesRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> all({String? status}) async {
+  Future<List<Map<String, dynamic>>> all({String? status, int page = 1}) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
         ApiEndpoints.feeInvoices,
         queryParameters: <String, dynamic>{
           if (status != null) 'status': status,
+          'page': page,
         },
       );
       return unwrapList(r.data).map(_normalize).toList();

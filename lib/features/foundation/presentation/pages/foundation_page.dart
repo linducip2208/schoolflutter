@@ -31,8 +31,8 @@ class _FoundationPageState extends State<FoundationPage> {
       appBar: AppBar(title: const Text('Yayasan')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _mine,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const Padding(
                 padding: EdgeInsets.all(24), child: AppLoading());
@@ -50,16 +50,14 @@ class _FoundationPageState extends State<FoundationPage> {
           final List<Map<String, dynamic>> items =
               snap.data ?? const <Map<String, dynamic>>[];
           if (items.isEmpty) {
-            return const Center(
-                child: Text('Tidak ada yayasan terdaftar.'));
+            return const Center(child: Text('Tidak ada yayasan terdaftar.'));
           }
           return ListView(
             padding: const EdgeInsets.all(16),
             children: <Widget>[
               DropdownButtonFormField<int>(
                 initialValue: _selected,
-                decoration:
-                    const InputDecoration(labelText: 'Pilih yayasan'),
+                decoration: const InputDecoration(labelText: 'Pilih yayasan'),
                 items: <DropdownMenuItem<int>>[
                   for (final Map<String, dynamic> f in items)
                     DropdownMenuItem<int>(
@@ -69,8 +67,7 @@ class _FoundationPageState extends State<FoundationPage> {
                 ],
                 onChanged: (int? v) => setState(() {
                   _selected = v;
-                  _dashboard =
-                      v == null ? null : _repo.dashboard(v);
+                  _dashboard = v == null ? null : _repo.dashboard(v);
                 }),
               ),
               const SizedBox(height: 12),
@@ -81,8 +78,7 @@ class _FoundationPageState extends State<FoundationPage> {
                       AsyncSnapshot<Map<String, dynamic>> s2) {
                     if (s2.connectionState == ConnectionState.waiting) {
                       return const Padding(
-                          padding: EdgeInsets.all(24),
-                          child: AppLoading());
+                          padding: EdgeInsets.all(24), child: AppLoading());
                     }
                     if (s2.hasError) {
                       return AppError(message: s2.error.toString());

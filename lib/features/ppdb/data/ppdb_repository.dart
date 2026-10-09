@@ -32,6 +32,17 @@ class PpdbRepository {
     }
   }
 
+  Future<Map<String, dynamic>> submitApplication(int id) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.ppdbSubmit(id),
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<List<Map<String, dynamic>>> myApplications() async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
@@ -43,11 +54,32 @@ class PpdbRepository {
     }
   }
 
+  /// Upload dokumen aplikasi (`file` pdf/jpg/png ≤10MB + doc_type).
+  Future<Map<String, dynamic>> uploadDoc({
+    required int applicationId,
+    required String filePath,
+    required String docType,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.ppdbUploadDoc(applicationId),
+        data: FormData.fromMap(<String, dynamic>{
+          'file': await MultipartFile.fromFile(filePath),
+          'doc_type': docType,
+        }),
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   /// Admin: daftar pendaftar (`role:admin`).
-  Future<List<Map<String, dynamic>>> adminApplications() async {
+  Future<List<Map<String, dynamic>>> adminApplications({int page = 1}) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
         ApiEndpoints.ppdbAdminApplications,
+        queryParameters: <String, dynamic>{'page': page},
       );
       return unwrapList(r.data);
     } on DioException catch (e) {

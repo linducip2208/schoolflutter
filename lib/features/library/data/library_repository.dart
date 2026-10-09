@@ -84,8 +84,8 @@ class LibraryRepository {
 
   Future<int> markOverdue() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .post<dynamic>(ApiEndpoints.libraryMarkOverdue);
+      final Response<dynamic> r =
+          await ApiClient.dio.post<dynamic>(ApiEndpoints.libraryMarkOverdue);
       final Map<String, dynamic> body = unwrapMap(r.data);
       return (body['marked'] as num?)?.toInt() ?? 0;
     } on DioException catch (e) {

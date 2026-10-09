@@ -51,8 +51,8 @@ class _SuperSystemPageState extends State<SuperSystemPage> {
           Text('Health Check', style: Theme.of(context).textTheme.titleSmall),
           FutureBuilder<Map<String, dynamic>>(
             future: _health,
-            builder: (BuildContext c,
-                AsyncSnapshot<Map<String, dynamic>> snap) {
+            builder:
+                (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
               if (snap.connectionState == ConnectionState.waiting) {
                 return const Padding(
                     padding: EdgeInsets.all(12), child: AppLoading());
@@ -77,12 +77,11 @@ class _SuperSystemPageState extends State<SuperSystemPage> {
             },
           ),
           const SizedBox(height: 8),
-          Text('Konfigurasi',
-              style: Theme.of(context).textTheme.titleSmall),
+          Text('Konfigurasi', style: Theme.of(context).textTheme.titleSmall),
           FutureBuilder<Map<String, dynamic>>(
             future: _config,
-            builder: (BuildContext c,
-                AsyncSnapshot<Map<String, dynamic>> snap) {
+            builder:
+                (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
               if (snap.connectionState == ConnectionState.waiting) {
                 return const Padding(
                     padding: EdgeInsets.all(12), child: AppLoading());

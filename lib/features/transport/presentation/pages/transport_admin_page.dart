@@ -56,8 +56,7 @@ class TransportAdminPage extends StatelessWidget {
                   ),
                 );
               },
-              itemBuilder: (BuildContext c, Map<String, dynamic> e) =>
-                  Card(
+              itemBuilder: (BuildContext c, Map<String, dynamic> e) => Card(
                 child: ListTile(
                   leading: const Icon(Icons.route_outlined),
                   title: Text(e['name']?.toString() ?? '-'),
@@ -112,8 +111,7 @@ class TransportAdminPage extends StatelessWidget {
                   ),
                 );
               },
-              itemBuilder: (BuildContext c, Map<String, dynamic> e) =>
-                  Card(
+              itemBuilder: (BuildContext c, Map<String, dynamic> e) => Card(
                 child: ListTile(
                   leading: const Icon(Icons.directions_bus_outlined),
                   title: Text(e['registration_no']?.toString() ?? '-'),
@@ -129,8 +127,40 @@ class TransportAdminPage extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.navigation_outlined),
                   title: Text('Trip ${e['id'] ?? '-'}'),
-                  subtitle:
-                      Text('${e['route'] ?? e['vehicle'] ?? '-'}'),
+                  subtitle: Text('${e['route'] ?? e['vehicle'] ?? '-'}'),
+                  trailing: IconButton(
+                    tooltip: 'Lacak posisi',
+                    icon: const Icon(Icons.location_searching_outlined),
+                    onPressed: () async {
+                      Map<String, dynamic>? res;
+                      String? error;
+                      try {
+                        res = await repo.trackTrip((e['id'] as num).toInt());
+                      } catch (err) {
+                        error = err.toString();
+                      }
+                      if (!c.mounted) return;
+                      final Map<String, dynamic>? loc = res?['location'] is Map
+                          ? Map<String, dynamic>.from(res!['location'] as Map)
+                          : null;
+                      await showDialog<void>(
+                        context: c,
+                        builder: (BuildContext d) => AlertDialog(
+                          title: const Text('Posisi Trip'),
+                          content: Text(error ??
+                              (loc == null
+                                  ? 'Belum ada data lokasi.'
+                                  : 'Lat ${loc['latitude'] ?? loc['lat'] ?? '-'} • Lng ${loc['longitude'] ?? loc['lng'] ?? '-'} • ${loc['recorded_at'] ?? loc['updated_at'] ?? ''}')),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(d).pop(),
+                              child: const Text('Tutup'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

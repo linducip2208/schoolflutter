@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/auth_repository.dart';
 import '../../data/models/school_model.dart';
 import '../../data/models/user_model.dart';
+import '../../../../core/storage/app_storage.dart';
+import '../../../../core/sync/sync_engine.dart';
 
 // ── Events
 abstract class AuthEvent extends Equatable {
@@ -32,6 +34,13 @@ class AuthLoginRequested extends AuthEvent {
 
 class AuthLogoutRequested extends AuthEvent {
   const AuthLogoutRequested();
+}
+
+/// Server rejected the session (HTTP 401 outside login/2FA).
+/// Clears local auth WITHOUT network calls (token already invalid)
+/// so the router reliably lands on login instead of bouncing.
+class AuthSessionExpired extends AuthEvent {
+  const AuthSessionExpired();
 }
 
 class AuthTwoFactorVerifyRequested extends AuthEvent {
@@ -104,6 +113,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onLogin);
     on<AuthTwoFactorVerifyRequested>(_onTwoFactorVerify);
     on<AuthLogoutRequested>(_onLogout);
+    on<AuthSessionExpired>(_onExpired);
     on<AuthLocaleChanged>(_onLocale);
   }
 
@@ -188,6 +198,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onLogout(AuthLogoutRequested e, Emitter<AuthState> emit) async {
     await _repo.logout();
+    emit(const AuthState(status: AuthStatus.unauthenticated));
+  }
+
+  Future<void> _onExpired(AuthSessionExpired e, Emitter<AuthState> emit) async {
+    await AppStorage.clearAuth();
+    await SyncEngine.instance.clearLocal();
     emit(const AuthState(status: AuthStatus.unauthenticated));
   }
 

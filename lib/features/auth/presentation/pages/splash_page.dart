@@ -83,7 +83,7 @@ class _SplashPageState extends State<SplashPage> {
               Icon(Icons.school_rounded, size: 96, color: Colors.white),
               SizedBox(height: 16),
               Text(
-                'eSchool',
+                'Sikad Pro',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,

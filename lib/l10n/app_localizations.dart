@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In id, this message translates to:
-  /// **'eSchool'**
+  /// **'Sikad Pro'**
   String get appName;
 
   /// No description provided for @welcome.
@@ -283,7 +283,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeTitle.
   ///
   /// In id, this message translates to:
-  /// **'Selamat Datang di eSchool'**
+  /// **'Selamat Datang di Sikad Pro'**
   String get welcomeTitle;
 
   /// No description provided for @welcomeSubtitle.
@@ -319,7 +319,7 @@ abstract class AppLocalizations {
   /// No description provided for @about.
   ///
   /// In id, this message translates to:
-  /// **'Tentang eSchool'**
+  /// **'Tentang Sikad Pro'**
   String get about;
 
   /// No description provided for @contactUs.

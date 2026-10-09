@@ -30,13 +30,16 @@ class DisciplinePage extends StatelessWidget {
             ModuleListPage(
               title: 'Records',
               loader: repo.records,
+              pagedLoader: ({required int page}) => repo.records(page: page),
+              pageSize: 50,
               emptyText: 'Belum ada records.',
               onCreate: () async {
                 final Map<String, String>? v = await showFormDialog(
                   context,
                   title: 'Catat Pelanggaran',
                   fields: const <FormFieldDef>[
-                    FormFieldDef(key: 'student_id', label: 'ID Siswa', isNumber: true),
+                    FormFieldDef(
+                        key: 'student_id', label: 'ID Siswa', isNumber: true),
                     FormFieldDef(
                         key: 'discipline_category_id',
                         label: 'ID Kategori',
@@ -54,8 +57,7 @@ class DisciplinePage extends StatelessWidget {
                   ),
                 );
               },
-              itemBuilder: (BuildContext c, Map<String, dynamic> e) =>
-                  Card(
+              itemBuilder: (BuildContext c, Map<String, dynamic> e) => Card(
                 child: ListTile(
                   leading: const Icon(Icons.gavel_outlined),
                   title: Text(e['description']?.toString() ?? '-',
@@ -79,7 +81,11 @@ class DisciplinePage extends StatelessWidget {
                         key: 'type',
                         label: 'Tipe',
                         options: <String>['violation', 'achievement']),
-                    FormFieldDef(key: 'point_value', label: 'Poin', isNumber: true, initial: '10'),
+                    FormFieldDef(
+                        key: 'point_value',
+                        label: 'Poin',
+                        isNumber: true,
+                        initial: '10'),
                   ],
                 );
                 if (v == null || !context.mounted) return;
@@ -92,13 +98,12 @@ class DisciplinePage extends StatelessWidget {
                   ),
                 );
               },
-              itemBuilder: (BuildContext c, Map<String, dynamic> e) =>
-                  Card(
+              itemBuilder: (BuildContext c, Map<String, dynamic> e) => Card(
                 child: ListTile(
                   leading: const Icon(Icons.category_outlined),
                   title: Text(e['name']?.toString() ?? '-'),
-                  subtitle:
-                      Text('${e['type'] ?? '-'} • ${e['point_value'] ?? 0} poin'),
+                  subtitle: Text(
+                      '${e['type'] ?? '-'} • ${e['point_value'] ?? 0} poin'),
                 ),
               ),
             ),
@@ -106,12 +111,11 @@ class DisciplinePage extends StatelessWidget {
               title: 'Leaderboard',
               loader: repo.leaderboard,
               emptyText: 'Belum ada data.',
-              itemBuilder: (BuildContext c, Map<String, dynamic> e) =>
-                  Card(
+              itemBuilder: (BuildContext c, Map<String, dynamic> e) => Card(
                 child: ListTile(
                   leading: const Icon(Icons.leaderboard_outlined),
-                  title: Text(
-                      e['name']?.toString() ?? 'Siswa ${e['student_id']}'),
+                  title:
+                      Text(e['name']?.toString() ?? 'Siswa ${e['student_id']}'),
                   trailing: Text('${e['points'] ?? e['total_points'] ?? 0}'),
                 ),
               ),

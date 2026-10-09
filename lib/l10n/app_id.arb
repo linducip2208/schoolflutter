@@ -1,6 +1,6 @@
 {
   "@@locale": "id",
-  "appName": "eSchool",
+  "appName": "Sikad Pro",
   "welcome": "Selamat datang",
   "login": "Masuk",
   "logout": "Keluar",
@@ -30,13 +30,13 @@
   "settings": "Pengaturan",
   "language": "Bahasa",
   "changePassword": "Ubah kata sandi",
-  "welcomeTitle": "Selamat Datang di eSchool",
+  "welcomeTitle": "Selamat Datang di Sikad Pro",
   "welcomeSubtitle": "Platform digital sekolah terpadu",
   "welcomeDescription": "Mendukung kegiatan akademik, komunikasi, dan operasional sekolah.",
   "welcomeStart": "Mulai Menggunakan",
   "welcomeContact": "Hubungi Kami via WhatsApp",
   "welcomeClose": "Tutup",
-  "about": "Tentang eSchool",
+  "about": "Tentang Sikad Pro",
   "contactUs": "Hubungi Kami",
   "appVersion": "Versi aplikasi"
 }

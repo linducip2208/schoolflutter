@@ -17,6 +17,19 @@ class ChatRepository {
     }
   }
 
+  /// Backend: `POST /chat/conversations {recipient_id}` (same-school user).
+  Future<Map<String, dynamic>> startConversation(int recipientId) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.chatStart,
+        data: <String, dynamic>{'recipient_id': recipientId},
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<List<Map<String, dynamic>>> messages(int conversationId) async {
     try {
       final Response<dynamic> r = await ApiClient.dio

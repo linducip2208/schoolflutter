@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appName": "eSchool",
+  "appName": "Sikad Pro",
   "welcome": "Welcome",
   "login": "Sign in",
   "logout": "Sign out",
@@ -30,13 +30,13 @@
   "settings": "Settings",
   "language": "Language",
   "changePassword": "Change password",
-  "welcomeTitle": "Welcome to eSchool",
+  "welcomeTitle": "Welcome to Sikad Pro",
   "welcomeSubtitle": "Integrated school digital platform",
   "welcomeDescription": "Supporting academics, communication, and school operations.",
   "welcomeStart": "Get Started",
   "welcomeContact": "Contact Us via WhatsApp",
   "welcomeClose": "Close",
-  "about": "About eSchool",
+  "about": "About Sikad Pro",
   "contactUs": "Contact Us",
   "appVersion": "App version"
 }

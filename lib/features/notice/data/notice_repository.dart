@@ -35,8 +35,7 @@ class NoticeRepository {
             'target_roles': targetRoles,
           if (publishAt != null && publishAt.isNotEmpty)
             'publish_at': publishAt,
-          if (expireAt != null && expireAt.isNotEmpty)
-            'expire_at': expireAt,
+          if (expireAt != null && expireAt.isNotEmpty) 'expire_at': expireAt,
         },
       );
     } on DioException catch (e) {

@@ -58,16 +58,15 @@ class _ReportsPageState extends State<ReportsPage> {
           children: <Widget>[
             FutureBuilder<Map<String, dynamic>>(
               future: _cash,
-              builder: (BuildContext c,
-                  AsyncSnapshot<Map<String, dynamic>> snap) {
+              builder:
+                  (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
                 if (snap.connectionState == ConnectionState.waiting) {
                   return const Padding(
                       padding: EdgeInsets.all(24), child: AppLoading());
                 }
                 if (snap.hasError) {
                   return ListView(children: <Widget>[
-                    AppError(
-                        message: snap.error.toString(), onRetry: _reload),
+                    AppError(message: snap.error.toString(), onRetry: _reload),
                   ]);
                 }
                 final Map<String, dynamic> d =
@@ -86,18 +85,17 @@ class _ReportsPageState extends State<ReportsPage> {
                       children: <Widget>[
                         StatCard(
                             label: 'Masuk Bulan Ini',
-                            value: CurrencyFormatter.compact(
-                                v('collected_month')),
+                            value:
+                                CurrencyFormatter.compact(v('collected_month')),
                             icon: Icons.trending_up_outlined),
                         StatCard(
                             label: 'Masuk Tahun Ini',
-                            value: CurrencyFormatter.compact(
-                                v('collected_year')),
+                            value:
+                                CurrencyFormatter.compact(v('collected_year')),
                             icon: Icons.account_balance_wallet_outlined),
                         StatCard(
                             label: 'Belum Terbayar',
-                            value:
-                                CurrencyFormatter.compact(v('pending')),
+                            value: CurrencyFormatter.compact(v('pending')),
                             icon: Icons.warning_amber_outlined),
                       ],
                     ),
@@ -117,22 +115,20 @@ class _ReportsPageState extends State<ReportsPage> {
             ),
             FutureBuilder<Map<String, dynamic>>(
               future: _aging,
-              builder: (BuildContext c,
-                  AsyncSnapshot<Map<String, dynamic>> snap) {
+              builder:
+                  (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
                 if (snap.connectionState == ConnectionState.waiting) {
                   return const Padding(
                       padding: EdgeInsets.all(24), child: AppLoading());
                 }
                 if (snap.hasError) {
                   return ListView(children: <Widget>[
-                    AppError(
-                        message: snap.error.toString(), onRetry: _reload),
+                    AppError(message: snap.error.toString(), onRetry: _reload),
                   ]);
                 }
                 final Map<String, dynamic> d =
                     snap.data ?? const <String, dynamic>{};
-                const List<Map<String, String>> buckets =
-                    <Map<String, String>>[
+                const List<Map<String, String>> buckets = <Map<String, String>>[
                   {'k': 'current', 'l': 'Belum jatuh tempo'},
                   {'k': 'd1_30', 'l': 'Telat 1–30 hari'},
                   {'k': 'd31_60', 'l': 'Telat 31–60 hari'},

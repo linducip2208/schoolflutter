@@ -1,6 +1,6 @@
 import 'package:url_launcher/url_launcher.dart';
 
-/// Single source of truth for eSchool support contact.
+/// Single source of truth for Sikad Pro support contact.
 ///
 /// WhatsApp number 081296052010 is normalized once here and never
 /// hardcoded in widgets. All UI (welcome popup, About page, settings)
@@ -19,7 +19,7 @@ class SupportContact {
 
   /// Prefilled professional message (Indonesian).
   static const String whatsappMessage =
-      'Halo eSchool, saya ingin mendapatkan informasi mengenai aplikasi dan layanan eSchool.';
+      'Halo Sikad Pro, saya ingin mendapatkan informasi mengenai aplikasi dan layanan Sikad Pro.';
 
   /// Full wa.me URL with encoded prefilled message.
   static Uri get whatsappUrl => Uri.parse(

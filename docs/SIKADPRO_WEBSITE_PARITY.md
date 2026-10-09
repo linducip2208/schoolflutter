@@ -188,3 +188,23 @@ operational (5 deliberate WEB_ONLY) / WEB_ONLY+NON_MOBILE 2.
 WEBSITE-TO-FLUTTER PARITY = 99% ((49 + 1x0.5)/50 excl. WEB_ONLY).
 SALE READINESS = 95% — remaining: operasional polish, quiz-bank
 generate button, backup flows stay web-only by design.
+
+## 7. Pass 5 — final audit (2026-10-09)
+
+Verifikasi path otomatis: 298/298 path Flutter cocok dengan
+`php artisan route:list`. Metode: PUT dipakai di 8 tempat sesuai route
+backend (klaim lama "hanya GET+POST" dikoreksi).
+Bug kontrak baru (semua 422/500/blank, kini fix): panic coords,
+QR `token`, `mood_score`, notice `content` + schedule/target + hapus,
+branding keys, LMS `enrollment_id`, super extend fields,
+dashboard `scheduled_at`, payroll/admission/exam display keys,
+exam attempt flow, classroom grade, library loan, chat baru,
+profil avatar/edit, PPDB submit+upload, rapor PDF, nilai per-anak,
+notifikasi baca, super plan/subscription create, transport track,
+library overdue, dapodik export.
+Session: AuthSessionExpired (tanpa loop), logout bersihkan drift.
+Rupiah: regression test Rp10.000 request→display.
+Semua peran backend (21) punya shell + home + guard + test.
+Pagination: ModuleListPage infinite-scroll opt-in (20/50) +
+backend paginate invoice; search server-side untuk direktori.
+Lihat `API_GAP_REPORT.md` + `FLUTTER_RELEASE_READINESS.md`.

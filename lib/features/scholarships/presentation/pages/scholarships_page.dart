@@ -14,11 +14,9 @@ class ScholarshipsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScholarshipsRepository repo = ScholarshipsRepository();
-    final String role =
-        context.watch<AuthBloc>().state.user?.role ?? 'student';
-    final bool canManage = role == 'admin' ||
-        role == 'school_admin' ||
-        role == 'super_admin';
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'student';
+    final bool canManage =
+        role == 'admin' || role == 'school_admin' || role == 'super_admin';
     return ModuleListPage(
       title: 'Beasiswa',
       loader: repo.programs,
@@ -43,7 +41,10 @@ class ScholarshipsPage extends StatelessWidget {
                       key: 'discount_type',
                       label: 'Tipe potongan',
                       options: <String>['percentage', 'fixed', 'full']),
-                  FormFieldDef(key: 'discount_value', label: 'Nilai potongan', isNumber: true),
+                  FormFieldDef(
+                      key: 'discount_value',
+                      label: 'Nilai potongan',
+                      isNumber: true),
                   FormFieldDef(key: 'open_date', label: 'Buka (YYYY-MM-DD)'),
                   FormFieldDef(key: 'close_date', label: 'Tutup (YYYY-MM-DD)'),
                 ],
@@ -82,7 +83,10 @@ class ScholarshipsPage extends StatelessWidget {
                         c,
                         title: 'Ajukan Beasiswa',
                         fields: const <FormFieldDef>[
-                          FormFieldDef(key: 'student_id', label: 'ID Siswa', isNumber: true),
+                          FormFieldDef(
+                              key: 'student_id',
+                              label: 'ID Siswa',
+                              isNumber: true),
                           FormFieldDef(key: 'motivation', label: 'Motivasi'),
                         ],
                       );
@@ -136,15 +140,14 @@ class ScholarshipsPage extends StatelessWidget {
                             ListTile(
                               dense: true,
                               title: Text('Siswa ${a['student_id']}'),
-                              subtitle:
-                                  Text('${a['status'] ?? '-'}'),
+                              subtitle: Text('${a['status'] ?? '-'}'),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   IconButton(
                                     tooltip: 'Terapkan ke invoice',
-                                    icon: const Icon(
-                                        Icons.receipt_long_outlined),
+                                    icon:
+                                        const Icon(Icons.receipt_long_outlined),
                                     onPressed: () async {
                                       final Map<String, String>? f =
                                           await showFormDialog(
@@ -162,8 +165,8 @@ class ScholarshipsPage extends StatelessWidget {
                                           (a['id'] as num).toInt();
                                       await runMutation(
                                         d,
-                                        () => repo.applyToInvoice(appId,
-                                            int.parse(f['invoice_id']!)),
+                                        () => repo.applyToInvoice(
+                                            appId, int.parse(f['invoice_id']!)),
                                       );
                                     },
                                   ),

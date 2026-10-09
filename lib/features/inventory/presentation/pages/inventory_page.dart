@@ -46,13 +46,16 @@ class _AssetsTab extends StatelessWidget {
     return ModuleListPage(
       title: 'Aset',
       loader: repo.assets,
+      pagedLoader: ({required int page}) => repo.assets(page: page),
+      pageSize: 50,
       emptyText: 'Belum ada aset.',
       onCreate: () async {
         final Map<String, String>? v = await showFormDialog(
           context,
           title: 'Aset Baru',
           fields: const <FormFieldDef>[
-            FormFieldDef(key: 'asset_category_id', label: 'ID Kategori', isNumber: true),
+            FormFieldDef(
+                key: 'asset_category_id', label: 'ID Kategori', isNumber: true),
             FormFieldDef(key: 'name', label: 'Nama barang'),
             FormFieldDef(key: 'location', label: 'Lokasi'),
           ],
@@ -88,6 +91,8 @@ class _LoansTab extends StatelessWidget {
     return ModuleListPage(
       title: 'Pinjaman',
       loader: repo.loans,
+      pagedLoader: ({required int page}) => repo.loans(page: page),
+      pageSize: 50,
       emptyText: 'Belum ada pinjaman.',
       itemBuilder: (BuildContext c, Map<String, dynamic> e) {
         final int id = (e['id'] as num).toInt();
@@ -95,8 +100,10 @@ class _LoansTab extends StatelessWidget {
         return Card(
           child: ListTile(
             leading: const Icon(Icons.swap_horiz_outlined),
-            title: Text('Aset ${e['asset_id'] ?? '-'} → User ${e['user_id'] ?? '-'}'),
-            subtitle: Text('Status $status • Jatuh tempo ${e['due_at'] ?? '-'}'),
+            title: Text(
+                'Aset ${e['asset_id'] ?? '-'} → User ${e['user_id'] ?? '-'}'),
+            subtitle:
+                Text('Status $status • Jatuh tempo ${e['due_at'] ?? '-'}'),
             trailing: status == 'pending'
                 ? IconButton(
                     tooltip: 'Setujui',
@@ -130,6 +137,8 @@ class _MaintenanceTab extends StatelessWidget {
     return ModuleListPage(
       title: 'Maintenance',
       loader: repo.maintenance,
+      pagedLoader: ({required int page}) => repo.maintenance(page: page),
+      pageSize: 50,
       emptyText: 'Belum ada laporan maintenance.',
       onCreate: () async {
         final Map<String, String>? v = await showFormDialog(

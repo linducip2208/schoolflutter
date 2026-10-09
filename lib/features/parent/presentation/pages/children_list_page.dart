@@ -25,7 +25,8 @@ class ChildrenListPage extends StatelessWidget {
         return Card(
           child: ListTile(
             leading: CircleAvatar(
-              child: Text(name.isNotEmpty ? name.substring(0, 1).toUpperCase() : '?'),
+              child: Text(
+                  name.isNotEmpty ? name.substring(0, 1).toUpperCase() : '?'),
             ),
             title: Text(name),
             subtitle: Text(

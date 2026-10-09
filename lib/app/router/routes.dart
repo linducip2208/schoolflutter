@@ -47,6 +47,7 @@ class Routes {
   static const String parentDonasi = '/parent/donasi';
   static const String parentBullying = '/parent/bullying';
   static const String parentEmergency = '/parent/emergency';
+  static const String parentApplications = '/parent/applications';
 
   // Teacher
   static const String teacherDashboard = '/teacher/dashboard';
@@ -123,6 +124,7 @@ class Routes {
   static const String adminEmergency = '/admin/emergency';
   static const String adminCalendar = '/admin/calendar';
   static const String adminFinanceTools = '/admin/finance-tools';
+  static const String adminSchool = '/admin/school';
   static const String adminAttendanceTools = '/admin/attendance-tools';
   static const String adminHafalanTargets = '/admin/hafalan-targets';
   static const String adminStudents = '/admin/students';

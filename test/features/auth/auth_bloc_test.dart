@@ -203,5 +203,24 @@ void main() {
         ),
       ],
     );
+
+    blocTest<AuthBloc, AuthState>(
+      'AuthSessionExpired → unauthenticated without network',
+      build: () => AuthBloc(repo),
+      act: (AuthBloc b) => b.add(const AuthSessionExpired()),
+      expect: () => <Matcher>[
+        predicate<AuthState>(
+          (AuthState s) =>
+              s.status == AuthStatus.unauthenticated &&
+              s.user == null &&
+              s.errorMessage == null,
+          'clean unauthenticated (no stale user/error)',
+        ),
+      ],
+      verify: (_) {
+        // Must not hit the network: expiry clears local state only.
+        verifyNever(() => repo.logout());
+      },
+    );
   });
 }

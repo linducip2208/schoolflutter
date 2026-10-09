@@ -64,7 +64,7 @@ void main() {
   group('WelcomePopup widget', () {
     testWidgets('TEST 1: fresh popup visible (ID)', (tester) async {
       await _pumpPopup(tester, l10n: WelcomeStrings.indonesian());
-      expect(find.text('Selamat Datang di eSchool'), findsOneWidget);
+      expect(find.text('Selamat Datang di Sikad Pro'), findsOneWidget);
       expect(find.text('Mulai Menggunakan'), findsOneWidget);
       expect(
         find.textContaining('Hubungi Kami via WhatsApp'),
@@ -84,7 +84,7 @@ void main() {
 
     testWidgets('TEST 7/8: localized English', (tester) async {
       await _pumpPopup(tester, l10n: WelcomeStrings.english());
-      expect(find.text('Welcome to eSchool'), findsOneWidget);
+      expect(find.text('Welcome to Sikad Pro'), findsOneWidget);
       expect(find.text('Get Started'), findsOneWidget);
     });
 
@@ -117,7 +117,7 @@ void main() {
       await _pumpPopup(tester, textScale: 2.0);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
-      expect(find.text('Selamat Datang di eSchool'), findsOneWidget);
+      expect(find.text('Selamat Datang di Sikad Pro'), findsOneWidget);
     });
 
     testWidgets('TEST 10: small screen renders', (tester) async {
@@ -139,7 +139,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
-      expect(find.text('Selamat Datang di eSchool'), findsOneWidget);
+      expect(find.text('Selamat Datang di Sikad Pro'), findsOneWidget);
     });
 
     testWidgets('TEST 12: light mode renders', (tester) async {

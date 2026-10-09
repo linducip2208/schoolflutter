@@ -9,8 +9,8 @@ import '../../../core/error/error_handler.dart';
 class DisciplineRepository {
   Future<List<Map<String, dynamic>>> categories() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.disciplineCategories);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.disciplineCategories);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -37,10 +37,14 @@ class DisciplineRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> records() async {
+  Future<List<Map<String, dynamic>>> records({int page = 1}) async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.disciplineRecords);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.disciplineRecords,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -69,8 +73,8 @@ class DisciplineRepository {
 
   Future<List<Map<String, dynamic>>> leaderboard() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.disciplineLeaderboard);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.disciplineLeaderboard);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

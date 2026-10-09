@@ -8,10 +8,12 @@ import '../../../core/error/error_handler.dart';
 /// Donasi sekolah. Backend: `DonationController`
 /// (`/admin/donations/*`, publik per subdomain).
 class DonationsRepository {
-  Future<List<Map<String, dynamic>>> campaigns() async {
+  Future<List<Map<String, dynamic>>> campaigns({int page = 1}) async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.donationAdminCampaigns);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.donationAdminCampaigns,
+        queryParameters: <String, dynamic>{'page': page},
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -46,8 +48,8 @@ class DonationsRepository {
 
   Future<List<Map<String, dynamic>>> donations() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.donationAdminList);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.donationAdminList);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

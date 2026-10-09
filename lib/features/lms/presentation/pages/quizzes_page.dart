@@ -28,8 +28,7 @@ class QuizzesPage extends StatelessWidget {
             onTap: () => Navigator.of(c).push(
               MaterialPageRoute<void>(
                 builder: (_) => QuizAttemptPage(
-                    quizId: id,
-                    title: e['title']?.toString() ?? 'Kuis'),
+                    quizId: id, title: e['title']?.toString() ?? 'Kuis'),
               ),
             ),
           ),

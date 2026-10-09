@@ -14,8 +14,7 @@ class AchievementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AchievementsRepository repo = AchievementsRepository();
-    final String role =
-        context.watch<AuthBloc>().state.user?.role ?? 'student';
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'student';
     final bool canManage = role == 'admin' ||
         role == 'school_admin' ||
         role == 'super_admin' ||

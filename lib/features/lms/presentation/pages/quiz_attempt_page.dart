@@ -9,8 +9,7 @@ import '../../data/lms_repository.dart';
 /// Backend: `GET /lms/quizzes/{id}/questions` (tanpa correct_answer),
 /// `POST /lms/quiz/submit {quiz_id, answers:{qid:jawaban}}`.
 class QuizAttemptPage extends StatefulWidget {
-  const QuizAttemptPage(
-      {super.key, required this.quizId, required this.title});
+  const QuizAttemptPage({super.key, required this.quizId, required this.title});
   final int quizId;
   final String title;
 
@@ -75,8 +74,8 @@ class _QuizAttemptPageState extends State<QuizAttemptPage> {
       appBar: AppBar(title: Text(widget.title)),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const Padding(
                 padding: EdgeInsets.all(24), child: AppLoading());
@@ -111,8 +110,7 @@ class _QuizAttemptPageState extends State<QuizAttemptPage> {
               FilledButton.icon(
                 onPressed: _busy ? null : () => _submit(items),
                 icon: const Icon(Icons.send_outlined),
-                label: Text(
-                    'Kumpulkan (${_answers.length}/${items.length})'),
+                label: Text('Kumpulkan (${_answers.length}/${items.length})'),
               ),
             ],
           );
@@ -151,8 +149,7 @@ class _QuestionCard extends StatelessWidget {
             const SizedBox(height: 8),
             if (options.isEmpty)
               TextField(
-                decoration:
-                    const InputDecoration(labelText: 'Jawaban singkat'),
+                decoration: const InputDecoration(labelText: 'Jawaban singkat'),
                 onChanged: onChanged,
               )
             else

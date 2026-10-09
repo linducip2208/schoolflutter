@@ -22,8 +22,9 @@ class StaffPage extends StatelessWidget {
         return Card(
           child: ListTile(
             leading: CircleAvatar(
-              child: Text(
-                  ((user?['name'] ?? '?') as String).substring(0, 1).toUpperCase()),
+              child: Text(((user?['name'] ?? '?') as String)
+                  .substring(0, 1)
+                  .toUpperCase()),
             ),
             title: Text(user?['name']?.toString() ?? 'ID ${e['id']}'),
             subtitle: Text(

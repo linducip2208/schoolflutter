@@ -101,12 +101,12 @@ class _StudentsPageState extends State<StudentsPage> {
                       return Card(
                         child: ListTile(
                           leading: CircleAvatar(
-                            child: Text(((user?['name'] ?? '?') as String)
-                                    .isNotEmpty
-                                ? ((user?['name'] ?? '?') as String)
-                                    .substring(0, 1)
-                                    .toUpperCase()
-                                : '?'),
+                            child: Text(
+                                ((user?['name'] ?? '?') as String).isNotEmpty
+                                    ? ((user?['name'] ?? '?') as String)
+                                        .substring(0, 1)
+                                        .toUpperCase()
+                                    : '?'),
                           ),
                           title: Text(
                               user?['name']?.toString() ?? 'ID ${e['id']}'),

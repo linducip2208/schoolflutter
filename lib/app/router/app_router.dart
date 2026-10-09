@@ -83,10 +83,12 @@ import '../../features/alumni/presentation/pages/alumni_page.dart';
 import '../../features/lms/presentation/pages/lms_courses_page.dart';
 import '../../features/emergency/presentation/pages/emergency_page.dart';
 import '../../features/fees/presentation/pages/finance_tools_page.dart';
+import '../../features/ppdb/presentation/pages/my_applications_page.dart';
 import '../../features/parent/presentation/pages/children_list_page.dart';
 import '../../features/attendance/presentation/pages/attendance_tools_page.dart';
 import '../../features/hafalan/presentation/pages/hafalan_targets_page.dart';
 import '../../features/gate/presentation/pages/qr_scan_page.dart';
+import '../../features/school/presentation/pages/school_profile_page.dart';
 import '../../features/directory/presentation/pages/students_page.dart';
 import '../../features/directory/presentation/pages/staff_page.dart';
 import '../../features/finance/presentation/pages/reports_page.dart';
@@ -119,6 +121,12 @@ class AppRouter {
   }
 
   static AppRouter? get maybeInstance => _instance;
+
+  /// Called by [ErrorInterceptor] on HTTP 401: flips auth state so the
+  /// refreshListenable redirect lands on login exactly once.
+  void expireSession() {
+    _authBloc.add(const AuthSessionExpired());
+  }
 
   final AuthBloc _authBloc;
   final GlobalKey<NavigatorState> _rootNavigatorKey;
@@ -275,6 +283,9 @@ class AppRouter {
             GoRoute(
                 path: Routes.parentEmergency,
                 builder: (_, __) => const EmergencyPage()),
+            GoRoute(
+                path: Routes.parentApplications,
+                builder: (_, __) => const MyApplicationsPage()),
           ],
         ),
 
@@ -449,8 +460,7 @@ class AppRouter {
                 path: Routes.adminKonseling,
                 builder: (_, __) => const CounselingPage()),
             GoRoute(
-                path: Routes.adminGate,
-                builder: (_, __) => const IdGatePage()),
+                path: Routes.adminGate, builder: (_, __) => const IdGatePage()),
             GoRoute(
                 path: Routes.adminLive,
                 builder: (_, __) => const LiveClassPage()),
@@ -494,6 +504,9 @@ class AppRouter {
                 path: Routes.adminFinanceTools,
                 builder: (_, __) => const FinanceToolsPage()),
             GoRoute(
+                path: Routes.adminSchool,
+                builder: (_, __) => const SchoolProfilePage()),
+            GoRoute(
                 path: Routes.adminAttendanceTools,
                 builder: (_, __) => const AttendanceToolsPage()),
             GoRoute(
@@ -503,8 +516,7 @@ class AppRouter {
                 path: Routes.adminStudents,
                 builder: (_, __) => const StudentsPage()),
             GoRoute(
-                path: Routes.adminStaff,
-                builder: (_, __) => const StaffPage()),
+                path: Routes.adminStaff, builder: (_, __) => const StaffPage()),
             GoRoute(
                 path: Routes.adminReports,
                 builder: (_, __) => const ReportsPage()),
@@ -551,127 +563,212 @@ class AppRouter {
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               AccountantShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.accountantFees, builder: (_, __) => const AdminFeesPage()),
-            GoRoute(path: Routes.accountantPayroll, builder: (_, __) => const PayrollPage()),
-            GoRoute(path: Routes.accountantPayProvider, builder: (_, __) => const PaymentProvidersPage()),
-            GoRoute(path: Routes.accountantDonasi, builder: (_, __) => const DonationsPage()),
-            GoRoute(path: Routes.accountantReports, builder: (_, __) => const ReportsPage()),
-            GoRoute(path: Routes.accountantBudget, builder: (_, __) => const BudgetPage()),
-            GoRoute(path: Routes.accountantProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.accountantFees,
+                builder: (_, __) => const AdminFeesPage()),
+            GoRoute(
+                path: Routes.accountantPayroll,
+                builder: (_, __) => const PayrollPage()),
+            GoRoute(
+                path: Routes.accountantPayProvider,
+                builder: (_, __) => const PaymentProvidersPage()),
+            GoRoute(
+                path: Routes.accountantDonasi,
+                builder: (_, __) => const DonationsPage()),
+            GoRoute(
+                path: Routes.accountantReports,
+                builder: (_, __) => const ReportsPage()),
+            GoRoute(
+                path: Routes.accountantBudget,
+                builder: (_, __) => const BudgetPage()),
+            GoRoute(
+                path: Routes.accountantProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               LibrarianShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.librarianLibrary, builder: (_, __) => const LibraryPage()),
-            GoRoute(path: Routes.librarianProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.librarianLibrary,
+                builder: (_, __) => const LibraryPage()),
+            GoRoute(
+                path: Routes.librarianProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               NurseShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.nurseVisits, builder: (_, __) => const MedicalManagePage()),
-            GoRoute(path: Routes.nurseProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.nurseVisits,
+                builder: (_, __) => const MedicalManagePage()),
+            GoRoute(
+                path: Routes.nurseProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               CounselorShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.counselorCounseling, builder: (_, __) => const CounselingPage()),
-            GoRoute(path: Routes.counselorDiscipline, builder: (_, __) => const DisciplinePage()),
-            GoRoute(path: Routes.counselorProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.counselorCounseling,
+                builder: (_, __) => const CounselingPage()),
+            GoRoute(
+                path: Routes.counselorDiscipline,
+                builder: (_, __) => const DisciplinePage()),
+            GoRoute(
+                path: Routes.counselorProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               PrincipalShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.principalDashboard, builder: (_, __) => const AdminDashboardPage()),
-            GoRoute(path: Routes.principalFees, builder: (_, __) => const AdminFeesPage()),
-            GoRoute(path: Routes.principalChat, builder: (_, __) => const ChatListPage()),
-            GoRoute(path: Routes.principalReports, builder: (_, __) => const ReportsPage()),
-            GoRoute(path: Routes.principalBudget, builder: (_, __) => const BudgetPage()),
-            GoRoute(path: Routes.principalProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.principalDashboard,
+                builder: (_, __) => const AdminDashboardPage()),
+            GoRoute(
+                path: Routes.principalFees,
+                builder: (_, __) => const AdminFeesPage()),
+            GoRoute(
+                path: Routes.principalChat,
+                builder: (_, __) => const ChatListPage()),
+            GoRoute(
+                path: Routes.principalReports,
+                builder: (_, __) => const ReportsPage()),
+            GoRoute(
+                path: Routes.principalBudget,
+                builder: (_, __) => const BudgetPage()),
+            GoRoute(
+                path: Routes.principalProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               FrontDeskShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.frontdeskVisitor, builder: (_, __) => const VisitorsPage()),
-            GoRoute(path: Routes.frontdeskAdmission, builder: (_, __) => const AdmissionPage()),
-            GoRoute(path: Routes.frontdeskPpdb, builder: (_, __) => const PpdbVerifyPage()),
-            GoRoute(path: Routes.frontdeskProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.frontdeskVisitor,
+                builder: (_, __) => const VisitorsPage()),
+            GoRoute(
+                path: Routes.frontdeskAdmission,
+                builder: (_, __) => const AdmissionPage()),
+            GoRoute(
+                path: Routes.frontdeskPpdb,
+                builder: (_, __) => const PpdbVerifyPage()),
+            GoRoute(
+                path: Routes.frontdeskProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               HrShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.hrPayroll, builder: (_, __) => const PayrollPage()),
-            GoRoute(path: Routes.hrProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.hrPayroll,
+                builder: (_, __) => const PayrollPage()),
+            GoRoute(
+                path: Routes.hrProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               TransportOpsShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.transportOpsManage, builder: (_, __) => const TransportAdminPage()),
-            GoRoute(path: Routes.transportOpsProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.transportOpsManage,
+                builder: (_, __) => const TransportAdminPage()),
+            GoRoute(
+                path: Routes.transportOpsProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               HostelOpsShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.hostelOpsHome, builder: (_, __) => const HostelPage()),
-            GoRoute(path: Routes.hostelOpsProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.hostelOpsHome,
+                builder: (_, __) => const HostelPage()),
+            GoRoute(
+                path: Routes.hostelOpsProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               ProcurementShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.procurementInventory, builder: (_, __) => const InventoryPage()),
-            GoRoute(path: Routes.procurementProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.procurementInventory,
+                builder: (_, __) => const InventoryPage()),
+            GoRoute(
+                path: Routes.procurementProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               GateShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.gateScan, builder: (_, __) => const QrScanPage()),
-            GoRoute(path: Routes.gateEmergency, builder: (_, __) => const EmergencyPage()),
-            GoRoute(path: Routes.gateProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.gateScan, builder: (_, __) => const QrScanPage()),
+            GoRoute(
+                path: Routes.gateEmergency,
+                builder: (_, __) => const EmergencyPage()),
+            GoRoute(
+                path: Routes.gateProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               VisitorOpsShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.visitorOpsHome, builder: (_, __) => const VisitorsPage()),
-            GoRoute(path: Routes.visitorOpsProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.visitorOpsHome,
+                builder: (_, __) => const VisitorsPage()),
+            GoRoute(
+                path: Routes.visitorOpsProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               SchoolOpsShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.schoolOpsCanteen, builder: (_, __) => const CanteenMerchantPage()),
-            GoRoute(path: Routes.schoolOpsVisitor, builder: (_, __) => const VisitorsPage()),
-            GoRoute(path: Routes.schoolOpsDapodik, builder: (_, __) => const DapodikPage()),
-            GoRoute(path: Routes.schoolOpsProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.schoolOpsCanteen,
+                builder: (_, __) => const CanteenMerchantPage()),
+            GoRoute(
+                path: Routes.schoolOpsVisitor,
+                builder: (_, __) => const VisitorsPage()),
+            GoRoute(
+                path: Routes.schoolOpsDapodik,
+                builder: (_, __) => const DapodikPage()),
+            GoRoute(
+                path: Routes.schoolOpsProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
         ShellRoute(
           builder: (BuildContext c, GoRouterState s, Widget child) =>
               FoundationShell(location: s.uri.path, child: child),
           routes: <RouteBase>[
-            GoRoute(path: Routes.foundationHome, builder: (_, __) => const FoundationPage()),
-            GoRoute(path: Routes.foundationProfile, builder: (_, __) => const ProfilePage()),
+            GoRoute(
+                path: Routes.foundationHome,
+                builder: (_, __) => const FoundationPage()),
+            GoRoute(
+                path: Routes.foundationProfile,
+                builder: (_, __) => const ProfilePage()),
           ],
         ),
 

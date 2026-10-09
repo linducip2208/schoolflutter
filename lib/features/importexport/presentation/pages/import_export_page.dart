@@ -26,11 +26,12 @@ class ImportExportPage extends StatelessWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
                 final FilePickerResult? picked = await FilePicker.platform
-                    .pickFiles(type: FileType.custom, allowedExtensions: <String>['csv']);
+                    .pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: <String>['csv']);
                 final String? path = picked?.files.single.path;
                 if (path == null || !context.mounted) return;
-                await runMutation(
-                    context, () => repo.importStudents(path));
+                await runMutation(context, () => repo.importStudents(path));
               },
             ),
           ),
@@ -41,8 +42,7 @@ class ImportExportPage extends StatelessWidget {
               title: const Text('Export nilai (CSV)'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
-                await runMutation(
-                    context, () => repo.downloadExport('marks'));
+                await runMutation(context, () => repo.downloadExport('marks'));
               },
             ),
           ),
@@ -53,8 +53,7 @@ class ImportExportPage extends StatelessWidget {
               title: const Text('Export keuangan (CSV)'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
-                await runMutation(
-                    context, () => repo.downloadExport('fee'));
+                await runMutation(context, () => repo.downloadExport('fee'));
               },
             ),
           ),

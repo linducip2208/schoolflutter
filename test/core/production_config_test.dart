@@ -22,7 +22,8 @@ void main() {
     });
     test('website + docs URLs', () {
       expect(AppConfig.websiteUrl, 'https://sikadpro.whitelabel.co.id');
-      expect(AppConfig.apiDocsUrl, 'https://sikadpro.whitelabel.co.id/api-docs');
+      expect(
+          AppConfig.apiDocsUrl, 'https://sikadpro.whitelabel.co.id/api-docs');
     });
     test('dev defaults remain environment-aware', () {
       expect(

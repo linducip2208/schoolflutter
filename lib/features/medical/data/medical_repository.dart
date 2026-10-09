@@ -39,10 +39,14 @@ class MedicalRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> allVisits() async {
+  Future<List<Map<String, dynamic>>> allVisits({int page = 1}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.medicalVisits);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.medicalVisits,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -60,8 +64,7 @@ class MedicalRepository {
         data: <String, dynamic>{
           'student_id': studentId,
           'symptoms': symptoms,
-          if (diagnosis != null && diagnosis.isNotEmpty)
-            'diagnosis': diagnosis,
+          if (diagnosis != null && diagnosis.isNotEmpty) 'diagnosis': diagnosis,
         },
       );
       return unwrapMap(r.data);

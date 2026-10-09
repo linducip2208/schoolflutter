@@ -233,26 +233,26 @@ class WelcomeStrings {
   final String logoLabel;
 
   factory WelcomeStrings.indonesian() => WelcomeStrings(
-        title: 'Selamat Datang di eSchool',
+        title: 'Selamat Datang di Sikad Pro',
         subtitle: 'Platform digital sekolah terpadu',
         description:
             'Mendukung kegiatan akademik, komunikasi, dan operasional sekolah untuk siswa, orang tua, guru, dan manajemen.',
         startLabel: 'Mulai Menggunakan',
         contactLabel: 'Hubungi Kami via WhatsApp',
         closeLabel: 'Tutup',
-        semanticsLabel: 'Sambutan selamat datang eSchool',
-        logoLabel: 'Logo eSchool',
+        semanticsLabel: 'Sambutan selamat datang Sikad Pro',
+        logoLabel: 'Logo Sikad Pro',
       );
 
   factory WelcomeStrings.english() => WelcomeStrings(
-        title: 'Welcome to eSchool',
+        title: 'Welcome to Sikad Pro',
         subtitle: 'Integrated school digital platform',
         description:
             'Supporting academics, communication, and school operations for students, parents, teachers, and management.',
         startLabel: 'Get Started',
         contactLabel: 'Contact Us via WhatsApp',
         closeLabel: 'Close',
-        semanticsLabel: 'eSchool welcome greeting',
-        logoLabel: 'eSchool logo',
+        semanticsLabel: 'Sikad Pro welcome greeting',
+        logoLabel: 'Sikad Pro logo',
       );
 }

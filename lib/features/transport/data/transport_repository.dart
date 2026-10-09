@@ -35,7 +35,9 @@ class TransportRepository {
         ApiEndpoints.transportStoreRoute,
         data: <String, dynamic>{
           'name': name,
-          'stops': stops.map((String s) => <String, dynamic>{'stop_name': s}).toList(),
+          'stops': stops
+              .map((String s) => <String, dynamic>{'stop_name': s})
+              .toList(),
         },
       );
       return unwrapMap(r.data);
@@ -81,8 +83,8 @@ class TransportRepository {
 
   Future<List<Map<String, dynamic>>> activeTrips() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.transportActiveTrips);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.transportActiveTrips);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

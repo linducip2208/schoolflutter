@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/router/routes.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/widgets/form_dialog.dart';
+import '../../../../core/widgets/module_list_page.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/data/auth_repository.dart';
 import '../../../../core/utils/validators.dart';
+import '../../data/profile_repository.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -26,17 +30,33 @@ class ProfilePage extends StatelessWidget {
             color: Theme.of(context).colorScheme.surface,
             child: Row(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 36,
-                  backgroundColor: AppColors.primary.withValues(alpha: 0.12),
-                  backgroundImage:
-                      user?.avatarUrl != null && user!.avatarUrl!.isNotEmpty
-                          ? NetworkImage(user.avatarUrl!)
-                          : null,
-                  child: user?.avatarUrl == null || user!.avatarUrl!.isEmpty
-                      ? const Icon(Icons.person,
-                          size: 36, color: AppColors.primary)
-                      : null,
+                InkWell(
+                  onTap: () => _changeAvatar(context),
+                  child: CircleAvatar(
+                    radius: 36,
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.12),
+                    backgroundImage:
+                        user?.avatarUrl != null && user!.avatarUrl!.isNotEmpty
+                            ? NetworkImage(user.avatarUrl!)
+                            : null,
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: <Widget>[
+                        if (user?.avatarUrl == null || user!.avatarUrl!.isEmpty)
+                          const Icon(Icons.person,
+                              size: 36, color: AppColors.primary),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.camera_alt,
+                              size: 14, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -94,6 +114,12 @@ class ProfilePage extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 ListTile(
+                  leading: const Icon(Icons.edit_outlined),
+                  title: const Text('Ubah nama / no. HP'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _editProfile(context, user?.name, user?.phone),
+                ),
+                ListTile(
                   leading: const Icon(Icons.lock_outline),
                   title: const Text('Ubah kata sandi'),
                   trailing: const Icon(Icons.chevron_right),
@@ -107,7 +133,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.info_outline),
-                  title: const Text('Tentang eSchool'),
+                  title: const Text('Tentang Sikad Pro'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => context.push(Routes.about),
                 ),
@@ -140,6 +166,56 @@ class ProfilePage extends StatelessWidget {
         'ar' => 'العربية',
         _ => 'Bahasa Indonesia',
       };
+
+  Future<void> _changeAvatar(BuildContext context) async {
+    try {
+      final XFile? picked = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 800,
+        imageQuality: 85,
+      );
+      if (picked == null || !context.mounted) return;
+      final bool ok = await runMutation(
+        context,
+        () => ProfileRepository().uploadAvatar(picked.path),
+      );
+      if (ok && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Foto profil diperbarui.')),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+  }
+
+  Future<void> _editProfile(
+      BuildContext context, String? name, String? phone) async {
+    final Map<String, String>? v = await showFormDialog(
+      context,
+      title: 'Ubah Profil',
+      fields: <FormFieldDef>[
+        FormFieldDef(key: 'name', label: 'Nama', initial: name),
+        FormFieldDef(
+            key: 'phone',
+            label: 'No. HP (08…)',
+            initial: phone,
+            optional: true),
+      ],
+    );
+    if (v == null || !context.mounted) return;
+    final Map<String, String> payload = <String, String>{
+      'name': v['name']!,
+      if (v['phone']!.isNotEmpty) 'phone': v['phone']!,
+    };
+    await runMutation(
+      context,
+      () => ProfileRepository().updateProfile(payload),
+    );
+  }
 
   void _showLocaleSheet(BuildContext context) {
     showModalBottomSheet<void>(

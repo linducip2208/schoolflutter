@@ -22,8 +22,7 @@ class DailyReportAdminPage extends StatelessWidget {
             child: ListTile(
               leading: const Icon(Icons.auto_awesome_outlined),
               title: const Text('Generate laporan harian'),
-              subtitle:
-                  const Text('Buat laporan seluruh sekolah per tanggal.'),
+              subtitle: const Text('Buat laporan seluruh sekolah per tanggal.'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
                 final Map<String, String>? v = await showFormDialog(

@@ -9,8 +9,8 @@ import '../../../core/error/error_handler.dart';
 class ScholarshipsRepository {
   Future<List<Map<String, dynamic>>> programs() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.scholarshipPrograms);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.scholarshipPrograms);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -46,10 +46,14 @@ class ScholarshipsRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> applications() async {
+  Future<List<Map<String, dynamic>>> applications({int page = 1}) async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.scholarshipApply);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.scholarshipApply,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

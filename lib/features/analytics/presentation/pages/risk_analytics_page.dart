@@ -27,8 +27,8 @@ class RiskAnalyticsPage extends StatelessWidget {
       itemBuilder: (BuildContext c, Map<String, dynamic> e) => Card(
         child: ListTile(
           leading: const Icon(Icons.warning_amber_outlined),
-          title: Text(
-              e['name']?.toString() ?? 'Siswa ${e['student_id'] ?? '-'}'),
+          title:
+              Text(e['name']?.toString() ?? 'Siswa ${e['student_id'] ?? '-'}'),
           subtitle: Text('Skor ${e['risk_score'] ?? e['score'] ?? '-'}'),
           onTap: () => _showDetail(c, repo, e),
         ),
@@ -36,8 +36,8 @@ class RiskAnalyticsPage extends StatelessWidget {
     );
   }
 
-  Future<void> _showDetail(BuildContext c, AnalyticsRepository repo,
-      Map<String, dynamic> e) async {
+  Future<void> _showDetail(
+      BuildContext c, AnalyticsRepository repo, Map<String, dynamic> e) async {
     final int? studentId = (e['student_id'] as num?)?.toInt();
     if (studentId == null) return;
     Map<String, dynamic>? detail;

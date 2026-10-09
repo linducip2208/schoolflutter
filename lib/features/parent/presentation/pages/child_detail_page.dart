@@ -61,8 +61,7 @@ class ChildDetailPage extends StatelessWidget {
             _DisciplineTab(studentId: studentId),
             _SimpleListTab(
               title: 'Prestasi',
-              loader: () =>
-                  AchievementsRepository().ofStudent(studentId),
+              loader: () => AchievementsRepository().ofStudent(studentId),
               tile: (Map<String, dynamic> e) =>
                   '${e['title'] ?? '-'} • ${e['achieved_at'] ?? ''}',
             ),
@@ -87,8 +86,8 @@ class _OverviewTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: ParentRepository().children(),
-      builder: (BuildContext c,
-          AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+      builder:
+          (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const Padding(
               padding: EdgeInsets.all(24), child: AppLoading());
@@ -99,7 +98,8 @@ class _OverviewTab extends StatelessWidget {
           ]);
         }
         Map<String, dynamic>? me;
-        for (final Map<String, dynamic> e in snap.data ?? const <Map<String, dynamic>>[]) {
+        for (final Map<String, dynamic> e
+            in snap.data ?? const <Map<String, dynamic>>[]) {
           if ((e['id'] as num?)?.toInt() == studentId) me = e;
         }
         me ??= <String, dynamic>{'name': studentName};
@@ -127,8 +127,7 @@ class _DisciplineTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
       future: DisciplineRepository().summary(studentId),
-      builder:
-          (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
+      builder: (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const Padding(
               padding: EdgeInsets.all(24), child: AppLoading());
@@ -172,8 +171,8 @@ class _SimpleListTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: loader(),
-      builder: (BuildContext c,
-          AsyncSnapshot<List<Map<String, dynamic>>> snap) {
+      builder:
+          (BuildContext c, AsyncSnapshot<List<Map<String, dynamic>>> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const Padding(
               padding: EdgeInsets.all(24), child: AppLoading());

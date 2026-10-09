@@ -41,17 +41,23 @@ class _DapodikPageState extends State<DapodikPage> {
           ),
           actions: <Widget>[
             IconButton(
+              tooltip: 'Export siswa (CSV)',
+              icon: const Icon(Icons.download_outlined),
+              onPressed: () async {
+                await runMutation(context, () => _repo.exportStudents());
+              },
+            ),
+            IconButton(
               tooltip: 'Import siswa (CSV)',
               icon: const Icon(Icons.upload_file_outlined),
               onPressed: () async {
-                final FilePickerResult? picked =
-                    await FilePicker.platform.pickFiles(
+                final FilePickerResult? picked = await FilePicker.platform
+                    .pickFiles(
                         type: FileType.custom,
                         allowedExtensions: const <String>['csv', 'txt']);
                 final String? path = picked?.files.single.path;
                 if (path == null || !context.mounted) return;
-                await runMutation(
-                    context, () => _repo.importStudents(path));
+                await runMutation(context, () => _repo.importStudents(path));
               },
             ),
             IconButton(
@@ -77,8 +83,8 @@ class _DapodikPageState extends State<DapodikPage> {
           children: <Widget>[
             FutureBuilder<Map<String, dynamic>>(
               future: _config,
-              builder: (BuildContext c,
-                  AsyncSnapshot<Map<String, dynamic>> snap) {
+              builder:
+                  (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
                 if (snap.connectionState == ConnectionState.waiting) {
                   return const Padding(
                       padding: EdgeInsets.all(24), child: AppLoading());
@@ -93,7 +99,8 @@ class _DapodikPageState extends State<DapodikPage> {
                     ),
                   ]);
                 }
-                final Map<String, dynamic> d = snap.data ?? const <String, dynamic>{};
+                final Map<String, dynamic> d =
+                    snap.data ?? const <String, dynamic>{};
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: <Widget>[
@@ -117,8 +124,7 @@ class _DapodikPageState extends State<DapodikPage> {
                   child: ListTile(
                     leading: const Icon(Icons.sync_outlined),
                     title: Text('Run #$id • ${e['status'] ?? '-'}'),
-                    subtitle:
-                        Text('${e['created_at'] ?? '-'}'),
+                    subtitle: Text('${e['created_at'] ?? '-'}'),
                     trailing: IconButton(
                       tooltip: 'Konfirmasi',
                       icon: const Icon(Icons.check_circle_outline),

@@ -18,7 +18,7 @@ class EschoolApp extends StatelessWidget {
       builder: (BuildContext context, AuthState state) {
         final String localeCode = state.user?.locale ?? 'id';
         return MaterialApp.router(
-          title: 'eSchool',
+          title: 'Sikad Pro',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light(),
           darkTheme: AppTheme.dark(),

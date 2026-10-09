@@ -99,6 +99,22 @@ class SyncEngine {
     _started = false;
   }
 
+  /// Clears read cache + mutation outbox (logout/session-expiry).
+  /// Prevents the next user on a shared device from seeing the
+  /// previous user's cached data or replaying their mutations.
+  /// Best-effort: never throws (logout must not fail on storage).
+  Future<void> clearLocal() async {
+    try {
+      await _kv.clear();
+    } catch (_) {}
+    try {
+      await _mutations.clear();
+    } catch (_) {}
+    try {
+      pendingCount.value = 0;
+    } catch (_) {}
+  }
+
   /// POST with offline fallback. Returns the server response when online,
   /// otherwise persists to the outbox and throws [OfflineQueuedException].
   ///

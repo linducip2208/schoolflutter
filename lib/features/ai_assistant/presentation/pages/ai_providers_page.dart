@@ -17,22 +17,51 @@ class AiProvidersPage extends StatelessWidget {
       title: 'AI Provider',
       loader: repo.providers,
       emptyText: 'Belum ada provider AI. Tambahkan API key sendiri.',
+      actions: <Widget>[
+        IconButton(
+          tooltip: 'Penggunaan',
+          icon: const Icon(Icons.insights_outlined),
+          onPressed: () async {
+            Map<String, dynamic>? data;
+            String? error;
+            try {
+              data = await repo.usage();
+            } catch (e) {
+              error = e.toString();
+            }
+            if (!context.mounted) return;
+            await showDialog<void>(
+              context: context,
+              builder: (BuildContext d) => AlertDialog(
+                title: const Text('Penggunaan AI'),
+                content: Text(error ?? data.toString()),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(d).pop(),
+                    child: const Text('Tutup'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
       onCreate: () async {
         final Map<String, String>? v = await showFormDialog(
           context,
           title: 'Provider Baru',
           fields: const <FormFieldDef>[
             FormFieldDef(key: 'name', label: 'Nama (mis. OpenAI)'),
+            FormFieldDef(key: 'api_format', label: 'Format', options: <String>[
+              'openai_compatible',
+              'anthropic_format',
+              'gemini_format',
+              'image_generic'
+            ]),
             FormFieldDef(
-                key: 'api_format',
-                label: 'Format',
-                options: <String>[
-                  'openai_compatible',
-                  'anthropic_format',
-                  'gemini_format',
-                  'image_generic'
-                ]),
-            FormFieldDef(key: 'base_url', label: 'Base URL', hint: 'https://api.openai.com/v1'),
+                key: 'base_url',
+                label: 'Base URL',
+                hint: 'https://api.openai.com/v1'),
             FormFieldDef(key: 'api_key', label: 'API Key'),
           ],
         );

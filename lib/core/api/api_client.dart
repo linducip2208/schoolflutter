@@ -11,7 +11,18 @@ class ApiClient {
 
   static late final Dio _dio;
 
-  static Dio get dio => _dio;
+  /// Test seam: when set, [dio] returns the override instead of [_dio].
+  /// Repositories intentionally keep using [dio] so contract tests can
+  /// drive them with a fake [HttpClientAdapter] (no network).
+  static Dio? _debugDio;
+
+  static Dio get dio => _debugDio ?? _dio;
+
+  @visibleForTesting
+  static void debugOverrideDio(Dio dio) => _debugDio = dio;
+
+  @visibleForTesting
+  static void debugResetDio() => _debugDio = null;
 
   static void init() {
     _dio = Dio(

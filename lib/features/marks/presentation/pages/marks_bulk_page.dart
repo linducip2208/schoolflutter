@@ -26,7 +26,8 @@ class MarksBulkPage extends StatelessWidget {
               context,
               title: 'Publish Raport',
               fields: const <FormFieldDef>[
-                FormFieldDef(key: 'report_card_id', label: 'ID Raport', isNumber: true),
+                FormFieldDef(
+                    key: 'report_card_id', label: 'ID Raport', isNumber: true),
               ],
             );
             if (v == null || !context.mounted) return;
@@ -44,14 +45,15 @@ class MarksBulkPage extends StatelessWidget {
               context,
               title: 'Generate Raport',
               fields: const <FormFieldDef>[
-                FormFieldDef(key: 'semester_id', label: 'ID Semester', isNumber: true),
+                FormFieldDef(
+                    key: 'semester_id', label: 'ID Semester', isNumber: true),
               ],
             );
             if (v == null || !context.mounted) return;
             final List<int> saved = <int>[];
             await runMutation(context, () async {
-              final int n = await repo.generateReportCards(
-                  int.parse(v['semester_id']!));
+              final int n =
+                  await repo.generateReportCards(int.parse(v['semester_id']!));
               saved.add(n);
             });
             if (context.mounted && saved.isNotEmpty) {
@@ -69,9 +71,15 @@ class MarksBulkPage extends StatelessWidget {
           fields: const <FormFieldDef>[
             FormFieldDef(key: 'student_id', label: 'ID Siswa', isNumber: true),
             FormFieldDef(key: 'subject_id', label: 'ID Mapel', isNumber: true),
-            FormFieldDef(key: 'semester_id', label: 'ID Semester', isNumber: true),
-            FormFieldDef(key: 'obtained', label: 'Nilai diperoleh', isNumber: true),
-            FormFieldDef(key: 'total', label: 'Nilai maksimal', isNumber: true, initial: '100'),
+            FormFieldDef(
+                key: 'semester_id', label: 'ID Semester', isNumber: true),
+            FormFieldDef(
+                key: 'obtained', label: 'Nilai diperoleh', isNumber: true),
+            FormFieldDef(
+                key: 'total',
+                label: 'Nilai maksimal',
+                isNumber: true,
+                initial: '100'),
           ],
         );
         if (v == null || !context.mounted) return;

@@ -32,7 +32,7 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
 
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'eschool_default',
-    'eSchool Notifications',
+    'Sikad Pro Notifications',
     importance: Importance.high,
   );
   final FlutterLocalNotificationsPlugin plugin =
@@ -52,7 +52,7 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
     const NotificationDetails(
       android: AndroidNotificationDetails(
         'eschool_default',
-        'eSchool Notifications',
+        'Sikad Pro Notifications',
         importance: Importance.high,
         priority: Priority.high,
       ),

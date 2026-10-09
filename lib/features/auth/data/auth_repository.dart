@@ -6,6 +6,7 @@ import '../../../core/error/app_exception.dart';
 import '../../../core/error/error_handler.dart';
 import '../../../core/notifications/fcm_service.dart';
 import '../../../core/storage/app_storage.dart';
+import '../../../core/sync/sync_engine.dart';
 import 'models/school_model.dart';
 import 'models/user_model.dart';
 
@@ -147,6 +148,7 @@ class AuthRepository {
       // best effort — local clear regardless
     }
     await AppStorage.clearAuth();
+    await SyncEngine.instance.clearLocal();
   }
 
   Future<void> changePassword({

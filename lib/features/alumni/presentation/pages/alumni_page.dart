@@ -29,11 +29,9 @@ class _AlumniPageState extends State<AlumniPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String role =
-        context.watch<AuthBloc>().state.user?.role ?? 'student';
-    final bool isAdmin = role == 'admin' ||
-        role == 'school_admin' ||
-        role == 'super_admin';
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'student';
+    final bool isAdmin =
+        role == 'admin' || role == 'school_admin' || role == 'super_admin';
     return Scaffold(
       appBar: AppBar(title: const Text('Alumni')),
       body: ListView(
@@ -41,8 +39,8 @@ class _AlumniPageState extends State<AlumniPage> {
         children: <Widget>[
           FutureBuilder<Map<String, dynamic>>(
             future: _future,
-            builder: (BuildContext c,
-                AsyncSnapshot<Map<String, dynamic>> snap) {
+            builder:
+                (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
               if (snap.connectionState == ConnectionState.waiting) {
                 return const Padding(
                     padding: EdgeInsets.all(24), child: AppLoading());

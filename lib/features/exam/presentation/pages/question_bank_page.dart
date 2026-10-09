@@ -15,6 +15,8 @@ class QuestionBankPage extends StatelessWidget {
     return ModuleListPage(
       title: 'Bank Soal',
       loader: repo.items,
+      pagedLoader: ({required int page}) => repo.items(page: page),
+      pageSize: 50,
       emptyText: 'Belum ada soal.',
       onCreate: () async {
         final Map<String, String>? v = await showFormDialog(

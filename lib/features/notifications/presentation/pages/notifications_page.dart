@@ -1,14 +1,13 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/api/api_client.dart';
-import '../../../../core/api/api_endpoints.dart';
-import '../../../../core/api/response_unwrap.dart';
-import '../../../../core/error/error_handler.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../../../core/widgets/module_list_page.dart';
+import '../../data/notifications_repository.dart';
 
+/// Notifikasi: daftar + tandai dibaca (tap) + tandai semua.
+/// Backend: `/notifications*` via repository (bukan Dio langsung).
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
 
@@ -17,24 +16,30 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  final NotificationsRepository _repo = NotificationsRepository();
   late Future<List<Map<String, dynamic>>> _future = _fetch();
 
-  Future<List<Map<String, dynamic>>> _fetch() async {
-    try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.notifications);
-      return unwrapList(r.data);
-    } on DioException catch (e) {
-      throw mapDioError(e);
-    }
-  }
+  Future<List<Map<String, dynamic>>> _fetch() => _repo.list();
 
   void _reload() => setState(() => _future = _fetch());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Notifikasi')),
+      appBar: AppBar(
+        title: const Text('Notifikasi'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () async {
+              final bool ok =
+                  await runMutation(context, () => _repo.markAllRead());
+              if (ok) _reload();
+            },
+            child: const Text('Tandai semua',
+                style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
         builder:
@@ -47,8 +52,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
           }
           final List<Map<String, dynamic>> list =
               snap.data ?? <Map<String, dynamic>>[];
-          if (list.isEmpty)
+          if (list.isEmpty) {
             return const AppEmpty(title: 'Belum ada notifikasi');
+          }
           return RefreshIndicator(
             onRefresh: () async => _reload(),
             child: ListView.separated(
@@ -77,6 +83,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         : '',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                  onTap: unread
+                      ? () async {
+                          final bool ok = await runMutation(
+                            c,
+                            () => _repo.markRead((n['id'] as num).toInt()),
+                          );
+                          if (ok) _reload();
+                        }
+                      : null,
                 );
               },
             ),

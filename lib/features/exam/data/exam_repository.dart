@@ -100,4 +100,42 @@ class ExamRepository {
       throw mapDioError(e);
     }
   }
+
+  /// Start attempt: returns ExamResult with exam.questions
+  /// (correct_answer hidden by backend).
+  Future<Map<String, dynamic>> startExam(int examId) async {
+    try {
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.startExam(examId));
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  /// Submit: answers keyed by question id.
+  Future<Map<String, dynamic>> submitExam(
+    int examId,
+    Map<String, String> answers,
+  ) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.submitExam(examId),
+        data: <String, dynamic>{'answers': answers},
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> examResult(int examId) async {
+    try {
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.examResult(examId));
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

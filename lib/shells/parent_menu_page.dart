@@ -9,14 +9,38 @@ class ParentMenuPage extends StatelessWidget {
   const ParentMenuPage({super.key});
 
   static const List<_MenuEntry> _entries = <_MenuEntry>[
-    _MenuEntry(icon: Icons.family_restroom_outlined, label: 'Anak Saya', route: Routes.parentChildren),
-    _MenuEntry(icon: Icons.event_outlined, label: 'Event', route: Routes.parentEvent),
-    _MenuEntry(icon: Icons.volunteer_activism_outlined, label: 'Donasi', route: Routes.parentDonasi),
-    _MenuEntry(icon: Icons.chat_outlined, label: 'Chat', route: Routes.parentChat),
-    _MenuEntry(icon: Icons.campaign_outlined, label: 'Pengumuman', route: Routes.notice),
-    _MenuEntry(icon: Icons.notifications_outlined, label: 'Notifikasi', route: Routes.notifications),
-    _MenuEntry(icon: Icons.report_outlined, label: 'Lapor Bullying', route: Routes.parentBullying),
-    _MenuEntry(icon: Icons.sos_outlined, label: 'Darurat', route: Routes.parentEmergency),
+    _MenuEntry(
+        icon: Icons.family_restroom_outlined,
+        label: 'Anak Saya',
+        route: Routes.parentChildren),
+    _MenuEntry(
+        icon: Icons.how_to_reg_outlined,
+        label: 'PPDB Saya',
+        route: Routes.parentApplications),
+    _MenuEntry(
+        icon: Icons.event_outlined, label: 'Event', route: Routes.parentEvent),
+    _MenuEntry(
+        icon: Icons.volunteer_activism_outlined,
+        label: 'Donasi',
+        route: Routes.parentDonasi),
+    _MenuEntry(
+        icon: Icons.chat_outlined, label: 'Chat', route: Routes.parentChat),
+    _MenuEntry(
+        icon: Icons.campaign_outlined,
+        label: 'Pengumuman',
+        route: Routes.notice),
+    _MenuEntry(
+        icon: Icons.notifications_outlined,
+        label: 'Notifikasi',
+        route: Routes.notifications),
+    _MenuEntry(
+        icon: Icons.report_outlined,
+        label: 'Lapor Bullying',
+        route: Routes.parentBullying),
+    _MenuEntry(
+        icon: Icons.sos_outlined,
+        label: 'Darurat',
+        route: Routes.parentEmergency),
   ];
 
   @override
@@ -39,8 +63,7 @@ class ParentMenuPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Icon(e.icon,
-                        size: 32,
-                        color: Theme.of(context).colorScheme.primary),
+                        size: 32, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(height: 8),
                     Text(e.label,
                         style: Theme.of(context)

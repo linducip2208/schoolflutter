@@ -5,6 +5,8 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../../../core/widgets/form_dialog.dart';
+import '../../../../core/widgets/module_list_page.dart';
 import '../../data/chat_repository.dart';
 
 class ChatListPage extends StatefulWidget {
@@ -24,6 +26,35 @@ class _ChatListPageState extends State<ChatListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Pesan')),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: const Icon(Icons.add),
+        label: const Text('Chat Baru'),
+        onPressed: () async {
+          final Map<String, String>? v = await showFormDialog(
+            context,
+            title: 'Chat Baru',
+            fields: const <FormFieldDef>[
+              FormFieldDef(
+                  key: 'recipient_id',
+                  label: 'ID User tujuan (satu sekolah)',
+                  isNumber: true),
+            ],
+          );
+          if (v == null || !context.mounted) return;
+          Map<String, dynamic>? conv;
+          final bool ok = await runMutation(context, () async {
+            conv = await _repo.startConversation(int.parse(v['recipient_id']!));
+          });
+          if (ok && context.mounted) {
+            final dynamic id = conv?['id'];
+            if (id != null) {
+              context.push('/chat/$id');
+            } else {
+              _reload();
+            }
+          }
+        },
+      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
         builder:

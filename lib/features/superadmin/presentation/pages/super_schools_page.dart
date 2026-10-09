@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../../../core/widgets/form_dialog.dart';
+import '../../../../core/widgets/module_list_page.dart';
 import '../../data/superadmin_repository.dart';
 
 /// List of all schools (platform view) for `super_admin`.
@@ -82,7 +84,8 @@ class _SuperSchoolsPageState extends State<SuperSchoolsPage> {
                       ],
                     );
                   }
-                  final List<Map<String, dynamic>> items = snap.data ?? const <Map<String, dynamic>>[];
+                  final List<Map<String, dynamic>> items =
+                      snap.data ?? const <Map<String, dynamic>>[];
                   if (items.isEmpty) {
                     return ListView(
                       children: const <Widget>[
@@ -98,8 +101,10 @@ class _SuperSchoolsPageState extends State<SuperSchoolsPage> {
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                     itemCount: items.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 8),
-                    itemBuilder: (BuildContext c, int i) =>
-                        _SchoolCard(school: items[i]),
+                    itemBuilder: (BuildContext c, int i) => _SchoolCard(
+                      school: items[i],
+                      onChanged: _reload,
+                    ),
                   );
                 },
               ),
@@ -112,14 +117,16 @@ class _SuperSchoolsPageState extends State<SuperSchoolsPage> {
 }
 
 class _SchoolCard extends StatelessWidget {
-  const _SchoolCard({required this.school});
+  const _SchoolCard({required this.school, required this.onChanged});
   final Map<String, dynamic> school;
+  final VoidCallback onChanged;
 
   @override
   Widget build(BuildContext context) {
     final bool active = school['is_active'] == true;
-    final Map<String, dynamic>? plan =
-        school['plan'] is Map ? Map<String, dynamic>.from(school['plan'] as Map) : null;
+    final Map<String, dynamic>? plan = school['plan'] is Map
+        ? Map<String, dynamic>.from(school['plan'] as Map)
+        : null;
     final DateTime? expires =
         DateTime.tryParse(school['plan_expires_at']?.toString() ?? '');
     return Card(
@@ -136,17 +143,110 @@ class _SchoolCard extends StatelessWidget {
           <String>[
             if (school['subdomain'] != null) '${school['subdomain']}',
             if (plan?['name'] != null) 'Paket ${plan!['name']}',
-            if (expires != null)
-              's/d ${DateFormatter.dayMonthYear(expires)}',
+            if (expires != null) 's/d ${DateFormatter.dayMonthYear(expires)}',
           ].join(' • '),
         ),
-        trailing: Chip(
-          label: Text(active ? 'Aktif' : 'Nonaktif',
-              style: const TextStyle(fontSize: 11)),
-          visualDensity: VisualDensity.compact,
-          backgroundColor: active ? Colors.green.shade100 : Colors.red.shade100,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Chip(
+              label: Text(active ? 'Aktif' : 'Nonaktif',
+                  style: const TextStyle(fontSize: 11)),
+              visualDensity: VisualDensity.compact,
+              backgroundColor:
+                  active ? Colors.green.shade100 : Colors.red.shade100,
+            ),
+            PopupMenuButton<String>(
+              onSelected: (String v) =>
+                  _act(context, (school['id'] as num).toInt(), v, active),
+              itemBuilder: (_) => <PopupMenuItem<String>>[
+                PopupMenuItem<String>(
+                    value: active ? 'suspend' : 'activate',
+                    child: Text(active ? 'Suspend' : 'Aktifkan')),
+                const PopupMenuItem<String>(
+                    value: 'extend', child: Text('Extend langganan')),
+                const PopupMenuItem<String>(
+                    value: 'upgrade', child: Text('Upgrade paket')),
+                const PopupMenuItem<String>(
+                    value: 'log', child: Text('Activity log')),
+              ],
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> _act(
+      BuildContext context, int id, String action, bool active) async {
+    final SuperAdminRepository repo = SuperAdminRepository();
+    if (action == 'suspend' || action == 'activate') {
+      final bool ok = await runMutation(
+        context,
+        () => active ? repo.suspendSchool(id) : repo.activateSchool(id),
+      );
+      if (ok) onChanged();
+    } else if (action == 'extend' || action == 'upgrade') {
+      final Map<String, String>? v = await showFormDialog(
+        context,
+        title: action == 'extend' ? 'Extend Langganan' : 'Upgrade Paket',
+        fields: const <FormFieldDef>[
+          FormFieldDef(key: 'plan_id', label: 'ID Paket', isNumber: true),
+          FormFieldDef(key: 'expires_at', label: 'Berakhir (YYYY-MM-DD)'),
+        ],
+      );
+      if (v == null || !context.mounted) return;
+      final bool ok = await runMutation(
+        context,
+        () => action == 'extend'
+            ? repo.extendSubscription(id,
+                planId: int.parse(v['plan_id']!), expiresAt: v['expires_at']!)
+            : repo.upgradeSubscription(id,
+                planId: int.parse(v['plan_id']!), expiresAt: v['expires_at']!),
+      );
+      if (ok) onChanged();
+    } else if (action == 'log') {
+      List<Map<String, dynamic>> items = const <Map<String, dynamic>>[];
+      String? error;
+      try {
+        items = await repo.activityLog(id);
+      } catch (e) {
+        error = e.toString();
+      }
+      if (!context.mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (BuildContext d) => AlertDialog(
+          title: const Text('Activity Log'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: error != null
+                ? Text(error)
+                : items.isEmpty
+                    ? const Text('Belum ada aktivitas.')
+                    : SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            for (final Map<String, dynamic> e in items)
+                              ListTile(
+                                dense: true,
+                                title:
+                                    Text(e['description']?.toString() ?? '-'),
+                                subtitle: Text('${e['created_at'] ?? ''}'),
+                              ),
+                          ],
+                        ),
+                      ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(d).pop(),
+              child: const Text('Tutup'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

@@ -15,14 +15,14 @@ class EventsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EventsRepository repo = EventsRepository();
-    final String role =
-        context.watch<AuthBloc>().state.user?.role ?? 'student';
-    final bool canManage = role == 'admin' ||
-        role == 'school_admin' ||
-        role == 'super_admin';
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'student';
+    final bool canManage =
+        role == 'admin' || role == 'school_admin' || role == 'super_admin';
     return ModuleListPage(
       title: 'Event Sekolah',
       loader: repo.list,
+      pagedLoader: ({required int page}) => repo.list(page: page),
+      pageSize: 50,
       emptyText: 'Belum ada event.',
       onCreate: canManage
           ? () async {
@@ -46,7 +46,8 @@ class EventsPage extends StatelessWidget {
                   FormFieldDef(key: 'starts_at', label: 'Mulai (YYYY-MM-DD)'),
                   FormFieldDef(key: 'ends_at', label: 'Selesai (YYYY-MM-DD)'),
                   FormFieldDef(key: 'venue', label: 'Tempat'),
-                  FormFieldDef(key: 'capacity', label: 'Kapasitas', isNumber: true),
+                  FormFieldDef(
+                      key: 'capacity', label: 'Kapasitas', isNumber: true),
                 ],
               );
               if (v == null || !context.mounted) return;
@@ -90,8 +91,7 @@ class EventsPage extends StatelessWidget {
     );
   }
 
-  Future<void> _showRsvps(
-      BuildContext c, EventsRepository repo, int id) async {
+  Future<void> _showRsvps(BuildContext c, EventsRepository repo, int id) async {
     List<Map<String, dynamic>> items = const <Map<String, dynamic>>[];
     String? error;
     try {
@@ -119,8 +119,7 @@ class EventsPage extends StatelessWidget {
                               dense: true,
                               title: Text(
                                   r['name']?.toString() ?? 'ID ${r['id']}'),
-                              subtitle: Text(
-                                  r['status']?.toString() ?? '-'),
+                              subtitle: Text(r['status']?.toString() ?? '-'),
                             ),
                         ],
                       ),

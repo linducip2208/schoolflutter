@@ -81,12 +81,11 @@ class FinanceToolsPage extends StatelessWidget {
                   );
                 });
                 if (context.mounted && res != null) {
-                  final int paid =
-                      (res!['paid_amount'] as num?)?.toInt() ?? 0;
+                  final int paid = (res!['paid_amount'] as num?)?.toInt() ?? 0;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content: Text(
-                            'Tercatat ${CurrencyFormatter.idr(paid)}.')),
+                        content:
+                            Text('Tercatat ${CurrencyFormatter.idr(paid)}.')),
                   );
                 }
               },

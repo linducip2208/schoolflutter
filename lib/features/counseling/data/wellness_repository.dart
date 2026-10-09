@@ -16,7 +16,8 @@ class WellnessRepository {
         ApiEndpoints.wellnessCheckin,
         data: <String, dynamic>{
           'student_id': studentId,
-          'mood': mood,
+          // Backend field is mood_score (1-10).
+          'mood_score': mood.clamp(1, 10),
           if (note != null && note.isNotEmpty) 'note': note,
         },
       );
@@ -35,10 +36,14 @@ class WellnessRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> sessions() async {
+  Future<List<Map<String, dynamic>>> sessions({int page = 1}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.counselingSessions);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.counselingSessions,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -75,10 +80,12 @@ class WellnessRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> bullyingReports() async {
+  Future<List<Map<String, dynamic>>> bullyingReports({int page = 1}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.bullyingReports);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.bullyingReports,
+        queryParameters: <String, dynamic>{'page': page},
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

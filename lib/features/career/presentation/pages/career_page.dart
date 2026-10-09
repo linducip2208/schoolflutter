@@ -26,6 +26,9 @@ class CareerPage extends StatelessWidget {
             ModuleListPage(
               title: 'Magang',
               loader: repo.internships,
+              pagedLoader: ({required int page}) =>
+                  repo.internships(page: page),
+              pageSize: 50,
               emptyText: 'Belum ada data magang.',
               onCreate: () async {
                 final Map<String, String>? v = await showFormDialog(
@@ -54,8 +57,7 @@ class CareerPage extends StatelessWidget {
                   ),
                 );
               },
-              itemBuilder: (BuildContext c, Map<String, dynamic> e) =>
-                  Card(
+              itemBuilder: (BuildContext c, Map<String, dynamic> e) => Card(
                 child: ListTile(
                   leading: const Icon(Icons.work_outline),
                   title: Text(

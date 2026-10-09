@@ -17,15 +17,18 @@ class DonationsPage extends StatelessWidget {
     final DonationsRepository repo = DonationsRepository();
     final auth = context.watch<AuthBloc>().state;
     final String role = auth.user?.role ?? 'student';
-    final bool canManage = role == 'admin' ||
-        role == 'school_admin' ||
-        role == 'super_admin';
+    final bool canManage =
+        role == 'admin' || role == 'school_admin' || role == 'super_admin';
     final String subdomain = auth.school?.subdomain ?? '';
     return ModuleListPage(
       title: 'Donasi',
       loader: () => canManage || subdomain.isEmpty
           ? repo.campaigns()
           : repo.publicCampaigns(subdomain),
+      pagedLoader: canManage
+          ? ({required int page}) => repo.campaigns(page: page)
+          : null,
+      pageSize: 50,
       emptyText: 'Belum ada campaign donasi.',
       onCreate: canManage
           ? () async {
@@ -35,7 +38,10 @@ class DonationsPage extends StatelessWidget {
                 fields: const <FormFieldDef>[
                   FormFieldDef(key: 'title', label: 'Judul'),
                   FormFieldDef(key: 'description', label: 'Deskripsi'),
-                  FormFieldDef(key: 'target_amount', label: 'Target (Rp)', isNumber: true),
+                  FormFieldDef(
+                      key: 'target_amount',
+                      label: 'Target (Rp)',
+                      isNumber: true),
                   FormFieldDef(key: 'start_date', label: 'Mulai (YYYY-MM-DD)'),
                   FormFieldDef(key: 'end_date', label: 'Selesai (YYYY-MM-DD)'),
                   FormFieldDef(

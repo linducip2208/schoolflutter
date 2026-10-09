@@ -69,11 +69,36 @@ class SuperAdminRepository {
     }
   }
 
-  Future<void> extendSubscription(int id, String expiresAt) async {
+  Future<void> extendSubscription(
+    int id, {
+    required int planId,
+    required String expiresAt,
+  }) async {
     try {
       await ApiClient.dio.post<dynamic>(
         ApiEndpoints.superSchoolExtend(id),
-        data: <String, dynamic>{'plan_expires_at': expiresAt},
+        data: <String, dynamic>{
+          'plan_id': planId,
+          'expires_at': expiresAt,
+        },
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> upgradeSubscription(
+    int id, {
+    required int planId,
+    required String expiresAt,
+  }) async {
+    try {
+      await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.superSchoolUpgrade(id),
+        data: <String, dynamic>{
+          'plan_id': planId,
+          'expires_at': expiresAt,
+        },
       );
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -85,6 +110,52 @@ class SuperAdminRepository {
       final Response<dynamic> r =
           await ApiClient.dio.get<dynamic>(ApiEndpoints.superPlans);
       return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> storePlan({
+    required String name,
+    required String slug,
+    required int price,
+    int? maxStudents,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.superPlans,
+        data: <String, dynamic>{
+          'name': name,
+          'slug': slug,
+          'price': price,
+          if (maxStudents != null) 'max_students': maxStudents,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> storeSubscription({
+    required int schoolId,
+    required int planId,
+    required int amount,
+    required String periodFrom,
+    required String periodTo,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.superSubscriptions,
+        data: <String, dynamic>{
+          'school_id': schoolId,
+          'plan_id': planId,
+          'amount': amount,
+          'period_from': periodFrom,
+          'period_to': periodTo,
+        },
+      );
+      return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
     }
@@ -102,8 +173,8 @@ class SuperAdminRepository {
 
   Future<Map<String, dynamic>> revenueAnalytics() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.superRevenueAnalytics);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.superRevenueAnalytics);
       return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -112,8 +183,8 @@ class SuperAdminRepository {
 
   Future<Map<String, dynamic>> growthAnalytics() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.superGrowthAnalytics);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.superGrowthAnalytics);
       return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -122,8 +193,8 @@ class SuperAdminRepository {
 
   Future<Map<String, dynamic>> systemConfig() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.superSystemConfig);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.superSystemConfig);
       return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -145,8 +216,8 @@ class SuperAdminRepository {
 
   Future<Map<String, dynamic>> deepHealth() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.apiDeepHealth);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.apiDeepHealth);
       return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

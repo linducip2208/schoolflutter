@@ -54,7 +54,8 @@ class _BudgetPageState extends State<BudgetPage> {
                   key: 'budget_item_id', label: 'ID Item', isNumber: true),
               FormFieldDef(
                   key: 'transaction_date', label: 'Tanggal (YYYY-MM-DD)'),
-              FormFieldDef(key: 'amount', label: 'Nominal (Rp)', isNumber: true),
+              FormFieldDef(
+                  key: 'amount', label: 'Nominal (Rp)', isNumber: true),
               FormFieldDef(key: 'description', label: 'Keterangan'),
             ],
           );
@@ -73,8 +74,7 @@ class _BudgetPageState extends State<BudgetPage> {
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _future,
-        builder:
-            (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
+        builder: (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const Padding(
                 padding: EdgeInsets.all(24), child: AppLoading());
@@ -84,13 +84,11 @@ class _BudgetPageState extends State<BudgetPage> {
               AppError(message: snap.error.toString(), onRetry: _reload),
             ]);
           }
-          final Map<String, dynamic> d =
-              snap.data ?? const <String, dynamic>{};
+          final Map<String, dynamic> d = snap.data ?? const <String, dynamic>{};
           final int planned = (d['planned_total'] as num?)?.toInt() ?? 0;
           final int actual = (d['actual_total'] as num?)?.toInt() ?? 0;
           final List<dynamic> items =
-              ((d['items'] as Map?)?['data'] as List?) ??
-                  const <dynamic>[];
+              ((d['items'] as Map?)?['data'] as List?) ?? const <dynamic>[];
           return ListView(
             padding: const EdgeInsets.all(16),
             children: <Widget>[
@@ -100,10 +98,8 @@ class _BudgetPageState extends State<BudgetPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                          'Rencana ${CurrencyFormatter.compact(planned)}'),
-                      Text(
-                          'Realisasi ${CurrencyFormatter.compact(actual)}'),
+                      Text('Rencana ${CurrencyFormatter.compact(planned)}'),
+                      Text('Realisasi ${CurrencyFormatter.compact(actual)}'),
                       const SizedBox(height: 4),
                       LinearProgressIndicator(
                           value: planned <= 0

@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'eSchool';
+  String get appName => 'Sikad Pro';
 
   @override
   String get welcome => 'Welcome';
@@ -99,7 +99,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changePassword => 'Change password';
 
   @override
-  String get welcomeTitle => 'Welcome to eSchool';
+  String get welcomeTitle => 'Welcome to Sikad Pro';
 
   @override
   String get welcomeSubtitle => 'Integrated school digital platform';
@@ -118,7 +118,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeClose => 'Close';
 
   @override
-  String get about => 'About eSchool';
+  String get about => 'About Sikad Pro';
 
   @override
   String get contactUs => 'Contact Us';

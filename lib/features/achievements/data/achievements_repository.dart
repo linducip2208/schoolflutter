@@ -9,8 +9,8 @@ import '../../../core/error/error_handler.dart';
 class AchievementsRepository {
   Future<List<Map<String, dynamic>>> categories() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.achievementCategories);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.achievementCategories);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -62,8 +62,8 @@ class AchievementsRepository {
 
   Future<List<Map<String, dynamic>>> badges() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.achievementBadges);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.achievementBadges);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -72,8 +72,8 @@ class AchievementsRepository {
 
   Future<List<Map<String, dynamic>>> leaderboard() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.achievementLeaderboard);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.achievementLeaderboard);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

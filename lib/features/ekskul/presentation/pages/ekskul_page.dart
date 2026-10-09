@@ -20,8 +20,7 @@ class EkskulPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EkskulRepository repo = EkskulRepository();
-    final String role =
-        context.watch<AuthBloc>().state.user?.role ?? 'student';
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'student';
     final bool canManage = _canManage(role);
     return ModuleListPage(
       title: 'Ekstrakurikuler',
@@ -40,8 +39,8 @@ class EkskulPage extends StatelessWidget {
               if (v == null || !context.mounted) return;
               await runMutation(
                 context,
-                () => repo.store(
-                    name: v['name']!, description: v['description']),
+                () =>
+                    repo.store(name: v['name']!, description: v['description']),
               );
             }
           : null,

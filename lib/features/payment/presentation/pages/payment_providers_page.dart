@@ -113,8 +113,7 @@ class PaymentProvidersPage extends StatelessWidget {
                   ),
                 );
               },
-              itemBuilder: (BuildContext c, Map<String, dynamic> e) =>
-                  Card(
+              itemBuilder: (BuildContext c, Map<String, dynamic> e) => Card(
                 child: ListTile(
                   leading: const Icon(Icons.qr_code_outlined),
                   title: Text(e['display_name']?.toString() ?? '-'),

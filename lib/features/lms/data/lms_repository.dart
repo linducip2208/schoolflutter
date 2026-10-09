@@ -27,12 +27,13 @@ class LmsRepository {
     }
   }
 
-  Future<void> enroll(int courseId) async {
+  Future<Map<String, dynamic>> enroll(int courseId) async {
     try {
-      await ApiClient.dio.post<dynamic>(
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
         ApiEndpoints.lmsEnroll,
         data: <String, dynamic>{'course_id': courseId},
       );
+      return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
     }
@@ -48,11 +49,18 @@ class LmsRepository {
     }
   }
 
-  Future<void> completeLesson(int lessonId) async {
+  /// Backend requires BOTH enrollment_id and lesson_id.
+  Future<void> completeLesson({
+    required int enrollmentId,
+    required int lessonId,
+  }) async {
     try {
       await ApiClient.dio.post<dynamic>(
         ApiEndpoints.lmsCompleteLesson,
-        data: <String, dynamic>{'lesson_id': lessonId},
+        data: <String, dynamic>{
+          'enrollment_id': enrollmentId,
+          'lesson_id': lessonId,
+        },
       );
     } on DioException catch (e) {
       throw mapDioError(e);

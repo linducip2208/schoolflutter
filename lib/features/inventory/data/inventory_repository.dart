@@ -7,10 +7,14 @@ import '../../../core/error/error_handler.dart';
 
 /// Inventaris/aset. Backend: `InventoryController` (`/inventory/*`).
 class InventoryRepository {
-  Future<List<Map<String, dynamic>>> assets() async {
+  Future<List<Map<String, dynamic>>> assets({int page = 1}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.invAssets);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.invAssets,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -39,10 +43,14 @@ class InventoryRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> loans() async {
+  Future<List<Map<String, dynamic>>> loans({int page = 1}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.invLoans);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.invLoans,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
@@ -65,10 +73,14 @@ class InventoryRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> maintenance() async {
+  Future<List<Map<String, dynamic>>> maintenance({int page = 1}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.invMaintenance);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.invMaintenance,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

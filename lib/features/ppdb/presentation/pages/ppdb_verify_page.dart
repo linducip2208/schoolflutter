@@ -15,6 +15,8 @@ class PpdbVerifyPage extends StatelessWidget {
     return ModuleListPage(
       title: 'Verifikasi PPDB',
       loader: repo.adminApplications,
+      pagedLoader: ({required int page}) => repo.adminApplications(page: page),
+      pageSize: 50,
       emptyText: 'Belum ada pendaftar.',
       actions: <Widget>[
         IconButton(

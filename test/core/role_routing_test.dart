@@ -29,8 +29,7 @@ void main() {
           Routes.homeForRole('procurement_admin'), Routes.procurementInventory);
       expect(Routes.homeForRole('driver'), Routes.gateScan);
       expect(Routes.homeForRole('security'), Routes.gateScan);
-      expect(
-          Routes.homeForRole('visitor_operator'), Routes.visitorOpsHome);
+      expect(Routes.homeForRole('visitor_operator'), Routes.visitorOpsHome);
       expect(Routes.homeForRole('school_admin'), Routes.schoolOpsCanteen);
       expect(Routes.homeForRole('foundation_admin'), Routes.foundationHome);
       expect(Routes.homeForRole('homeroom_teacher'), Routes.teacherDashboard);

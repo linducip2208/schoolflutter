@@ -61,8 +61,8 @@ class _CalendarPageState extends State<CalendarPage> {
       appBar: AppBar(title: const Text('Kalender Akademik')),
       body: FutureBuilder<List<Map<String, String>>>(
         future: _future,
-        builder: (BuildContext c,
-            AsyncSnapshot<List<Map<String, String>>> snap) {
+        builder:
+            (BuildContext c, AsyncSnapshot<List<Map<String, String>>> snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const Padding(
                 padding: EdgeInsets.all(24), child: AppLoading());

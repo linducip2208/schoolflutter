@@ -11,6 +11,7 @@ class DirectoryRepository {
   Future<List<Map<String, dynamic>>> students({
     String? search,
     int? classSectionId,
+    int page = 1,
   }) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
@@ -18,6 +19,7 @@ class DirectoryRepository {
         queryParameters: <String, dynamic>{
           if (search != null && search.isNotEmpty) 'search': search,
           if (classSectionId != null) 'class_section_id': classSectionId,
+          'page': page,
         },
       );
       return unwrapList(r.data);
@@ -26,12 +28,14 @@ class DirectoryRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> staff({String? search}) async {
+  Future<List<Map<String, dynamic>>> staff(
+      {String? search, int page = 1}) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
         ApiEndpoints.dirStaff,
         queryParameters: <String, dynamic>{
           if (search != null && search.isNotEmpty) 'search': search,
+          'page': page,
         },
       );
       return unwrapList(r.data);

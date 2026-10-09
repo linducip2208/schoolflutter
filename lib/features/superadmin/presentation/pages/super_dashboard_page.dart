@@ -66,8 +66,7 @@ class _SuperDashboardView extends StatelessWidget {
                           .add(const DashboardRefreshRequested('super_admin')),
                     )
                   else
-                    _content(
-                        context, state.data ?? const <String, dynamic>{}),
+                    _content(context, state.data ?? const <String, dynamic>{}),
                 ],
               ),
             );
@@ -78,10 +77,12 @@ class _SuperDashboardView extends StatelessWidget {
   }
 
   Widget _content(BuildContext context, Map<String, dynamic> d) {
-    final Map<String, dynamic> overview =
-        (d['overview'] as Map?) != null ? Map<String, dynamic>.from(d['overview'] as Map) : const <String, dynamic>{};
+    final Map<String, dynamic> overview = (d['overview'] as Map?) != null
+        ? Map<String, dynamic>.from(d['overview'] as Map)
+        : const <String, dynamic>{};
     final int totalSchools = (overview['total_schools'] as num?)?.toInt() ?? 0;
-    final int activeSchools = (overview['active_schools'] as num?)?.toInt() ?? 0;
+    final int activeSchools =
+        (overview['active_schools'] as num?)?.toInt() ?? 0;
     final int suspendedSchools =
         (overview['suspended_schools'] as num?)?.toInt() ?? 0;
     final int totalStudents =
@@ -91,8 +92,7 @@ class _SuperDashboardView extends StatelessWidget {
     // return whole rupiah. Hence the single /100 here.
     final int revenueCents =
         (overview['total_revenue_this_month_cents'] as num?)?.toInt() ?? 0;
-    final int newSchools =
-        (d['new_schools_this_month'] as num?)?.toInt() ?? 0;
+    final int newSchools = (d['new_schools_this_month'] as num?)?.toInt() ?? 0;
     final List<dynamic> trend =
         (d['monthly_revenue'] as List<dynamic>?) ?? const <dynamic>[];
     final List<dynamic> expiring =
@@ -231,8 +231,8 @@ class _SuperDashboardView extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.workspace_premium_outlined),
               title: Text((p as Map)['plan']?.toString() ?? '-'),
-              trailing: Text(
-                  '${p['count'] ?? 0} sekolah (${p['percentage'] ?? 0}%)'),
+              trailing:
+                  Text('${p['count'] ?? 0} sekolah (${p['percentage'] ?? 0}%)'),
               dense: true,
             ),
         ],
@@ -262,8 +262,7 @@ class _SuperDashboardView extends StatelessWidget {
     final List<FlSpot> spots = <FlSpot>[];
     double maxY = 0;
     for (int i = 0; i < data.length; i++) {
-      final num cents =
-          ((data[i] as Map)['amount_cents'] as num?) ?? 0;
+      final num cents = ((data[i] as Map)['amount_cents'] as num?) ?? 0;
       final double v = cents.toDouble() / 100;
       if (v > maxY) maxY = v;
       spots.add(FlSpot(i.toDouble(), v));

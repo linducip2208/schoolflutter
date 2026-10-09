@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../../../core/widgets/form_dialog.dart';
+import '../../../../core/widgets/module_list_page.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../data/classroom_repository.dart';
 
 class ClassroomPage extends StatefulWidget {
@@ -36,6 +40,12 @@ class _ClassroomPageState extends State<ClassroomPage>
 
   @override
   Widget build(BuildContext context) {
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'student';
+    final bool canManage = role == 'admin' ||
+        role == 'school_admin' ||
+        role == 'super_admin' ||
+        role == 'teacher' ||
+        role == 'homeroom_teacher';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kelas'),
@@ -47,10 +57,43 @@ class _ClassroomPageState extends State<ClassroomPage>
           ],
         ),
       ),
+      floatingActionButton: canManage
+          ? FloatingActionButton.extended(
+              icon: const Icon(Icons.add),
+              label: const Text('Tugas'),
+              onPressed: () async {
+                final Map<String, String>? v = await showFormDialog(
+                  context,
+                  title: 'Tugas Baru',
+                  fields: const <FormFieldDef>[
+                    FormFieldDef(
+                        key: 'lesson_id', label: 'ID Materi', isNumber: true),
+                    FormFieldDef(key: 'title', label: 'Judul'),
+                    FormFieldDef(
+                        key: 'due_date', label: 'Tenggat (YYYY-MM-DD)'),
+                  ],
+                );
+                if (v == null || !context.mounted) return;
+                final bool ok = await runMutation(
+                  context,
+                  () => _repo.storeAssignment(
+                    lessonId: int.parse(v['lesson_id']!),
+                    title: v['title']!,
+                    dueDate: v['due_date']!,
+                  ),
+                );
+                if (ok) _reload();
+              },
+            )
+          : null,
       body: TabBarView(
         controller: _tab,
         children: <Widget>[
-          _List(future: _assignments, kind: 'assignment', onRefresh: _reload),
+          _List(
+              future: _assignments,
+              kind: 'assignment',
+              onRefresh: _reload,
+              canGrade: canManage),
           _List(future: _materials, kind: 'material', onRefresh: _reload),
         ],
       ),
@@ -58,13 +101,100 @@ class _ClassroomPageState extends State<ClassroomPage>
   }
 }
 
+Future<void> _openSubmissions(BuildContext context,
+    Map<String, dynamic> assignment, bool canGrade) async {
+  final ClassroomRepository repo = ClassroomRepository();
+  final int id = (assignment['id'] as num).toInt();
+  List<Map<String, dynamic>> items = const <Map<String, dynamic>>[];
+  String? error;
+  try {
+    items = await repo.submissions(id);
+  } catch (e) {
+    error = e.toString();
+  }
+  if (!context.mounted) return;
+  await showDialog<void>(
+    context: context,
+    builder: (BuildContext d) => AlertDialog(
+      title: Text('Submissions — ${assignment['title'] ?? ''}'),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: error != null
+            ? Text(error)
+            : items.isEmpty
+                ? const Text('Belum ada submission.')
+                : SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        for (final Map<String, dynamic> s in items)
+                          ListTile(
+                            dense: true,
+                            title: Text(
+                                'Siswa ${s['student_id'] ?? '-'} • Nilai ${s['marks'] ?? '-'}'),
+                            subtitle: Text('${s['feedback'] ?? ''}'),
+                            trailing: canGrade
+                                ? IconButton(
+                                    tooltip: 'Nilai',
+                                    icon: const Icon(Icons.grade_outlined),
+                                    onPressed: () async {
+                                      final Map<String, String>? v =
+                                          await showFormDialog(
+                                        d,
+                                        title: 'Nilai Submission',
+                                        fields: const <FormFieldDef>[
+                                          FormFieldDef(
+                                              key: 'marks',
+                                              label: 'Nilai',
+                                              isNumber: true),
+                                          FormFieldDef(
+                                              key: 'feedback',
+                                              label: 'Feedback'),
+                                        ],
+                                      );
+                                      if (v == null || !d.mounted) {
+                                        return;
+                                      }
+                                      await runMutation(
+                                        d,
+                                        () => repo.gradeSubmission(
+                                          (s['id'] as num).toInt(),
+                                          int.parse(v['marks']!),
+                                          feedback: v['feedback'],
+                                        ),
+                                      );
+                                      if (d.mounted) {
+                                        Navigator.of(d).pop();
+                                      }
+                                    },
+                                  )
+                                : null,
+                          ),
+                      ],
+                    ),
+                  ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(d).pop(),
+          child: const Text('Tutup'),
+        ),
+      ],
+    ),
+  );
+}
+
 class _List extends StatelessWidget {
   const _List(
-      {required this.future, required this.kind, required this.onRefresh});
+      {required this.future,
+      required this.kind,
+      required this.onRefresh,
+      this.canGrade = false});
 
   final Future<List<Map<String, dynamic>>> future;
   final String kind;
   final VoidCallback onRefresh;
+  final bool canGrade;
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +250,9 @@ class _List extends StatelessWidget {
                     ],
                   ),
                   trailing: const Icon(Icons.chevron_right),
+                  onTap: kind == 'assignment'
+                      ? () => _openSubmissions(c, a, canGrade)
+                      : null,
                 ),
               );
             },

@@ -15,6 +15,8 @@ class MedicalManagePage extends StatelessWidget {
     return ModuleListPage(
       title: 'UKS / Klinik',
       loader: repo.allVisits,
+      pagedLoader: ({required int page}) => repo.allVisits(page: page),
+      pageSize: 50,
       emptyText: 'Belum ada kunjungan.',
       onCreate: () async {
         final Map<String, String>? v = await showFormDialog(

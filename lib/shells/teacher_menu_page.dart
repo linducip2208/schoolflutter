@@ -9,21 +9,64 @@ class TeacherMenuPage extends StatelessWidget {
   const TeacherMenuPage({super.key});
 
   static const List<_MenuEntry> _entries = <_MenuEntry>[
-    _MenuEntry(icon: Icons.description_outlined, label: 'RPP', route: Routes.teacherRpp),
-    _MenuEntry(icon: Icons.help_outline, label: 'Bank Soal', route: Routes.teacherBankSoal),
-    _MenuEntry(icon: Icons.grade_outlined, label: 'Input Nilai', route: Routes.teacherNilai),
-    _MenuEntry(icon: Icons.videocam_outlined, label: 'Live Class', route: Routes.teacherLive),
-    _MenuEntry(icon: Icons.auto_awesome_outlined, label: 'AI Tools', route: Routes.teacherAi),
-    _MenuEntry(icon: Icons.account_tree_outlined, label: 'Kurikulum', route: Routes.teacherKurikulum),
-    _MenuEntry(icon: Icons.menu_book_outlined, label: 'Hafalan', route: Routes.hafalanInput),
-    _MenuEntry(icon: Icons.gavel_outlined, label: 'Disiplin', route: Routes.teacherDisiplin),
-    _MenuEntry(icon: Icons.emoji_events_outlined, label: 'Prestasi', route: Routes.teacherPrestasi),
-    _MenuEntry(icon: Icons.chat_outlined, label: 'Chat', route: Routes.teacherChat),
-    _MenuEntry(icon: Icons.notifications_outlined, label: 'Notifikasi', route: Routes.notifications),
-    _MenuEntry(icon: Icons.lock_outlined, label: 'Kunci & Koreksi', route: Routes.teacherAttendanceTools),
-    _MenuEntry(icon: Icons.flag_outlined, label: 'Target Hafalan', route: Routes.teacherHafalanTargets),
-    _MenuEntry(icon: Icons.quiz_outlined, label: 'Kuis LMS', route: Routes.teacherQuizzes),
-    _MenuEntry(icon: Icons.sos_outlined, label: 'Darurat', route: Routes.teacherEmergency),
+    _MenuEntry(
+        icon: Icons.description_outlined,
+        label: 'RPP',
+        route: Routes.teacherRpp),
+    _MenuEntry(
+        icon: Icons.help_outline,
+        label: 'Bank Soal',
+        route: Routes.teacherBankSoal),
+    _MenuEntry(
+        icon: Icons.grade_outlined,
+        label: 'Input Nilai',
+        route: Routes.teacherNilai),
+    _MenuEntry(
+        icon: Icons.videocam_outlined,
+        label: 'Live Class',
+        route: Routes.teacherLive),
+    _MenuEntry(
+        icon: Icons.auto_awesome_outlined,
+        label: 'AI Tools',
+        route: Routes.teacherAi),
+    _MenuEntry(
+        icon: Icons.account_tree_outlined,
+        label: 'Kurikulum',
+        route: Routes.teacherKurikulum),
+    _MenuEntry(
+        icon: Icons.menu_book_outlined,
+        label: 'Hafalan',
+        route: Routes.hafalanInput),
+    _MenuEntry(
+        icon: Icons.gavel_outlined,
+        label: 'Disiplin',
+        route: Routes.teacherDisiplin),
+    _MenuEntry(
+        icon: Icons.emoji_events_outlined,
+        label: 'Prestasi',
+        route: Routes.teacherPrestasi),
+    _MenuEntry(
+        icon: Icons.chat_outlined, label: 'Chat', route: Routes.teacherChat),
+    _MenuEntry(
+        icon: Icons.notifications_outlined,
+        label: 'Notifikasi',
+        route: Routes.notifications),
+    _MenuEntry(
+        icon: Icons.lock_outlined,
+        label: 'Kunci & Koreksi',
+        route: Routes.teacherAttendanceTools),
+    _MenuEntry(
+        icon: Icons.flag_outlined,
+        label: 'Target Hafalan',
+        route: Routes.teacherHafalanTargets),
+    _MenuEntry(
+        icon: Icons.quiz_outlined,
+        label: 'Kuis LMS',
+        route: Routes.teacherQuizzes),
+    _MenuEntry(
+        icon: Icons.sos_outlined,
+        label: 'Darurat',
+        route: Routes.teacherEmergency),
   ];
 
   @override
@@ -46,8 +89,7 @@ class TeacherMenuPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Icon(e.icon,
-                        size: 32,
-                        color: Theme.of(context).colorScheme.primary),
+                        size: 32, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(height: 8),
                     Text(e.label,
                         style: Theme.of(context)

@@ -7,10 +7,14 @@ import '../../../core/error/error_handler.dart';
 
 /// Karier/BKK. Backend: `CareerController` (`/career/*`).
 class CareerRepository {
-  Future<List<Map<String, dynamic>>> internships() async {
+  Future<List<Map<String, dynamic>>> internships({int page = 1}) async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.careerInternships);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.careerInternships,
+        queryParameters: <String, dynamic>{
+          'page': page,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

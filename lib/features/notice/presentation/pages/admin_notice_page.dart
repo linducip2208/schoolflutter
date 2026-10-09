@@ -5,6 +5,7 @@ import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../../../core/widgets/module_list_page.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../data/notice_repository.dart';
 
@@ -138,11 +139,9 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
   @override
   Widget build(BuildContext context) {
     // notice.manage gate: principal & others read-only.
-    final String role =
-        context.watch<AuthBloc>().state.user?.role ?? 'admin';
-    final bool canManage = role == 'admin' ||
-        role == 'school_admin' ||
-        role == 'super_admin';
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'admin';
+    final bool canManage =
+        role == 'admin' || role == 'school_admin' || role == 'super_admin';
     return Scaffold(
       appBar: AppBar(title: const Text('Pengumuman')),
       floatingActionButton: canManage
@@ -184,6 +183,38 @@ class _AdminNoticePageState extends State<AdminNoticePage> {
                               DateTime.parse(n['published_at'] as String))
                           : '',
                     ),
+                    trailing: canManage
+                        ? IconButton(
+                            tooltip: 'Hapus',
+                            icon: const Icon(Icons.delete_outline),
+                            onPressed: () async {
+                              final bool? ok = await showDialog<bool>(
+                                context: c,
+                                builder: (BuildContext d) => AlertDialog(
+                                  title: const Text('Hapus pengumuman?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(d).pop(false),
+                                      child: const Text('Batal'),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () =>
+                                          Navigator.of(d).pop(true),
+                                      child: const Text('Hapus'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (ok != true || !c.mounted) return;
+                              final bool done = await runMutation(
+                                c,
+                                () => _repo.remove((n['id'] as num).toInt()),
+                              );
+                              if (done) _reload();
+                            },
+                          )
+                        : null,
                   ),
                 );
               },

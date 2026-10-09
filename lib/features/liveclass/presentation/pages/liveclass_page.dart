@@ -15,8 +15,7 @@ class LiveClassPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LiveClassRepository repo = LiveClassRepository();
-    final String role =
-        context.watch<AuthBloc>().state.user?.role ?? 'student';
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'student';
     final bool canManage = role == 'admin' ||
         role == 'school_admin' ||
         role == 'super_admin' ||
@@ -24,6 +23,8 @@ class LiveClassPage extends StatelessWidget {
     return ModuleListPage(
       title: 'Live Class',
       loader: repo.sessions,
+      pagedLoader: ({required int page}) => repo.sessions(page: page),
+      pageSize: 50,
       emptyText: 'Belum ada sesi live class.',
       onCreate: canManage
           ? () async {
@@ -35,7 +36,8 @@ class LiveClassPage extends StatelessWidget {
                       key: 'class_section_id',
                       label: 'ID Rombel',
                       isNumber: true),
-                  FormFieldDef(key: 'subject_id', label: 'ID Mapel', isNumber: true),
+                  FormFieldDef(
+                      key: 'subject_id', label: 'ID Mapel', isNumber: true),
                   FormFieldDef(key: 'topic', label: 'Topik'),
                   FormFieldDef(
                       key: 'scheduled_start',
@@ -55,8 +57,7 @@ class LiveClassPage extends StatelessWidget {
                   subjectId: int.parse(v['subject_id']!),
                   topic: v['topic']!,
                   scheduledStart: v['scheduled_start']!,
-                  durationMinutes:
-                      int.tryParse(v['duration_minutes']!) ?? 60,
+                  durationMinutes: int.tryParse(v['duration_minutes']!) ?? 60,
                 ),
               );
             }
@@ -83,8 +84,10 @@ class LiveClassPage extends StatelessWidget {
                     itemBuilder: (_) => const <PopupMenuItem<String>>[
                       PopupMenuItem<String>(
                           value: 'start', child: Text('Mulai')),
-                      PopupMenuItem<String>(value: 'end', child: Text('Selesai')),
-                      PopupMenuItem<String>(value: 'join', child: Text('Ikuti')),
+                      PopupMenuItem<String>(
+                          value: 'end', child: Text('Selesai')),
+                      PopupMenuItem<String>(
+                          value: 'join', child: Text('Ikuti')),
                     ],
                   )
                 : FilledButton.tonal(
@@ -97,12 +100,11 @@ class LiveClassPage extends StatelessWidget {
     );
   }
 
-  Future<void> _join(
-      BuildContext c, LiveClassRepository repo, int id) async {
+  Future<void> _join(BuildContext c, LiveClassRepository repo, int id) async {
     try {
       final Map<String, dynamic> res = await repo.join(id);
-      final String? url = (res['join_url'] ?? res['url'] ?? res['link'])
-          ?.toString();
+      final String? url =
+          (res['join_url'] ?? res['url'] ?? res['link'])?.toString();
       if (url == null || url.isEmpty) {
         if (c.mounted) {
           ScaffoldMessenger.of(c).showSnackBar(

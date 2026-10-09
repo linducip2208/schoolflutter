@@ -97,8 +97,8 @@ class AttendanceRepository {
 
   Future<List<Map<String, dynamic>>> corrections() async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .get<dynamic>(ApiEndpoints.attendanceCorrections);
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.attendanceCorrections);
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

@@ -24,6 +24,7 @@ class ApiEndpoints {
   // ── School
   static const String schoolProfile = '/school/profile';
   static const String schoolSettings = '/school/settings';
+  static const String schoolLogo = '/school/logo';
 
   // ── Dashboard (aggregator per role)
   static const String studentDashboard = '/dashboard/student';
@@ -149,6 +150,8 @@ class ApiEndpoints {
   static String ppdbRegister(String subdomain) =>
       '/public/ppdb/$subdomain/register';
   static const String ppdbMyApplications = '/ppdb/applications/me';
+  static String ppdbSubmit(int id) => '/ppdb/applications/$id/submit';
+  static String ppdbUploadDoc(int id) => '/ppdb/applications/$id/upload-doc';
 
   // ── Bus tracking + Gate
   static String childBusLocation(int studentId) =>
@@ -290,9 +293,9 @@ class ApiEndpoints {
 
   // ── Payment providers admin (BYOK)
   static const String payProviders = '/admin/payment-providers';
-  static String payProviderTest(int id) =>
-      '/admin/payment-providers/$id/test';
-  static const String payProviderPresets = '/admin/payment-providers/presets/list';
+  static String payProviderTest(int id) => '/admin/payment-providers/$id/test';
+  static const String payProviderPresets =
+      '/admin/payment-providers/presets/list';
   static const String payProviderPresetLoad =
       '/admin/payment-providers/presets/load';
   static const String payMethodsAdmin = '/admin/payment-methods';
@@ -508,7 +511,8 @@ class ApiEndpoints {
   static String letterStatus(int id) => '/letters/$id/status';
 
   // ── Super extras
-  static String superSchoolActivity(int id) =>      '/super/schools/$id/activity-log';
+  static String superSchoolActivity(int id) =>
+      '/super/schools/$id/activity-log';
   static String superSchoolSuspend(int id) => '/super/schools/$id/suspend';
   static String superSchoolActivate(int id) => '/super/schools/$id/activate';
   static String superSchoolExtend(int id) =>

@@ -33,16 +33,13 @@ class BullyingReportPage extends StatelessWidget {
                 context,
                 title: 'Laporan Baru',
                 fields: const <FormFieldDef>[
-                  FormFieldDef(
-                      key: 'type',
-                      label: 'Tipe',
-                      options: <String>[
-                        'verbal',
-                        'physical',
-                        'cyber',
-                        'social',
-                        'other'
-                      ]),
+                  FormFieldDef(key: 'type', label: 'Tipe', options: <String>[
+                    'verbal',
+                    'physical',
+                    'cyber',
+                    'social',
+                    'other'
+                  ]),
                   FormFieldDef(key: 'location', label: 'Lokasi'),
                   FormFieldDef(key: 'description', label: 'Deskripsi'),
                 ],

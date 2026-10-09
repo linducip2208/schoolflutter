@@ -46,8 +46,8 @@ class PaymentAdminRepository {
 
   Future<Map<String, dynamic>> testProvider(int id) async {
     try {
-      final Response<dynamic> r = await ApiClient.dio
-          .post<dynamic>(ApiEndpoints.payProviderTest(id));
+      final Response<dynamic> r =
+          await ApiClient.dio.post<dynamic>(ApiEndpoints.payProviderTest(id));
       return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

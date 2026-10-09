@@ -29,26 +29,31 @@ class CounselingPage extends StatelessWidget {
             ModuleListPage(
               title: 'Sesi',
               loader: repo.sessions,
+              pagedLoader: ({required int page}) => repo.sessions(page: page),
+              pageSize: 50,
               emptyText: 'Belum ada sesi.',
               onCreate: () async {
                 final Map<String, String>? v = await showFormDialog(
                   context,
                   title: 'Jadwalkan Sesi',
                   fields: const <FormFieldDef>[
-                    FormFieldDef(key: 'student_id', label: 'ID Siswa', isNumber: true),
-                    FormFieldDef(key: 'counselor_id', label: 'ID Konselor', isNumber: true),
-                    FormFieldDef(key: 'scheduled_at', label: 'Jadwal (YYYY-MM-DD HH:MM)'),
                     FormFieldDef(
-                        key: 'type',
-                        label: 'Tipe',
-                        options: <String>[
-                          'academic',
-                          'behavior',
-                          'mental_health',
-                          'career',
-                          'family',
-                          'social'
-                        ]),
+                        key: 'student_id', label: 'ID Siswa', isNumber: true),
+                    FormFieldDef(
+                        key: 'counselor_id',
+                        label: 'ID Konselor',
+                        isNumber: true),
+                    FormFieldDef(
+                        key: 'scheduled_at',
+                        label: 'Jadwal (YYYY-MM-DD HH:MM)'),
+                    FormFieldDef(key: 'type', label: 'Tipe', options: <String>[
+                      'academic',
+                      'behavior',
+                      'mental_health',
+                      'career',
+                      'family',
+                      'social'
+                    ]),
                   ],
                 );
                 if (v == null || !context.mounted) return;
@@ -69,8 +74,8 @@ class CounselingPage extends StatelessWidget {
                     leading: const Icon(Icons.forum_outlined),
                     title: Text(
                         'Siswa ${e['student_id'] ?? '-'} • ${e['type'] ?? '-'}'),
-                    subtitle:
-                        Text('${e['scheduled_at'] ?? '-'} • ${e['status'] ?? '-'}'),
+                    subtitle: Text(
+                        '${e['scheduled_at'] ?? '-'} • ${e['status'] ?? '-'}'),
                     trailing: IconButton(
                       tooltip: 'Selesaikan',
                       icon: const Icon(Icons.check_circle_outline),
@@ -85,22 +90,22 @@ class CounselingPage extends StatelessWidget {
             ModuleListPage(
               title: 'Bullying',
               loader: repo.bullyingReports,
+              pagedLoader: ({required int page}) =>
+                  repo.bullyingReports(page: page),
+              pageSize: 50,
               emptyText: 'Belum ada laporan.',
               onCreate: () async {
                 final Map<String, String>? v = await showFormDialog(
                   context,
                   title: 'Lapor Bullying',
                   fields: const <FormFieldDef>[
-                    FormFieldDef(
-                        key: 'type',
-                        label: 'Tipe',
-                        options: <String>[
-                          'verbal',
-                          'physical',
-                          'cyber',
-                          'social',
-                          'other'
-                        ]),
+                    FormFieldDef(key: 'type', label: 'Tipe', options: <String>[
+                      'verbal',
+                      'physical',
+                      'cyber',
+                      'social',
+                      'other'
+                    ]),
                     FormFieldDef(key: 'description', label: 'Deskripsi'),
                   ],
                 );
@@ -120,8 +125,8 @@ class CounselingPage extends StatelessWidget {
                     leading: const Icon(Icons.report_outlined),
                     title: Text(e['description']?.toString() ?? '-',
                         maxLines: 2, overflow: TextOverflow.ellipsis),
-                    subtitle: Text(
-                        '${e['type'] ?? '-'} • ${e['status'] ?? '-'}'),
+                    subtitle:
+                        Text('${e['type'] ?? '-'} • ${e['status'] ?? '-'}'),
                     trailing: IconButton(
                       tooltip: 'Tutup laporan',
                       icon: const Icon(Icons.check_circle_outline),

@@ -22,16 +22,13 @@ class CurriculumPage extends StatelessWidget {
           title: 'Kerangka Baru',
           fields: const <FormFieldDef>[
             FormFieldDef(key: 'name', label: 'Nama (mis. Kurikulum Merdeka)'),
-            FormFieldDef(
-                key: 'type',
-                label: 'Tipe',
-                options: <String>[
-                  'merdeka',
-                  'k13',
-                  'cambridge',
-                  'ib',
-                  'custom'
-                ]),
+            FormFieldDef(key: 'type', label: 'Tipe', options: <String>[
+              'merdeka',
+              'k13',
+              'cambridge',
+              'ib',
+              'custom'
+            ]),
           ],
         );
         if (v == null || !context.mounted) return;
@@ -46,8 +43,8 @@ class CurriculumPage extends StatelessWidget {
           child: ListTile(
             leading: const Icon(Icons.account_tree_outlined),
             title: Text(e['name']?.toString() ?? '-'),
-            subtitle:
-                Text('Tipe ${e['type'] ?? '-'} • Aktif ${e['is_active'] ?? '-'}'),
+            subtitle: Text(
+                'Tipe ${e['type'] ?? '-'} • Aktif ${e['is_active'] ?? '-'}'),
             onTap: () => _showCompetencies(c, repo, id, e['name']?.toString()),
             trailing: IconButton(
               tooltip: 'Tambah kompetensi',
@@ -57,8 +54,12 @@ class CurriculumPage extends StatelessWidget {
                   c,
                   title: 'Kompetensi Baru',
                   fields: const <FormFieldDef>[
-                    FormFieldDef(key: 'subject_id', label: 'ID Mapel', isNumber: true),
-                    FormFieldDef(key: 'class_room_id', label: 'ID Kelas', isNumber: true),
+                    FormFieldDef(
+                        key: 'subject_id', label: 'ID Mapel', isNumber: true),
+                    FormFieldDef(
+                        key: 'class_room_id',
+                        label: 'ID Kelas',
+                        isNumber: true),
                     FormFieldDef(key: 'code', label: 'Kode (mis. CP-1)'),
                     FormFieldDef(key: 'description', label: 'Deskripsi'),
                     FormFieldDef(
