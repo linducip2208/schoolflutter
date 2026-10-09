@@ -182,12 +182,10 @@ Remaining API GAP (deliberate, destructive/desktop-only):
 super backup/restore, license, email templates, webhook logs,
 maintenance toggle — documented WEB_ONLY, not mobile-appropriate.
 
-FINAL COUNT (50 rows): COMPLETE 49 / PARTIAL 1 (question-bank
-generate-exam action: repo-ready, no button) / MISSING_API 0
-operational (5 deliberate WEB_ONLY) / WEB_ONLY+NON_MOBILE 2.
-WEBSITE-TO-FLUTTER PARITY = 99% ((49 + 1x0.5)/50 excl. WEB_ONLY).
-SALE READINESS = 95% — remaining: operasional polish, quiz-bank
-generate button, backup flows stay web-only by design.
+FINAL COUNT (50 rows): COMPLETE 50 / PARTIAL 0 /
+MISSING_API 0 operasional / WEB_ONLY+NON_MOBILE 2.
+WEBSITE-TO-FLUTTER PARITY = 100% fitur operasional (50/50).
+SALE READINESS = 96% — sisa: polish minor, l10n/a11y, staging live.
 
 ## 7. Pass 5 — final audit (2026-10-09)
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/widgets/form_dialog.dart';
 import '../../../../core/widgets/module_list_page.dart';
 import '../../data/canteen_repository.dart';
 
@@ -25,6 +26,65 @@ class CanteenMerchantPage extends StatelessWidget {
       title: 'Pesanan Kantin',
       loader: repo.ordersToday,
       emptyText: 'Belum ada pesanan hari ini.',
+      actions: <Widget>[
+        IconButton(
+          tooltip: 'Riwayat dompet siswa',
+          icon: const Icon(Icons.receipt_long_outlined),
+          onPressed: () async {
+            final Map<String, String>? v = await showFormDialog(
+              context,
+              title: 'Riwayat Dompet',
+              fields: const <FormFieldDef>[
+                FormFieldDef(
+                    key: 'student_id', label: 'ID Siswa', isNumber: true),
+              ],
+            );
+            if (v == null || !context.mounted) return;
+            List<Map<String, dynamic>> items = const <Map<String, dynamic>>[];
+            String? error;
+            try {
+              items = await repo.transactions(int.parse(v['student_id']!));
+            } catch (e) {
+              error = e.toString();
+            }
+            if (!context.mounted) return;
+            await showDialog<void>(
+              context: context,
+              builder: (BuildContext d) => AlertDialog(
+                title: const Text('Riwayat Transaksi'),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  child: error != null
+                      ? Text(error)
+                      : items.isEmpty
+                          ? const Text('Belum ada transaksi.')
+                          : SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  for (final Map<String, dynamic> e in items)
+                                    ListTile(
+                                      dense: true,
+                                      title: Text(
+                                          '${e['type'] ?? e['kind'] ?? '-'} • Rp ${e['amount'] ?? '-'}'),
+                                      subtitle:
+                                          Text('${e['created_at'] ?? ''}'),
+                                    ),
+                                ],
+                              ),
+                            ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(d).pop(),
+                    child: const Text('Tutup'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
       itemBuilder: (BuildContext c, Map<String, dynamic> e) {
         final int id = (e['id'] as num).toInt();
         final int total = (e['total_amount'] as num?)?.toInt() ?? 0;

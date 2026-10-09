@@ -72,6 +72,60 @@ class _AlumniPageState extends State<AlumniPage> {
                         title: Text(e.key),
                         subtitle: Text('${e.value}'),
                       ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: FilledButton.tonalIcon(
+                        icon: const Icon(Icons.edit_outlined),
+                        label: const Text('Ubah profil alumni'),
+                        onPressed: () async {
+                          final Map<String, String>? v = await showFormDialog(
+                            context,
+                            title: 'Profil Alumni',
+                            fields: <FormFieldDef>[
+                              FormFieldDef(
+                                  key: 'graduation_year',
+                                  label: 'Tahun lulus',
+                                  isNumber: true,
+                                  initial: d['graduation_year']?.toString()),
+                              FormFieldDef(
+                                  key: 'current_position',
+                                  label: 'Posisi',
+                                  initial: d['current_position']?.toString(),
+                                  optional: true),
+                              FormFieldDef(
+                                  key: 'current_company',
+                                  label: 'Perusahaan',
+                                  initial: d['current_company']?.toString(),
+                                  optional: true),
+                              FormFieldDef(
+                                  key: 'city',
+                                  label: 'Kota',
+                                  initial: d['city']?.toString(),
+                                  optional: true),
+                            ],
+                          );
+                          if (v == null || !context.mounted) return;
+                          final Map<String, dynamic> payload =
+                              <String, dynamic>{
+                            'graduation_year': int.parse(v['graduation_year']!),
+                            if (v['current_position']!.isNotEmpty)
+                              'current_position': v['current_position']!,
+                            if (v['current_company']!.isNotEmpty)
+                              'current_company': v['current_company']!,
+                            if (v['city']!.isNotEmpty) 'city': v['city']!,
+                          };
+                          final bool ok = await runMutation(
+                            context,
+                            () => _repo.updateProfile(payload),
+                          );
+                          if (ok) {
+                            setState(() {
+                              _future = _repo.profile();
+                            });
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
               );

@@ -127,12 +127,39 @@ class CounselingPage extends StatelessWidget {
                         maxLines: 2, overflow: TextOverflow.ellipsis),
                     subtitle:
                         Text('${e['type'] ?? '-'} • ${e['status'] ?? '-'}'),
-                    trailing: IconButton(
-                      tooltip: 'Tutup laporan',
-                      icon: const Icon(Icons.check_circle_outline),
-                      onPressed: () async {
-                        await runMutation(c, () => repo.closeBullying(id));
-                      },
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        IconButton(
+                          tooltip: 'Tugaskan konselor',
+                          icon: const Icon(Icons.person_add_outlined),
+                          onPressed: () async {
+                            final Map<String, String>? v = await showFormDialog(
+                              c,
+                              title: 'Tugaskan Konselor',
+                              fields: const <FormFieldDef>[
+                                FormFieldDef(
+                                    key: 'user_id',
+                                    label: 'ID User konselor',
+                                    isNumber: true),
+                              ],
+                            );
+                            if (v == null || !c.mounted) return;
+                            await runMutation(
+                              c,
+                              () => repo.assignBullying(
+                                  id, int.parse(v['user_id']!)),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          tooltip: 'Tutup laporan',
+                          icon: const Icon(Icons.check_circle_outline),
+                          onPressed: () async {
+                            await runMutation(c, () => repo.closeBullying(id));
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 );

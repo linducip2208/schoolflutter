@@ -24,11 +24,19 @@ class FormFieldDef {
 
 /// Generic validated form dialog. Returns string values keyed by field key,
 /// or null when cancelled. Keeps every admin create-form to ~10 lines.
+///
+/// Reentrancy guard: a second call while one is open returns null
+/// immediately, so double-tapping a FAB can never open two forms and
+/// submit the same mutation twice.
+bool _formOpen = false;
+
 Future<Map<String, String>?> showFormDialog(
   BuildContext context, {
   required String title,
   required List<FormFieldDef> fields,
 }) {
+  if (_formOpen) return Future<Map<String, String>?>.value();
+  _formOpen = true;
   final Map<String, TextEditingController> controllers =
       <String, TextEditingController>{
     for (final FormFieldDef f in fields)
@@ -87,12 +95,16 @@ Future<Map<String, String>?> showFormDialog(
       ),
       actions: <Widget>[
         TextButton(
-          onPressed: () => Navigator.of(c).pop(),
+          onPressed: () {
+            _formOpen = false;
+            Navigator.of(c).pop();
+          },
           child: const Text('Batal'),
         ),
         FilledButton(
           onPressed: () {
             if (!(key.currentState?.validate() ?? false)) return;
+            _formOpen = false;
             Navigator.of(c).pop(<String, String>{
               for (final FormFieldDef f in fields)
                 f.key: f.options != null
@@ -104,5 +116,5 @@ Future<Map<String, String>?> showFormDialog(
         ),
       ],
     ),
-  );
+  ).whenComplete(() => _formOpen = false);
 }

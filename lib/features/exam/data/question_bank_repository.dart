@@ -62,21 +62,29 @@ class QuestionBankRepository {
     }
   }
 
-  Future<Map<String, dynamic>> generateExam({
-    required int examId,
-    int? subjectId,
-    int count = 10,
+  /// Generate soal dari bank: `{subject_id, distribution{easy,medium,
+  /// hard}}` → `{data:[items]}`. Backend: `POST /question-bank/generate-exam`.
+  Future<List<Map<String, dynamic>>> generateExam({
+    required int subjectId,
+    int easy = 0,
+    int medium = 0,
+    int hard = 0,
+    int? categoryId,
   }) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
         ApiEndpoints.qbGenerateExam,
         data: <String, dynamic>{
-          'exam_id': examId,
-          if (subjectId != null) 'subject_id': subjectId,
-          'count': count,
+          'subject_id': subjectId,
+          if (categoryId != null) 'category_id': categoryId,
+          'distribution': <String, dynamic>{
+            'easy': easy,
+            'medium': medium,
+            'hard': hard,
+          },
         },
       );
-      return unwrapMap(r.data);
+      return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
     }

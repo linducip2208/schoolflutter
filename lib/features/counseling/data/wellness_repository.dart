@@ -119,4 +119,15 @@ class WellnessRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<void> assignBullying(int id, int counselorUserId) async {
+    try {
+      await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.bullyingAssign(id),
+        data: <String, dynamic>{'user_id': counselorUserId},
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

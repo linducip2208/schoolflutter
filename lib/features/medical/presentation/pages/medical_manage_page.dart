@@ -18,6 +18,64 @@ class MedicalManagePage extends StatelessWidget {
       pagedLoader: ({required int page}) => repo.allVisits(page: page),
       pageSize: 50,
       emptyText: 'Belum ada kunjungan.',
+      actions: <Widget>[
+        IconButton(
+          tooltip: 'Rekam medis siswa',
+          icon: const Icon(Icons.folder_shared_outlined),
+          onPressed: () async {
+            final Map<String, String>? v = await showFormDialog(
+              context,
+              title: 'Rekam Medis',
+              fields: const <FormFieldDef>[
+                FormFieldDef(
+                    key: 'student_id', label: 'ID Siswa', isNumber: true),
+              ],
+            );
+            if (v == null || !context.mounted) return;
+            Map<String, dynamic>? record;
+            String? error;
+            try {
+              record = await repo.record(int.parse(v['student_id']!));
+            } catch (e) {
+              error = e.toString();
+            }
+            if (!context.mounted) return;
+            await showDialog<void>(
+              context: context,
+              builder: (BuildContext d) => AlertDialog(
+                title: const Text('Rekam Medis'),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  child: error != null
+                      ? Text(error)
+                      : (record == null || record.isEmpty)
+                          ? const Text('Belum ada rekam medis.')
+                          : SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  for (final MapEntry<String, dynamic> e
+                                      in record.entries)
+                                    ListTile(
+                                      dense: true,
+                                      title: Text(e.key),
+                                      subtitle: Text('${e.value}'),
+                                    ),
+                                ],
+                              ),
+                            ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(d).pop(),
+                    child: const Text('Tutup'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
       onCreate: () async {
         final Map<String, String>? v = await showFormDialog(
           context,
