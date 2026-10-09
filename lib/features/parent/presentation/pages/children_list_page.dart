@@ -20,8 +20,26 @@ class ChildrenListPage extends StatelessWidget {
         final int id = (e['id'] as num?)?.toInt() ??
             (e['student_id'] as num?)?.toInt() ??
             0;
-        final String name =
-            e['name']?.toString() ?? e['student_name']?.toString() ?? '-';
+        // Backend returns the Student model with `user` + `class_section`
+        // relations (no flat name/nis keys).
+        final Map<String, dynamic>? user = e['user'] is Map
+            ? Map<String, dynamic>.from(e['user'] as Map)
+            : null;
+        final String name = user?['name']?.toString() ??
+            e['name']?.toString() ??
+            e['student_name']?.toString() ??
+            'Anak $id';
+        final Map<String, dynamic>? section = e['class_section'] is Map
+            ? Map<String, dynamic>.from(e['class_section'] as Map)
+            : (e['classSection'] is Map
+                ? Map<String, dynamic>.from(e['classSection'] as Map)
+                : null);
+        final String rombel = section?['name']?.toString() ??
+            e['class']?.toString() ??
+            e['class_name']?.toString() ??
+            '';
+        final String nis =
+            e['admission_no']?.toString() ?? e['nis']?.toString() ?? '-';
         return Card(
           child: ListTile(
             leading: CircleAvatar(
@@ -29,8 +47,7 @@ class ChildrenListPage extends StatelessWidget {
                   name.isNotEmpty ? name.substring(0, 1).toUpperCase() : '?'),
             ),
             title: Text(name),
-            subtitle: Text(
-                '${e['class'] ?? e['class_name'] ?? ''} • NIS ${e['nis'] ?? '-'}'),
+            subtitle: Text('${rombel.isNotEmpty ? '$rombel • ' : ''}NIS $nis'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(c).push(
               MaterialPageRoute<void>(

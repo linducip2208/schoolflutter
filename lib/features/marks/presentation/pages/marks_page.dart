@@ -79,9 +79,12 @@ class _MarksPageState extends State<MarksPage> {
                     DropdownMenuItem<int>(
                       value: (e['id'] as num?)?.toInt() ??
                           (e['student_id'] as num?)?.toInt(),
-                      child: Text(e['name']?.toString() ??
-                          e['student_name']?.toString() ??
-                          '-'),
+                      child: Text(
+                          (e['user'] is Map ? (e['user'] as Map)['name'] : null)
+                                  ?.toString() ??
+                              e['name']?.toString() ??
+                              e['student_name']?.toString() ??
+                              '-'),
                     ),
                 ],
                 onChanged: (int? v) => setState(() {
