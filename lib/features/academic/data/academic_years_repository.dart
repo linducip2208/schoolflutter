@@ -47,11 +47,32 @@ class AcademicYearsRepository {
     }
   }
 
+  Future<void> updateYear(int id, Map<String, String> fields) async {
+    try {
+      await ApiClient.dio.put<dynamic>(
+        '${ApiEndpoints.academicYears}/$id',
+        data: fields,
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<List<Map<String, dynamic>>> holidays() async {
     try {
       final Response<dynamic> r =
           await ApiClient.dio.get<dynamic>(ApiEndpoints.holidays);
       return unwrapList(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> deleteHoliday(int id) async {
+    try {
+      await ApiClient.dio.delete<dynamic>(
+        '${ApiEndpoints.holidays}/$id',
+      );
     } on DioException catch (e) {
       throw mapDioError(e);
     }

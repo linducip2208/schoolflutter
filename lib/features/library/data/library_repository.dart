@@ -92,4 +92,23 @@ class LibraryRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<void> updateBook(int id, Map<String, dynamic> fields) async {
+    try {
+      await ApiClient.dio.put<dynamic>(
+        ApiEndpoints.libraryBook(id),
+        data: fields,
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> deleteBook(int id) async {
+    try {
+      await ApiClient.dio.delete<dynamic>(ApiEndpoints.libraryBook(id));
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

@@ -161,9 +161,30 @@ class _LibraryPageState extends State<LibraryPage> {
                                           .textTheme
                                           .bodySmall),
                                   if (canManage)
-                                    TextButton(
-                                      onPressed: () => _issueBook(context, b),
-                                      child: const Text('Pinjamkan'),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              _issueBook(context, b),
+                                          child: const Text('Pinjamkan'),
+                                        ),
+                                        PopupMenuButton<String>(
+                                          icon: const Icon(Icons.more_vert,
+                                              size: 18),
+                                          onSelected: (String v) => _bookAction(
+                                              context, b, v, _reload),
+                                          itemBuilder: (_) =>
+                                              const <PopupMenuItem<String>>[
+                                            PopupMenuItem<String>(
+                                                value: 'edit',
+                                                child: Text('Ubah')),
+                                            PopupMenuItem<String>(
+                                                value: 'hapus',
+                                                child: Text('Hapus')),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                 ],
                               ),
@@ -249,5 +270,56 @@ class _LibraryPageState extends State<LibraryPage> {
         userId: int.parse(v['user_id']!),
       ),
     );
+  }
+
+  Future<void> _bookAction(BuildContext context, Map<String, dynamic> book,
+      String action, VoidCallback onChanged) async {
+    final int id = (book['id'] as num).toInt();
+    if (action == 'hapus') {
+      final bool? ok = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext d) => AlertDialog(
+          title: const Text('Hapus buku?'),
+          content: Text('${book['title'] ?? ''}'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(d).pop(false),
+              child: const Text('Batal'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(d).pop(true),
+              child: const Text('Hapus'),
+            ),
+          ],
+        ),
+      );
+      if (ok != true || !context.mounted) return;
+      final bool done = await runMutation(context, () => _repo.deleteBook(id));
+      if (done && context.mounted) onChanged();
+      return;
+    }
+    final Map<String, String>? v = await showFormDialog(
+      context,
+      title: 'Ubah Buku',
+      fields: <FormFieldDef>[
+        FormFieldDef(
+            key: 'title', label: 'Judul', initial: book['title']?.toString()),
+        FormFieldDef(
+            key: 'total_quantity',
+            label: 'Jumlah',
+            isNumber: true,
+            initial: (book['total_quantity'] as num?)?.toString() ?? ''),
+      ],
+    );
+    if (v == null || !context.mounted) return;
+    final bool done = await runMutation(
+      context,
+      () => _repo.updateBook(id, <String, dynamic>{
+        'title': v['title']!,
+        if (v['total_quantity']!.isNotEmpty)
+          'total_quantity': int.parse(v['total_quantity']!),
+      }),
+    );
+    if (done && context.mounted) onChanged();
   }
 }

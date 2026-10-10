@@ -58,12 +58,41 @@ class AcademicYearsPage extends StatelessWidget {
                       ? const Chip(
                           label: Text('Aktif'),
                           visualDensity: VisualDensity.compact)
-                      : TextButton(
-                          onPressed: () async {
-                            final int id = (e['id'] as num).toInt();
-                            await runMutation(c, () => repo.activate(id));
-                          },
-                          child: const Text('Aktifkan'),
+                      : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            TextButton(
+                              onPressed: () async {
+                                final int id = (e['id'] as num).toInt();
+                                await runMutation(c, () => repo.activate(id));
+                              },
+                              child: const Text('Aktifkan'),
+                            ),
+                            IconButton(
+                              tooltip: 'Ubah nama',
+                              icon: const Icon(Icons.edit_outlined, size: 20),
+                              onPressed: () async {
+                                final Map<String, String>? v =
+                                    await showFormDialog(
+                                  c,
+                                  title: 'Ubah Tahun Ajaran',
+                                  fields: <FormFieldDef>[
+                                    FormFieldDef(
+                                        key: 'name',
+                                        label: 'Nama',
+                                        initial: e['name']?.toString()),
+                                  ],
+                                );
+                                if (v == null || !c.mounted) return;
+                                await runMutation(
+                                  c,
+                                  () => repo.updateYear(
+                                      (e['id'] as num).toInt(),
+                                      <String, String>{'name': v['name']!}),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                 ),
               ),
@@ -100,6 +129,33 @@ class AcademicYearsPage extends StatelessWidget {
                   leading: const Icon(Icons.beach_access_outlined),
                   title: Text(e['title']?.toString() ?? '-'),
                   subtitle: Text('${e['date'] ?? '-'} • ${e['type'] ?? '-'}'),
+                  trailing: IconButton(
+                    tooltip: 'Hapus',
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () async {
+                      final bool? ok = await showDialog<bool>(
+                        context: c,
+                        builder: (BuildContext d) => AlertDialog(
+                          title: const Text('Hapus hari libur?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(d).pop(false),
+                              child: const Text('Batal'),
+                            ),
+                            FilledButton(
+                              onPressed: () => Navigator.of(d).pop(true),
+                              child: const Text('Hapus'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (ok != true || !c.mounted) return;
+                      await runMutation(
+                        c,
+                        () => repo.deleteHoliday((e['id'] as num).toInt()),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

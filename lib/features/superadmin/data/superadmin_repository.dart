@@ -42,6 +42,17 @@ class SuperAdminRepository {
     }
   }
 
+  Future<Map<String, dynamic>> schoolStats(int id) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.superSchoolStats(id),
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<List<Map<String, dynamic>>> activityLog(int schoolId) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(

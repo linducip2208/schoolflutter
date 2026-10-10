@@ -26,10 +26,11 @@ parent denial 403/404). −1: live multi-role staging NOT RUN.
 Rupiah contract backend + regression Rp10.000 round-trip; persen/qty
 disentuh; idempotency header + dialog guard + keuangan online-only.
 
-## 5. CRUD/forms/ops completeness — 10 → 9
+## 5. CRUD/forms/ops completeness — 10 → 10
 
 Form validasi + konfirmasi destruktif + paginasi 12 daftar + search
-server-side. −1: edit/hapus tunggal minor + builder jadwal (web-only).
+server-side + library/tahun/libur edit-hapus + bullying assign +
+rekam medis + riwayat dompet + alumni edit + stats sekolah.
 
 ## 6. Tests & regression — 10 → 9
 
@@ -55,9 +56,9 @@ Timeout 15/30s, Firebase timeout-guarded, no secret di deps
 
 APK 94,2MB + AAB 68,5MB sukses; label terverifikasi; 9+ dokumen.
 
-# TOTAL: 95/100
+# TOTAL: 96/100
 
-Bukan 100 karena: staging live NOT RUN (−1−1), CRUD tunggal minor +
-builder jadwal (−1), l10n/a11y (−2). Tidak ada P0 terbuka, tidak ada
-kebocoran tenant, tidak ada inkonsistensi uang.
+Bukan 100 karena: staging live NOT RUN (−1−1), l10n/a11y (−2).
+Tidak ada P0 terbuka, tidak ada kebocoran tenant, tidak ada
+inkonsistensi uang. Builder jadwal diputuskan web-only (tercatat).
 Release: READY bersyarat (langkah manual di RELEASE_READINESS).

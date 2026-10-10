@@ -164,6 +164,8 @@ class _SchoolCard extends StatelessWidget {
                     value: active ? 'suspend' : 'activate',
                     child: Text(active ? 'Suspend' : 'Aktifkan')),
                 const PopupMenuItem<String>(
+                    value: 'stats', child: Text('Statistik')),
+                const PopupMenuItem<String>(
                     value: 'extend', child: Text('Extend langganan')),
                 const PopupMenuItem<String>(
                     value: 'upgrade', child: Text('Upgrade paket')),
@@ -180,6 +182,50 @@ class _SchoolCard extends StatelessWidget {
   Future<void> _act(
       BuildContext context, int id, String action, bool active) async {
     final SuperAdminRepository repo = SuperAdminRepository();
+    if (action == 'stats') {
+      Map<String, dynamic>? stats;
+      String? error;
+      try {
+        stats = await repo.schoolStats(id);
+      } catch (e) {
+        error = e.toString();
+      }
+      if (!context.mounted) return;
+      final Map<String, dynamic> s = stats ?? const <String, dynamic>{};
+      await showDialog<void>(
+        context: context,
+        builder: (BuildContext d) => AlertDialog(
+          title: const Text('Statistik Sekolah'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: error != null
+                ? Text(error)
+                : s.isEmpty
+                    ? const Text('Belum ada data.')
+                    : SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            for (final MapEntry<String, dynamic> e in s.entries)
+                              ListTile(
+                                dense: true,
+                                title: Text(e.key),
+                                trailing: Text('${e.value}'),
+                              ),
+                          ],
+                        ),
+                      ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(d).pop(),
+              child: const Text('Tutup'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
     if (action == 'suspend' || action == 'activate') {
       final bool ok = await runMutation(
         context,
