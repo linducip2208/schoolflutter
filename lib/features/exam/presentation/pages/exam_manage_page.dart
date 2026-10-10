@@ -80,6 +80,8 @@ class ExamManagePage extends StatelessWidget {
                     marks: int.tryParse(q['marks'] ?? '') ?? 10,
                   ),
                 );
+              } else if (v == 'lihat') {
+                await _showQuestions(c, repo, id);
               } else if (v == 'ubah') {
                 final Map<String, String>? f = await showFormDialog(
                   c,
@@ -104,6 +106,7 @@ class ExamManagePage extends StatelessWidget {
             },
             itemBuilder: (_) => const <PopupMenuItem<String>>[
               PopupMenuItem<String>(value: 'soal', child: Text('Tambah soal')),
+              PopupMenuItem<String>(value: 'lihat', child: Text('Lihat soal')),
               PopupMenuItem<String>(value: 'ubah', child: Text('Ubah judul')),
               PopupMenuItem<String>(value: 'hapus', child: Text('Hapus')),
             ],
@@ -146,6 +149,109 @@ class ExamManagePage extends StatelessWidget {
                                   'Siswa ${s['student_id'] ?? s['student'] ?? '-'}'),
                               subtitle: Text(
                                   'Skor ${s['score'] ?? s['total_score'] ?? '-'}'),
+                            ),
+                        ],
+                      ),
+                    ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(d).pop(),
+            child: const Text('Tutup'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showQuestions(
+      BuildContext c, ExamRepository repo, int examId) async {
+    List<Map<String, dynamic>> items = const <Map<String, dynamic>>[];
+    String? error;
+    try {
+      items = await repo.questions(examId);
+    } catch (err) {
+      error = err.toString();
+    }
+    if (!c.mounted) return;
+    await showDialog<void>(
+      context: c,
+      builder: (BuildContext d) => AlertDialog(
+        title: const Text('Soal Ujian'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: error != null
+              ? Text(error)
+              : items.isEmpty
+                  ? const Text('Belum ada soal.')
+                  : SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          for (final Map<String, dynamic> q in items)
+                            ListTile(
+                              dense: true,
+                              title: Text((q['question'] ?? '-').toString(),
+                                  maxLines: 2, overflow: TextOverflow.ellipsis),
+                              subtitle: Text(
+                                  '${q['type'] ?? '-'} • ${q['marks'] ?? '-'} poin'),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  IconButton(
+                                    tooltip: 'Ubah',
+                                    icon: const Icon(Icons.edit_outlined,
+                                        size: 20),
+                                    onPressed: () async {
+                                      final Map<String, String>? f =
+                                          await showFormDialog(
+                                        d,
+                                        title: 'Ubah Soal',
+                                        fields: <FormFieldDef>[
+                                          FormFieldDef(
+                                              key: 'question',
+                                              label: 'Pertanyaan',
+                                              initial:
+                                                  q['question']?.toString()),
+                                          FormFieldDef(
+                                              key: 'marks',
+                                              label: 'Bobot',
+                                              isNumber: true,
+                                              initial: '${q['marks'] ?? ''}'),
+                                        ],
+                                      );
+                                      if (f == null || !d.mounted) return;
+                                      await runMutation(
+                                        d,
+                                        () => repo.updateQuestion(
+                                          (q['id'] as num).toInt(),
+                                          <String, dynamic>{
+                                            'question': f['question']!,
+                                            if (f['marks']!.isNotEmpty)
+                                              'marks': int.parse(f['marks']!),
+                                          },
+                                        ),
+                                      );
+                                      if (d.mounted) Navigator.of(d).pop();
+                                    },
+                                  ),
+                                  IconButton(
+                                    tooltip: 'Hapus',
+                                    icon: const Icon(Icons.delete_outline,
+                                        size: 20),
+                                    onPressed: () async {
+                                      final bool ok = await runMutation(
+                                        d,
+                                        () => repo.deleteQuestion(
+                                            (q['id'] as num).toInt()),
+                                      );
+                                      if (ok && d.mounted) {
+                                        Navigator.of(d).pop();
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                         ],
                       ),

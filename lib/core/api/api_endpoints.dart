@@ -225,6 +225,7 @@ class ApiEndpoints {
   static String examUpdate(int examId) => '/exams/$examId';
   static String examDelete(int examId) => '/exams/$examId';
   static String examStoreQuestion(int examId) => '/exams/$examId/questions';
+  static String examQuestion(int questionId) => '/exams/questions/$questionId';
   static String examSubmissions(int examId) => '/exams/$examId/submissions';
 
   // ── Question bank

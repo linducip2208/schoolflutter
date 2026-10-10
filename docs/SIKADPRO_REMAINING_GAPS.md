@@ -2,18 +2,17 @@
 
 ## P0: TIDAK ADA
 
-## P1: kecil, terverifikasi ada-tidaknya
+## P1: kecil, terverifikasi ada-tidaknya (mayoritas ditutup)
 
-- Tombol generate-exam bank soal (repo siap).
-- Edit/hapus tunggal: soal ujian, buku, kategori (pola CRUD sama).
-- Bullying assign-konselor, alumni edit, medical record lookup,
-  canteen transactions history (endpoint ada).
-- Timetable builder + conflict UI (butuh desain grid; views jalan).
+Ditutup: generate-exam + attach, exam soal edit/hapus/lihat, marks
+koreksi tunggal, classroom materi upload + buka tautan, academic
+edit + holiday hapus, library edit/hapus, bullying assign, medical
+record lookup, canteen transactions, alumni edit, super stats/upgrade.
+Tersisa: timetable conflict UI (minor), branding reset (sengaja).
 
 ## P2
 
 - l10n dipakai 0 layar (infra siap) — migrasi bertahap.
-- Super stats per-sekolah display (endpoint ada).
 - Struktur gaji/payroll lanjutan, surat template picker.
 
 ## P3

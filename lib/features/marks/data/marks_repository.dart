@@ -76,6 +76,20 @@ class MarksRepository {
     }
   }
 
+  Future<void> updateMark(int markId, {int? obtained, int? total}) async {
+    try {
+      await ApiClient.dio.put<dynamic>(
+        ApiEndpoints.markUpdate(markId),
+        data: <String, dynamic>{
+          if (obtained != null) 'obtained_marks': obtained,
+          if (total != null) 'total_marks': total,
+        },
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<List<Map<String, dynamic>>> gradeSystems() async {
     try {
       final Response<dynamic> r =

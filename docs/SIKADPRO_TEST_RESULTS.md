@@ -23,12 +23,29 @@ splash widget, unwrap, smoke.
 | kontrak + route wired | 23/23 hijau |
 | `TenantIsolationTest` (DB khusus `sikadpro_tenant_iso`, serial, rollback) | 3/3 hijau (directory scope, fee filter kosong, parent 403/404) |
 
+## Live smoke produksi (2026-10-10, read-only + login/logout demo)
+
+Server pulih (`/health/deep` all-ok). Login demo admin@sman1demo.sch.id
+200 (role admin, 90 siswa). Hasil:
+
+- 200: dashboard (fees_pending 4500000000 SEN = Rp45jt — bukti
+  produksi BELUM pakai ConvertsRupiah), academic-years, holidays,
+  fee structures (25000000 SEN = Rp250rb), notices, library, exams,
+  events, ekskul, lms. Logout 200 (token dicabut).
+- 404: `/directory/*`, `/reports/*`, `/budget/*`, `/letters`
+  → patch backend BELUM DI-DEPLOY ke produksi.
+- 403: `/super/dashboard` untuk admin → benar (guard bekerja).
+
+KESIMPULAN: aplikasi Flutter HANYA benar bila backend `main`
+sudah di-deploy. Tanpa itu: nominal 100x + ~20 layar 404.
+JANGAN rilis app sebelum deploy backend. Tanpa migrasi.
+
 ## Tidak dijalankan (alasan)
 
-- Integrasi live produksi tulis: dilarang (produksi).
+- Mutasi live produksi: dilarang (produksi; smoke hanya baca + login/
+  logout akun demo publik).
 - `flutter build ipa`: tanpa toolchain macOS.
-- Uji perangkat fisik (GPS/kamera): tanpa farm; GPS diuji via mock?
-  belum — permission flow statis terverifikasi.
+- Uji perangkat fisik (GPS/kamera): tanpa farm.
 - Beban/stress: tanpa staging.
 
 ## Kegagalan selama pass (diperbaiki, bukan dihapus)

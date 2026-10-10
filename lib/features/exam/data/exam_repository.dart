@@ -68,6 +68,28 @@ class ExamRepository {
     }
   }
 
+  Future<void> updateQuestion(
+      int questionId, Map<String, dynamic> fields) async {
+    try {
+      await ApiClient.dio.put<dynamic>(
+        ApiEndpoints.examQuestion(questionId),
+        data: fields,
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  Future<void> deleteQuestion(int questionId) async {
+    try {
+      await ApiClient.dio.delete<dynamic>(
+        ApiEndpoints.examQuestion(questionId),
+      );
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<Map<String, dynamic>> addQuestion(
     int examId, {
     required String question,

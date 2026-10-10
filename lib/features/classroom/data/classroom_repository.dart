@@ -97,4 +97,27 @@ class ClassroomRepository {
       throw mapDioError(e);
     }
   }
+
+  /// Tambah materi ke lesson: `{title, type: file|link|video, url}`.
+  /// Untuk file: upload dulu via UploadRepository lalu kirim URL-nya.
+  Future<Map<String, dynamic>> storeMaterial({
+    required int lessonId,
+    required String title,
+    required String type,
+    required String url,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.classroomLessonMaterials(lessonId),
+        data: <String, dynamic>{
+          'title': title,
+          'type': type,
+          'url': url,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

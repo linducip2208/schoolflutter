@@ -19,6 +19,38 @@ class MarksBulkPage extends StatelessWidget {
       emptyText: 'Belum ada sistem grading. Tambahkan nilai di bawah.',
       actions: <Widget>[
         IconButton(
+          tooltip: 'Koreksi nilai by ID',
+          icon: const Icon(Icons.edit_outlined),
+          onPressed: () async {
+            final Map<String, String>? v = await showFormDialog(
+              context,
+              title: 'Koreksi Nilai',
+              fields: const <FormFieldDef>[
+                FormFieldDef(key: 'mark_id', label: 'ID Nilai', isNumber: true),
+                FormFieldDef(
+                    key: 'obtained',
+                    label: 'Diperoleh (kosongkan=b tetap)',
+                    isNumber: true,
+                    optional: true),
+                FormFieldDef(
+                    key: 'total',
+                    label: 'Maksimal (kosongkan=b tetap)',
+                    isNumber: true,
+                    optional: true),
+              ],
+            );
+            if (v == null || !context.mounted) return;
+            await runMutation(
+              context,
+              () => repo.updateMark(
+                int.parse(v['mark_id']!),
+                obtained: int.tryParse(v['obtained']!),
+                total: int.tryParse(v['total']!),
+              ),
+            );
+          },
+        ),
+        IconButton(
           tooltip: 'Publish raport by ID',
           icon: const Icon(Icons.publish_outlined),
           onPressed: () async {

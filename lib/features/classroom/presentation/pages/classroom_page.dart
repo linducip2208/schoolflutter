@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/api/upload_repository.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
@@ -36,6 +41,62 @@ class _ClassroomPageState extends State<ClassroomPage>
       _assignments = _repo.assignments();
       _materials = _repo.lessons();
     });
+  }
+
+  /// Tambah materi: link/video langsung, file via upload dulu.
+  Future<void> _addMaterial(BuildContext context) async {
+    final Map<String, String>? v = await showFormDialog(
+      context,
+      title: 'Materi Baru',
+      fields: const <FormFieldDef>[
+        FormFieldDef(
+            key: 'lesson_id', label: 'ID Materi Induk', isNumber: true),
+        FormFieldDef(key: 'title', label: 'Judul'),
+        FormFieldDef(
+            key: 'type',
+            label: 'Tipe',
+            options: <String>['file', 'link', 'video']),
+        FormFieldDef(
+            key: 'url',
+            label: 'URL (kosongkan bila upload file)',
+            optional: true),
+      ],
+    );
+    if (v == null || !context.mounted) return;
+    String url = v['url']!;
+    if (url.isEmpty) {
+      if (v['type'] != 'file') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Isi URL untuk tipe link/video.')),
+        );
+        return;
+      }
+      final FilePickerResult? picked = await FilePicker.platform.pickFiles();
+      final String? path = picked?.files.single.path;
+      if (path == null || !context.mounted) return;
+      try {
+        final Map<String, dynamic> up = await UploadRepository().upload(
+          file: File(path),
+          purpose: 'classroom_material',
+        );
+        url = (up['path'] ?? up['url'] ?? '').toString();
+      } catch (e) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+        return;
+      }
+      if (url.isEmpty || !context.mounted) return;
+    }
+    await runMutation(
+      context,
+      () => _repo.storeMaterial(
+        lessonId: int.parse(v['lesson_id']!),
+        title: v['title']!,
+        type: v['type']!,
+        url: url,
+      ),
+    );
   }
 
   @override
@@ -94,10 +155,40 @@ class _ClassroomPageState extends State<ClassroomPage>
               kind: 'assignment',
               onRefresh: _reload,
               canGrade: canManage),
-          _List(future: _materials, kind: 'material', onRefresh: _reload),
+          _List(
+            future: _materials,
+            kind: 'material',
+            onRefresh: _reload,
+            onAddMaterial: canManage ? () => _addMaterial(context) : null,
+          ),
         ],
       ),
     );
+  }
+}
+
+Future<void> _openMaterial(
+    BuildContext context, Map<String, dynamic> material) async {
+  final String url = (material['url'] ?? material['file_url'] ?? '').toString();
+  if (url.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Materi tidak memiliki tautan.')),
+    );
+    return;
+  }
+  final Uri? uri = Uri.tryParse(url);
+  if (uri == null || !uri.hasScheme) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Tautan materi tidak valid.')),
+    );
+    return;
+  }
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak dapat membuka materi.')),
+      );
+    }
   }
 }
 
@@ -189,12 +280,14 @@ class _List extends StatelessWidget {
       {required this.future,
       required this.kind,
       required this.onRefresh,
-      this.canGrade = false});
+      this.canGrade = false,
+      this.onAddMaterial});
 
   final Future<List<Map<String, dynamic>>> future;
   final String kind;
   final VoidCallback onRefresh;
   final bool canGrade;
+  final Future<void> Function()? onAddMaterial;
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +303,7 @@ class _List extends StatelessWidget {
         }
         final List<Map<String, dynamic>> list =
             snap.data ?? <Map<String, dynamic>>[];
-        if (list.isEmpty) {
+        if (list.isEmpty && onAddMaterial == null) {
           return AppEmpty(
             title:
                 kind == 'assignment' ? 'Belum ada tugas' : 'Belum ada materi',
@@ -220,10 +313,24 @@ class _List extends StatelessWidget {
           onRefresh: () async => onRefresh(),
           child: ListView.separated(
             padding: const EdgeInsets.all(16),
-            itemCount: list.length,
+            itemCount: list.length + (onAddMaterial == null ? 0 : 1),
             separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (BuildContext c, int i) {
-              final Map<String, dynamic> a = list[i];
+              if (onAddMaterial != null && i == 0) {
+                return Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.add_circle_outline),
+                    title: const Text('Tambah materi'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () async {
+                      await onAddMaterial!();
+                      onRefresh();
+                    },
+                  ),
+                );
+              }
+              final Map<String, dynamic> a =
+                  list[onAddMaterial == null ? i : i - 1];
               return Card(
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(14),
@@ -252,7 +359,7 @@ class _List extends StatelessWidget {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: kind == 'assignment'
                       ? () => _openSubmissions(c, a, canGrade)
-                      : null,
+                      : () => _openMaterial(c, a),
                 ),
               );
             },
