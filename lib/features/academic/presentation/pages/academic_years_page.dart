@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/app_confirm_dialog.dart';
 import '../../../../core/widgets/form_dialog.dart';
 import '../../../../core/widgets/module_list_page.dart';
 import '../../data/academic_years_repository.dart';
@@ -133,23 +134,13 @@ class AcademicYearsPage extends StatelessWidget {
                     tooltip: 'Hapus',
                     icon: const Icon(Icons.delete_outline),
                     onPressed: () async {
-                      final bool? ok = await showDialog<bool>(
-                        context: c,
-                        builder: (BuildContext d) => AlertDialog(
-                          title: const Text('Hapus hari libur?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.of(d).pop(false),
-                              child: const Text('Batal'),
-                            ),
-                            FilledButton(
-                              onPressed: () => Navigator.of(d).pop(true),
-                              child: const Text('Hapus'),
-                            ),
-                          ],
-                        ),
+                      final bool ok = await showConfirmDialog(
+                        c,
+                        title: 'Hapus hari libur?',
+                        message:
+                            'Hari libur "${e['title']?.toString() ?? '-'}" akan dihapus permanen.',
                       );
-                      if (ok != true || !c.mounted) return;
+                      if (!ok || !c.mounted) return;
                       await runMutation(
                         c,
                         () => repo.deleteHoliday((e['id'] as num).toInt()),

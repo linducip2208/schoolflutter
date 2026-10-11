@@ -48,6 +48,11 @@ class StudentShell extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) =>
-      ShellScaffold(child: child, location: location, items: _items);
+  Widget build(BuildContext context) => ShellScaffold(
+        child: child,
+        location: location,
+        items: _items,
+        // Tabs: Beranda(0) Jadwal(1) Kelas(2) Chat(3) Menu(4) Profil(5).
+        fallbackIndex: 4,
+      );
 }

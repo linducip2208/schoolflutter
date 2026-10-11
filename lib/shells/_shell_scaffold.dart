@@ -1,8 +1,7 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/sync/sync_engine.dart';
+import '../core/widgets/app_offline_banner.dart';
 
 class ShellNavItem {
   const ShellNavItem({
@@ -23,16 +22,30 @@ class ShellScaffold extends StatelessWidget {
     required this.child,
     required this.location,
     required this.items,
+    this.fallbackIndex = 0,
   });
 
   final Widget child;
   final String location;
   final List<ShellNavItem> items;
 
+  /// Index highlighted when [location] matches no tab (e.g. a detail page
+  /// opened from the Menu hub). Shells pass their Menu tab index so detail
+  /// pages no longer light up the wrong tab.
+  final int fallbackIndex;
+
   int get _currentIndex {
-    final int idx = items.indexWhere((ShellNavItem it) =>
-        location == it.route || location.startsWith('${it.route}/'));
-    return idx < 0 ? 0 : idx;
+    final int idx = items.indexWhere(
+      (ShellNavItem it) =>
+          location == it.route || location.startsWith('${it.route}/'),
+    );
+    if (idx >= 0) {
+      return idx;
+    }
+    if (fallbackIndex >= 0 && fallbackIndex < items.length) {
+      return fallbackIndex;
+    }
+    return 0;
   }
 
   @override
@@ -40,7 +53,9 @@ class ShellScaffold extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          const _OfflineBanner(),
+          // Shared banner: themed colors, pending count, manual retry.
+          // Replaces the former private duplicate with hardcoded colors.
+          const AppOfflineBanner(),
           Expanded(child: child),
         ],
       ),
@@ -57,54 +72,6 @@ class ShellScaffold extends StatelessWidget {
             ),
         ],
       ),
-    );
-  }
-}
-
-/// Slim offline indicator shown above every role shell. Also surfaces the
-/// pending outbox count so users know mutations will sync automatically.
-class _OfflineBanner extends StatelessWidget {
-  const _OfflineBanner();
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<List<ConnectivityResult>>(
-      stream: Connectivity().onConnectivityChanged,
-      initialData: const <ConnectivityResult>[ConnectivityResult.wifi],
-      builder: (BuildContext c, AsyncSnapshot<List<ConnectivityResult>> snap) {
-        final List<ConnectivityResult> results =
-            snap.data ?? const <ConnectivityResult>[ConnectivityResult.wifi];
-        final bool offline = results.contains(ConnectivityResult.none);
-        if (!offline) return const SizedBox.shrink();
-        return ValueListenableBuilder<int>(
-          valueListenable: SyncEngine.instance.pendingCount,
-          builder: (BuildContext c, int pending, _) {
-            return Container(
-              width: double.infinity,
-              color: Colors.orange.shade800,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              child: SafeArea(
-                bottom: false,
-                child: Row(
-                  children: <Widget>[
-                    const Icon(Icons.cloud_off, size: 14, color: Colors.white),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        pending > 0
-                            ? 'Offline — $pending perubahan menunggu sinkron'
-                            : 'Offline — menampilkan data tersimpan',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }

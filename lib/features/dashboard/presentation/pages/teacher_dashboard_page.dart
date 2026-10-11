@@ -43,6 +43,7 @@ class _TeacherDashboardView extends StatelessWidget {
                   .read<DashboardBloc>()
                   .add(const DashboardRefreshRequested('teacher')),
               child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   GreetingHeader(
@@ -50,7 +51,8 @@ class _TeacherDashboardView extends StatelessWidget {
                     subtitle: 'Hari yang produktif menanti.',
                     avatarUrl: user?.avatarUrl,
                   ),
-                  if (state.status == DashboardStatus.loading)
+                  if (state.status == DashboardStatus.loading ||
+                      state.status == DashboardStatus.initial)
                     const Padding(
                         padding: EdgeInsets.all(24), child: AppLoading())
                   else if (state.status == DashboardStatus.error)
@@ -153,6 +155,8 @@ class _TeacherDashboardView extends StatelessWidget {
                       Text('${s['start']} - ${s['end']} • ${s['room'] ?? '-'}'),
                   trailing: TextButton(
                     onPressed: () => context.push(Routes.teacherAttendance),
+                    style:
+                        TextButton.styleFrom(minimumSize: const Size(48, 48)),
                     child: const Text('Absen'),
                   ),
                 ),

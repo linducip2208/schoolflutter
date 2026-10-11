@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../../core/widgets/app_confirm_dialog.dart';
 import '../../../../core/widgets/module_list_page.dart';
 import '../../data/emergency_repository.dart';
 
@@ -71,25 +72,12 @@ class EmergencyPage extends StatelessWidget {
             icon: const Icon(Icons.sos_outlined),
             label: const Text('PANIC BUTTON'),
             onPressed: () async {
-              final bool ok = await showDialog<bool>(
-                    context: context,
-                    builder: (BuildContext d) => AlertDialog(
-                      title: const Text('Kirim sinyal darurat?'),
-                      content: const Text(
-                          'Sekolah akan menerima lokasi dan identitas Anda.'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.of(d).pop(false),
-                          child: const Text('Batal'),
-                        ),
-                        FilledButton(
-                          onPressed: () => Navigator.of(d).pop(true),
-                          child: const Text('Kirim'),
-                        ),
-                      ],
-                    ),
-                  ) ??
-                  false;
+              final bool ok = await showConfirmDialog(
+                context,
+                title: 'Kirim sinyal darurat?',
+                message: 'Sekolah akan menerima lokasi dan identitas Anda.',
+                confirmLabel: 'Kirim',
+              );
               if (ok && context.mounted) {
                 final Position? pos = await _position(context);
                 if (pos == null || !context.mounted) return;

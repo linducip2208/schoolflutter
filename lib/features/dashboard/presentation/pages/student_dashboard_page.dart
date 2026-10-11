@@ -44,6 +44,7 @@ class _StudentDashboardView extends StatelessWidget {
                   .read<DashboardBloc>()
                   .add(const DashboardRefreshRequested('student')),
               child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   GreetingHeader(
@@ -52,7 +53,8 @@ class _StudentDashboardView extends StatelessWidget {
                         '${state.data?['class_name'] ?? '—'} • ${school?.name ?? ''}',
                     avatarUrl: user?.avatarUrl,
                   ),
-                  if (state.status == DashboardStatus.loading)
+                  if (state.status == DashboardStatus.loading ||
+                      state.status == DashboardStatus.initial)
                     const Padding(
                       padding: EdgeInsets.all(24),
                       child: AppLoading(),
@@ -131,6 +133,7 @@ class _StudentDashboardView extends StatelessWidget {
           title: 'Jadwal Hari Ini',
           action: TextButton(
             onPressed: () => context.push(Routes.studentTimetable),
+            style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
             child: const Text('Lihat semua'),
           ),
         ),

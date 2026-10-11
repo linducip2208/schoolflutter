@@ -58,7 +58,12 @@ void main() {
     await tester
         .pumpWidget(_wrap(const LoginPage(), bloc, _MockAuthRepository()));
 
-    await tester.tap(find.text('Masuk'));
+    // Layout scrolls on compact screens: bring the button into view.
+    // NOTE: widgetWithText — the page contains several ElevatedButtons.
+    final Finder masukButton = find.widgetWithText(ElevatedButton, 'Masuk');
+    await tester.scrollUntilVisible(masukButton, 200,
+        scrollable: find.byType(Scrollable).first);
+    await tester.tap(masukButton);
     await tester.pump();
 
     // Validators should produce at least one error message.
@@ -77,7 +82,10 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField).at(1), 'budi@school.id');
     await tester.enterText(find.byType(TextFormField).at(2), 'secret123');
-    await tester.tap(find.text('Masuk'));
+    final Finder masukButton = find.widgetWithText(ElevatedButton, 'Masuk');
+    await tester.scrollUntilVisible(masukButton, 200,
+        scrollable: find.byType(Scrollable).first);
+    await tester.tap(masukButton);
     await tester.pump();
 
     verify(() => bloc.add(any(that: isA<AuthLoginRequested>()))).called(1);

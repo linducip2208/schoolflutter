@@ -45,6 +45,7 @@ class _AdminDashboardView extends StatelessWidget {
                   .read<DashboardBloc>()
                   .add(const DashboardRefreshRequested('admin')),
               child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   GreetingHeader(
@@ -52,7 +53,8 @@ class _AdminDashboardView extends StatelessWidget {
                     subtitle: school?.name ?? '',
                     avatarUrl: user?.avatarUrl,
                   ),
-                  if (state.status == DashboardStatus.loading)
+                  if (state.status == DashboardStatus.loading ||
+                      state.status == DashboardStatus.initial)
                     const Padding(
                         padding: EdgeInsets.all(24), child: AppLoading())
                   else if (state.status == DashboardStatus.error)
@@ -148,7 +150,7 @@ class _AdminDashboardView extends StatelessWidget {
                   icon: Icons.menu_book_outlined,
                   label: 'Library',
                   color: AppColors.info,
-                  onTap: () => context.push(Routes.studentLibrary),
+                  onTap: () => context.push(Routes.adminLibrary),
                 ),
               ),
             ],
@@ -163,7 +165,11 @@ class _AdminDashboardView extends StatelessWidget {
               child: SizedBox(
                 height: 200,
                 child: trend.isEmpty
-                    ? const Center(child: Text('Belum ada data'))
+                    ? const AppEmpty(
+                        icon: Icons.show_chart_outlined,
+                        title: 'Belum ada data',
+                        subtitle: 'Data tren muncul setelah absensi tercatat',
+                      )
                     : LineChart(_chart(trend)),
               ),
             ),
@@ -175,8 +181,10 @@ class _AdminDashboardView extends StatelessWidget {
 
   LineChartData _chart(List<dynamic> data) {
     final List<FlSpot> spots = <FlSpot>[];
+    double maxSeen = 0;
     for (int i = 0; i < data.length; i++) {
       final num v = ((data[i] as Map)['value'] as num?) ?? 0;
+      if (v.toDouble() > maxSeen) maxSeen = v.toDouble();
       spots.add(FlSpot(i.toDouble(), v.toDouble()));
     }
     return LineChartData(
@@ -188,7 +196,8 @@ class _AdminDashboardView extends StatelessWidget {
         topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
       minY: 0,
-      maxY: 100,
+      // Scale to the data (percent charts cap at 100; counts grow freely).
+      maxY: maxSeen <= 100 ? 100 : (maxSeen * 1.1).ceilToDouble(),
       lineBarsData: <LineChartBarData>[
         LineChartBarData(
           spots: spots,

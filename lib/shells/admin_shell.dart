@@ -42,6 +42,11 @@ class AdminShell extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) =>
-      ShellScaffold(child: child, location: location, items: _items);
+  Widget build(BuildContext context) => ShellScaffold(
+        child: child,
+        location: location,
+        items: _items,
+        // Tabs: Dashboard(0) Admisi(1) Keuangan(2) Menu(3) Profil(4).
+        fallbackIndex: 3,
+      );
 }

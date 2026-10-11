@@ -35,4 +35,11 @@ class AppColors {
     'librarian': Color(0xFFF59E0B),
     'accountant': Color(0xFF10B981),
   };
+
+  /// Extra menu tint used across role menu grids.
+  static const Color pink = Color(0xFFDB2777);
+
+  /// Single lookup for per-role accent colors (menu tints, avatars, badges).
+  /// Unknown roles fall back to [primary] so callers never hardcode hex.
+  static Color roleColor(String role) => roleAccent[role] ?? primary;
 }

@@ -48,6 +48,11 @@ class ParentShell extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) =>
-      ShellScaffold(child: child, location: location, items: _items);
+  Widget build(BuildContext context) => ShellScaffold(
+        child: child,
+        location: location,
+        items: _items,
+        // Tabs: Beranda(0) Nilai(1) Kehadiran(2) Tagihan(3) Menu(4) Profil(5).
+        fallbackIndex: 4,
+      );
 }

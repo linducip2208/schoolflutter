@@ -43,6 +43,7 @@ class _ParentDashboardView extends StatelessWidget {
                   .read<DashboardBloc>()
                   .add(const DashboardRefreshRequested('parent')),
               child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   GreetingHeader(
@@ -50,7 +51,8 @@ class _ParentDashboardView extends StatelessWidget {
                     subtitle: 'Pantau perkembangan ananda di sini.',
                     avatarUrl: user?.avatarUrl,
                   ),
-                  if (state.status == DashboardStatus.loading)
+                  if (state.status == DashboardStatus.loading ||
+                      state.status == DashboardStatus.initial)
                     const Padding(
                         padding: EdgeInsets.all(24), child: AppLoading())
                   else if (state.status == DashboardStatus.error)
