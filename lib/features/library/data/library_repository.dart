@@ -60,6 +60,18 @@ class LibraryRepository {
     }
   }
 
+  Future<Map<String, dynamic>> storeCategory(String name) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.libraryStoreCategory,
+        data: <String, dynamic>{'name': name},
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<Map<String, dynamic>> storeBook({
     required int categoryId,
     required String title,

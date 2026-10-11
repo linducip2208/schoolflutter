@@ -23,6 +23,47 @@ class AchievementsPage extends StatelessWidget {
       title: 'Prestasi',
       loader: repo.leaderboard,
       emptyText: 'Belum ada data prestasi.',
+      actions: canManage
+          ? <Widget>[
+              IconButton(
+                tooltip: 'Kategori baru',
+                icon: const Icon(Icons.category_outlined),
+                onPressed: () async {
+                  final Map<String, String>? v = await showFormDialog(
+                    context,
+                    title: 'Kategori Prestasi',
+                    fields: const <FormFieldDef>[
+                      FormFieldDef(key: 'name', label: 'Nama'),
+                      FormFieldDef(
+                          key: 'scope',
+                          label: 'Cakupan',
+                          options: <String>[
+                            'internal',
+                            'district',
+                            'province',
+                            'national',
+                            'international'
+                          ]),
+                      FormFieldDef(
+                          key: 'points',
+                          label: 'Poin',
+                          isNumber: true,
+                          initial: '10'),
+                    ],
+                  );
+                  if (v == null || !context.mounted) return;
+                  await runMutation(
+                    context,
+                    () => repo.storeCategory(
+                      name: v['name']!,
+                      scope: v['scope']!,
+                      points: int.tryParse(v['points']!),
+                    ),
+                  );
+                },
+              ),
+            ]
+          : null,
       onCreate: canManage
           ? () async {
               final Map<String, String>? v = await showFormDialog(

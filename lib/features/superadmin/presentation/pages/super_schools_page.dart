@@ -151,10 +151,18 @@ class _SchoolCard extends StatelessWidget {
           children: <Widget>[
             Chip(
               label: Text(active ? 'Aktif' : 'Nonaktif',
-                  style: const TextStyle(fontSize: 11)),
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: active
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.error,
+                      fontWeight: FontWeight.w600)),
               visualDensity: VisualDensity.compact,
-              backgroundColor:
-                  active ? Colors.green.shade100 : Colors.red.shade100,
+              backgroundColor: (active
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.error)
+                  .withValues(alpha: 0.12),
+              side: BorderSide.none,
             ),
             PopupMenuButton<String>(
               onSelected: (String v) =>

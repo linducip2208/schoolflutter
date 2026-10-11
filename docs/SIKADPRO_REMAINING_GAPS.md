@@ -6,9 +6,11 @@
 
 Ditutup: generate-exam + attach, exam soal edit/hapus/lihat, marks
 koreksi tunggal, classroom materi upload + buka tautan, academic
-edit + holiday hapus, library edit/hapus, bullying assign, medical
-record lookup, canteen transactions, alumni edit, super stats/upgrade.
-Tersisa: timetable conflict UI (minor), branding reset (sengaja).
+edit + holiday hapus, library edit/hapus/kategori, bullying assign,
+medical record lookup, canteen transactions, alumni edit, super
+stats/upgrade, PPDB run-selection, kategori prestasi, cek bentrok
+jadwal.
+Tersisa: branding reset (sengaja).
 
 ## P2
 

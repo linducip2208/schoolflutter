@@ -17,6 +17,26 @@ class AchievementsRepository {
     }
   }
 
+  Future<Map<String, dynamic>> storeCategory({
+    required String name,
+    required String scope,
+    int? points,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.achievementCategories,
+        data: <String, dynamic>{
+          'name': name,
+          'scope': scope,
+          if (points != null) 'points': points,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   Future<List<Map<String, dynamic>>> ofStudent(int studentId) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.get<dynamic>(

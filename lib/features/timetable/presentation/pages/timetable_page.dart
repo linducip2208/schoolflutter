@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
+import '../../../../core/widgets/form_dialog.dart';
+import '../../../../core/widgets/module_list_page.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../data/timetable_repository.dart';
 
@@ -53,8 +55,82 @@ class _TimetablePageState extends State<TimetablePage>
     super.dispose();
   }
 
+  Future<void> _checkConflict(BuildContext context) async {
+    final Map<String, String>? v = await showFormDialog(
+      context,
+      title: 'Cek Bentrok Slot',
+      fields: const <FormFieldDef>[
+        FormFieldDef(
+            key: 'class_section_id', label: 'ID Rombel', isNumber: true),
+        FormFieldDef(key: 'teacher_id', label: 'ID Guru', isNumber: true),
+        FormFieldDef(
+            key: 'day_of_week',
+            label: 'Hari',
+            options: <String>['1', '2', '3', '4', '5', '6', '7']),
+        FormFieldDef(key: 'start_time', label: 'Mulai (HH:MM)', hint: '07:00'),
+        FormFieldDef(key: 'end_time', label: 'Selesai (HH:MM)', hint: '08:30'),
+      ],
+    );
+    if (v == null || !context.mounted) return;
+    Map<String, dynamic>? res;
+    String? error;
+    try {
+      res = await _repo.checkConflict(
+        classSectionId: int.parse(v['class_section_id']!),
+        teacherId: int.parse(v['teacher_id']!),
+        dayOfWeek: int.parse(v['day_of_week']!),
+        startTime: v['start_time']!,
+        endTime: v['end_time']!,
+      );
+    } catch (e) {
+      error = e.toString();
+    }
+    if (!context.mounted) return;
+    final List<dynamic> conflicts =
+        (res?['conflicts'] as List?) ?? const <dynamic>[];
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext d) => AlertDialog(
+        title: Text(error != null
+            ? 'Gagal'
+            : (res?['has_conflict'] == true ? 'Bentrok!' : 'Aman')),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: error != null
+              ? Text(error)
+              : conflicts.isEmpty
+                  ? const Text('Tidak ada bentrok pada slot ini.')
+                  : SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          for (final dynamic e in conflicts)
+                            ListTile(
+                              dense: true,
+                              title: Text((e as Map)['title']?.toString() ??
+                                  'Slot bentrok'),
+                              subtitle: Text(
+                                  '${e['day_of_week'] ?? ''} ${e['start_time'] ?? ''}-${e['end_time'] ?? ''}'),
+                            ),
+                        ],
+                      ),
+                    ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(d).pop(),
+            child: const Text('Tutup'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final String role = context.watch<AuthBloc>().state.user?.role ?? 'student';
+    final bool canManage =
+        role == 'admin' || role == 'school_admin' || role == 'super_admin';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Jadwal Pelajaran'),
@@ -63,6 +139,15 @@ class _TimetablePageState extends State<TimetablePage>
           isScrollable: true,
           tabs: <Widget>[for (final String l in _dayLabels) Tab(text: l)],
         ),
+        actions: canManage
+            ? <Widget>[
+                IconButton(
+                  tooltip: 'Cek bentrok slot',
+                  icon: const Icon(Icons.compare_arrows_outlined),
+                  onPressed: () => _checkConflict(context),
+                ),
+              ]
+            : null,
       ),
       body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
         future: _future,

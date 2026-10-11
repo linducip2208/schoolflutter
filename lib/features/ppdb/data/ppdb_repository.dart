@@ -127,4 +127,15 @@ class PpdbRepository {
       throw mapDioError(e);
     }
   }
+
+  Future<Map<String, dynamic>> runSelection(int periodId) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
+        ApiEndpoints.ppdbRunSelection(periodId),
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

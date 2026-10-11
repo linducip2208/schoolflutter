@@ -112,8 +112,10 @@ class _StudyAssistantPageState extends State<StudyAssistantPage> {
                             maxWidth: MediaQuery.of(context).size.width * 0.75),
                         decoration: BoxDecoration(
                           color: isUser
-                              ? Colors.blue.shade100
-                              : Colors.grey.shade200,
+                              ? Theme.of(context).colorScheme.primaryContainer
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: SelectableText(m.content),
@@ -126,7 +128,9 @@ class _StudyAssistantPageState extends State<StudyAssistantPage> {
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
-            border: Border(top: BorderSide(color: Colors.grey.shade300)),
+            border: Border(
+                top: BorderSide(
+                    color: Theme.of(context).colorScheme.outlineVariant)),
           ),
           padding: const EdgeInsets.all(8),
           child: SafeArea(

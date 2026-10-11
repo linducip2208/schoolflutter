@@ -61,14 +61,56 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    width: 64,
-                    height: 64,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(20),
+                      gradient: const LinearGradient(
+                        colors: <Color>[
+                          AppColors.primary,
+                          AppColors.primaryDark
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(24),
                     ),
-                    child: const Icon(Icons.school_rounded,
-                        color: AppColors.primary, size: 36),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: const Icon(Icons.school_rounded,
+                              color: Colors.white, size: 34),
+                        ),
+                        const SizedBox(width: 14),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Sikad Pro',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                'Satu aplikasi untuk sekolah, guru, siswa & orang tua.',
+                                style: TextStyle(
+                                    color: Colors.white70, fontSize: 13),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 24),
                   Text('Selamat datang',

@@ -464,6 +464,7 @@ class ApiEndpoints {
   static String timetableSlot(int id) => '/timetable/$id';
   static const String timetableBreaks = '/timetable/breaks';
   static const String timetableBulk = '/timetable/bulk';
+  static const String timetableCheckConflict = '/timetable/check-conflict';
 
   // ── Hostel (manage)
   static String hostelStoreRoom(int hostelId) => '/hostel/$hostelId/rooms';

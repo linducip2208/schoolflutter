@@ -104,4 +104,30 @@ class TimetableRepository {
     final String s = v.toString();
     return s.length >= 5 ? s.substring(0, 5) : s;
   }
+
+  /// Cek bentrok slot: `{class_section_id, teacher_id, day_of_week 1-7,
+  /// start_time/end_time HH:MM}` → `{conflicts, has_conflict}`.
+  Future<Map<String, dynamic>> checkConflict({
+    required int classSectionId,
+    required int teacherId,
+    required int dayOfWeek,
+    required String startTime,
+    required String endTime,
+  }) async {
+    try {
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.timetableCheckConflict,
+        queryParameters: <String, dynamic>{
+          'class_section_id': classSectionId,
+          'teacher_id': teacherId,
+          'day_of_week': dayOfWeek,
+          'start_time': startTime,
+          'end_time': endTime,
+        },
+      );
+      return unwrapMap(r.data);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
 }

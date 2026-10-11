@@ -61,6 +61,25 @@ class _LibraryPageState extends State<LibraryPage> {
               onPressed: _scan,
               tooltip: 'Pindai barcode',
             ),
+            if (canManage)
+              IconButton(
+                icon: const Icon(Icons.category_outlined),
+                tooltip: 'Kategori baru',
+                onPressed: () async {
+                  final Map<String, String>? v = await showFormDialog(
+                    context,
+                    title: 'Kategori Buku',
+                    fields: const <FormFieldDef>[
+                      FormFieldDef(key: 'name', label: 'Nama kategori'),
+                    ],
+                  );
+                  if (v == null || !context.mounted) return;
+                  await runMutation(
+                    context,
+                    () => _repo.storeCategory(v['name']!),
+                  );
+                },
+              ),
           ],
         ),
         floatingActionButton: canManage

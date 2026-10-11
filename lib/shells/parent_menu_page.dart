@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/router/routes.dart';
+import '../core/widgets/menu_tile.dart';
 
 /// Hub wali (docs §parent): anak, layanan, komunikasi.
 /// Setiap tile membuka screen real ber-API.
@@ -43,37 +44,34 @@ class ParentMenuPage extends StatelessWidget {
         route: Routes.parentEmergency),
   ];
 
+  static const List<Color> _tints = <Color>[
+    Color(0xFF14B8A6),
+    Color(0xFF2563EB),
+    Color(0xFFF59E0B),
+    Color(0xFF7C3AED),
+    Color(0xFF0EA5E9),
+    Color(0xFF16A34A),
+    Color(0xFFDB2777),
+    Color(0xFFDC2626),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Menu Wali')),
       body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(16),
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 1.35,
+        crossAxisCount: 3,
+        padding: const EdgeInsets.all(12),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 0.92,
         children: <Widget>[
-          for (final _MenuEntry e in _entries)
-            Card(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
-                onTap: () => context.push(e.route),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(e.icon,
-                        size: 32, color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(height: 8),
-                    Text(e.label,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center),
-                  ],
-                ),
-              ),
+          for (int i = 0; i < _entries.length; i++)
+            MenuTile(
+              icon: _entries[i].icon,
+              label: _entries[i].label,
+              color: _tints[i % _tints.length],
+              onTap: () => context.push(_entries[i].route),
             ),
         ],
       ),

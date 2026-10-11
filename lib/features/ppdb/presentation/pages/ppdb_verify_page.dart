@@ -20,6 +20,32 @@ class PpdbVerifyPage extends StatelessWidget {
       emptyText: 'Belum ada pendaftar.',
       actions: <Widget>[
         IconButton(
+          tooltip: 'Jalankan seleksi',
+          icon: const Icon(Icons.playlist_play_outlined),
+          onPressed: () async {
+            final Map<String, String>? v = await showFormDialog(
+              context,
+              title: 'Jalankan Seleksi',
+              fields: const <FormFieldDef>[
+                FormFieldDef(
+                    key: 'period_id', label: 'ID Periode', isNumber: true),
+              ],
+            );
+            if (v == null || !context.mounted) return;
+            Map<String, dynamic>? res;
+            await runMutation(context, () async {
+              res = await repo.runSelection(int.parse(v['period_id']!));
+            });
+            if (context.mounted && res != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content:
+                        Text('Seleksi: ${res!.isEmpty ? 'selesai' : res}')),
+              );
+            }
+          },
+        ),
+        IconButton(
           tooltip: 'Laporan',
           icon: const Icon(Icons.summarize_outlined),
           onPressed: () => _showReports(context, repo),

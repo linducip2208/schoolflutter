@@ -38,42 +38,85 @@ class GreetingHeader extends StatelessWidget {
           bottomRight: Radius.circular(24),
         ),
       ),
-      child: Row(
+      child: Stack(
         children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  greet,
-                  style: const TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: Colors.white70, fontSize: 13),
-                ),
-              ],
+          Positioned(
+            right: -36,
+            top: -48,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
-          CircleAvatar(
-            radius: 26,
-            backgroundColor: Colors.white24,
-            backgroundImage: avatarUrl != null && avatarUrl!.isNotEmpty
-                ? NetworkImage(avatarUrl!)
-                : null,
-            child: avatarUrl == null || avatarUrl!.isEmpty
-                ? const Icon(Icons.person, color: Colors.white)
-                : null,
+          Positioned(
+            right: 52,
+            bottom: -64,
+            child: Container(
+              width: 110,
+              height: 110,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.06),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      greet,
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        subtitle,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 12),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              CircleAvatar(
+                radius: 26,
+                backgroundColor: Colors.white24,
+                backgroundImage: avatarUrl != null && avatarUrl!.isNotEmpty
+                    ? NetworkImage(avatarUrl!)
+                    : null,
+                child: avatarUrl == null || avatarUrl!.isEmpty
+                    ? const Icon(Icons.person, color: Colors.white)
+                    : null,
+              ),
+            ],
           ),
         ],
       ),
