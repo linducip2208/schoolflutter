@@ -5,7 +5,6 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
 import '../../../../core/widgets/form_dialog.dart';
-import '../../../../core/widgets/module_list_page.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../data/timetable_repository.dart';
 

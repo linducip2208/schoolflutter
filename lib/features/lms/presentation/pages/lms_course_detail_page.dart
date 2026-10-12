@@ -79,6 +79,14 @@ class _LmsCourseDetailPageState extends State<LmsCourseDetailPage> {
               (d['lessons'] as List?) ?? const <dynamic>[];
           final List<dynamic> quizzes =
               (d['quizzes'] as List?) ?? const <dynamic>[];
+          final List<Map<String, dynamic>> lessonMaps = <Map<String, dynamic>>[
+            for (final dynamic e in lessons)
+              Map<String, dynamic>.from(e as Map),
+          ];
+          final List<Map<String, dynamic>> quizMaps = <Map<String, dynamic>>[
+            for (final dynamic e in quizzes)
+              Map<String, dynamic>.from(e as Map),
+          ];
           return ListView(
             padding: const EdgeInsets.all(16),
             children: <Widget>[
@@ -127,12 +135,12 @@ class _LmsCourseDetailPageState extends State<LmsCourseDetailPage> {
               ],
               const SizedBox(height: 12),
               Text('Materi', style: Theme.of(context).textTheme.titleSmall),
-              for (final dynamic l in lessons)
+              for (final Map<String, dynamic> l in lessonMaps)
                 Card(
                   child: ListTile(
                     dense: true,
                     leading: const Icon(Icons.article_outlined),
-                    title: Text((l as Map)['title']?.toString() ?? '-'),
+                    title: Text(l['title']?.toString() ?? '-'),
                     trailing: _enrollmentId == null
                         ? const Tooltip(
                             message: 'Enroll dulu',
@@ -146,7 +154,7 @@ class _LmsCourseDetailPageState extends State<LmsCourseDetailPage> {
                                 context,
                                 () => _repo.completeLesson(
                                   enrollmentId: _enrollmentId!,
-                                  lessonId: ((l as Map)['id'] as num).toInt(),
+                                  lessonId: (l['id'] as num?)?.toInt() ?? 0,
                                 ),
                               );
                             },
@@ -155,20 +163,19 @@ class _LmsCourseDetailPageState extends State<LmsCourseDetailPage> {
                 ),
               const SizedBox(height: 8),
               Text('Kuis', style: Theme.of(context).textTheme.titleSmall),
-              for (final dynamic q in quizzes)
+              for (final Map<String, dynamic> q in quizMaps)
                 Card(
                   child: ListTile(
                     dense: true,
                     leading: const Icon(Icons.quiz_outlined),
-                    title: Text((q as Map)['title']?.toString() ?? 'Kuis'),
-                    subtitle:
-                        Text('${(q as Map)['questions_count'] ?? '-'} soal'),
+                    title: Text(q['title']?.toString() ?? 'Kuis'),
+                    subtitle: Text('${q['questions_count'] ?? '-'} soal'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => QuizAttemptPage(
-                          quizId: ((q as Map)['id'] as num).toInt(),
-                          title: (q as Map)['title']?.toString() ?? 'Kuis',
+                          quizId: (q['id'] as num?)?.toInt() ?? 0,
+                          title: q['title']?.toString() ?? 'Kuis',
                         ),
                       ),
                     ),

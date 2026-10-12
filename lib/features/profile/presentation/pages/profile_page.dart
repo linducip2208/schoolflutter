@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/router/routes.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/config/app_contact.dart';
 import '../../../../core/widgets/form_dialog.dart';
 import '../../../../core/widgets/module_list_page.dart';
 import '../../../../core/widgets/section_header.dart';
@@ -153,6 +154,36 @@ class ProfilePage extends StatelessWidget {
               ),
               onPressed: () =>
                   context.read<AuthBloc>().add(const AuthLogoutRequested()),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Card(
+              child: ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.success.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.support_agent_outlined,
+                      color: AppColors.success, size: 22),
+                ),
+                title: const Text('Butuh bantuan?'),
+                subtitle:
+                    Text('Support WhatsApp ${SupportContact.whatsappDisplay}'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () async {
+                  try {
+                    await SupportContact.openWhatsApp();
+                  } catch (e) {
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(e.toString())));
+                  }
+                },
+              ),
             ),
           ),
           const SizedBox(height: 24),

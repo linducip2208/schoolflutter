@@ -24,20 +24,6 @@ class _PayrollPageState extends State<PayrollPage> {
 
   void _reload() => setState(() => _future = _fetch());
 
-  String _staffName(Map<String, dynamic> p) {
-    final dynamic staff = p['staff'];
-    if (staff is Map) {
-      final dynamic user = staff['user'];
-      if (user is Map && user['name'] != null) {
-        return user['name'].toString();
-      }
-      if (staff['employee_id'] != null) {
-        return 'ID ${staff['employee_id']}';
-      }
-    }
-    return 'Staf ${p['staff_id'] ?? '-'}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

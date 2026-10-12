@@ -56,21 +56,46 @@ class _AdmissionPageState extends State<AdmissionPage> {
             builder:
                 (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
               if (!snap.hasData) return const SizedBox.shrink();
-              final Map<String, dynamic> s = snap.data!;
-              if (s.isEmpty) return const SizedBox.shrink();
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              final Map<String, dynamic> entries = snap.data!;
+              if (entries.isEmpty) return const SizedBox.shrink();
+              final List<MapEntry<String, dynamic>> items =
+                  entries.entries.toList();
+              return Container(
+                margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: <Color>[AppColors.primary, AppColors.primaryDark],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Row(
                   children: <Widget>[
-                    for (final MapEntry<String, dynamic> e in s.entries)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Chip(
-                          label: Text('${_label(e.key)}: ${e.value}'),
-                          visualDensity: VisualDensity.compact,
+                    for (int i = 0; i < items.length; i++) ...<Widget>[
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            Text('${items[i].value}',
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800)),
+                            const SizedBox(height: 2),
+                            Text(_label(items[i].key),
+                                style: const TextStyle(
+                                    color: Colors.white70, fontSize: 11),
+                                textAlign: TextAlign.center),
+                          ],
                         ),
                       ),
+                      if (i < items.length - 1)
+                        Container(
+                            width: 1,
+                            height: 32,
+                            color: Colors.white.withValues(alpha: 0.25)),
+                    ],
                   ],
                 ),
               );
@@ -146,13 +171,6 @@ class _AdmissionPageState extends State<AdmissionPage> {
         'enrolled' => 'Diterima',
         'rejected' => 'Ditolak',
         _ => s,
-      };
-
-  Color _color(String s) => switch (s) {
-        'enrolled' => AppColors.success,
-        'rejected' => AppColors.danger,
-        'applied' => AppColors.info,
-        _ => AppColors.warning,
       };
 }
 

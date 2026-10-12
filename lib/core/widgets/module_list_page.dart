@@ -17,6 +17,7 @@ class ModuleListPage extends StatefulWidget {
     required this.itemBuilder,
     this.loader,
     this.emptyText = 'Belum ada data.',
+    this.emptyHint,
     this.actions,
     this.onCreate,
     this.createTooltip = 'Tambah',
@@ -29,6 +30,7 @@ class ModuleListPage extends StatefulWidget {
   final Future<List<Map<String, dynamic>>> Function()? loader;
   final Widget Function(BuildContext, Map<String, dynamic>) itemBuilder;
   final String emptyText;
+  final String? emptyHint;
   final List<Widget>? actions;
   final Future<void> Function()? onCreate;
   final String createTooltip;
@@ -164,7 +166,7 @@ class _ModuleListPageState extends State<ModuleListPage> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(32),
-                      child: Center(child: Text(widget.emptyText)),
+                      child: Center(child: _EmptyHint()),
                     ),
                   ],
                 );
@@ -206,7 +208,7 @@ class _ModuleListPageState extends State<ModuleListPage> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(32),
-                    child: Center(child: Text(widget.emptyText)),
+                    child: Center(child: _EmptyHint()),
                   ),
                 ],
               );
@@ -221,6 +223,34 @@ class _ModuleListPageState extends State<ModuleListPage> {
           },
         ),
       ),
+    );
+  }
+}
+
+/// Empty state with optional guidance hint.
+class _EmptyHint extends StatelessWidget {
+  const _EmptyHint();
+
+  @override
+  Widget build(BuildContext context) {
+    final ModuleListPage? page =
+        context.findAncestorWidgetOfExactType<ModuleListPage>();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Icon(Icons.inbox_outlined,
+            size: 48, color: Theme.of(context).hintColor),
+        const SizedBox(height: 12),
+        Text(page?.emptyText ?? 'Belum ada data.',
+            style: Theme.of(context).textTheme.titleMedium,
+            textAlign: TextAlign.center),
+        if (page?.emptyHint != null) ...<Widget>[
+          const SizedBox(height: 6),
+          Text(page!.emptyHint!,
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center),
+        ],
+      ],
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/module_list_page.dart';
 import '../../data/directory_repository.dart';
 
 /// Direktori siswa: cari, filter rombel (docs §admin §2.7).

@@ -100,24 +100,28 @@ class _AdminDashboardView extends StatelessWidget {
                 label: 'Total Siswa',
                 value: '$totalStudents',
                 icon: Icons.school_outlined,
+                onTap: () => context.push(Routes.adminStudents),
               ),
               StatCard(
                 label: 'Total Guru/Staf',
                 value: '$totalTeachers',
                 icon: Icons.badge_outlined,
                 color: AppColors.secondary,
+                onTap: () => context.push(Routes.adminStaff),
               ),
               StatCard(
                 label: 'Iuran Diterima',
                 value: CurrencyFormatter.compact(feesCollected),
                 icon: Icons.payments_outlined,
                 color: AppColors.success,
+                onTap: () => context.push(Routes.adminFees),
               ),
               StatCard(
                 label: 'Tunggakan',
                 value: CurrencyFormatter.compact(feesPending),
                 icon: Icons.warning_amber_outlined,
                 color: AppColors.danger,
+                onTap: () => context.push(Routes.adminFees),
               ),
             ],
           ),
@@ -129,31 +133,102 @@ class _AdminDashboardView extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: _QuickAction(
-                  icon: Icons.apartment_outlined,
-                  label: 'Asrama',
+                  icon: Icons.receipt_long_outlined,
+                  label: 'Keuangan',
+                  color: AppColors.success,
+                  onTap: () => context.push(Routes.adminFees),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _QuickAction(
+                  icon: Icons.fact_check_outlined,
+                  label: 'Absensi',
+                  color: AppColors.primary,
+                  onTap: () => context.push(Routes.adminAttendance),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _QuickAction(
+                  icon: Icons.assessment_outlined,
+                  label: 'Laporan',
                   color: AppColors.secondary,
-                  onTap: () => context.push(Routes.hostel),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _QuickAction(
-                  icon: Icons.directions_bus_outlined,
-                  label: 'Transport',
-                  color: AppColors.warning,
-                  onTap: () => context.push(Routes.transport),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _QuickAction(
-                  icon: Icons.menu_book_outlined,
-                  label: 'Library',
-                  color: AppColors.info,
-                  onTap: () => context.push(Routes.adminLibrary),
+                  onTap: () => context.push(Routes.adminReports),
                 ),
               ),
             ],
+          ),
+        ),
+        const SectionHeader(title: 'Komposisi Iuran'),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: SizedBox(
+                height: 190,
+                child: (feesCollected + feesPending) <= 0
+                    ? const AppEmpty(
+                        icon: Icons.pie_chart_outline,
+                        title: 'Belum ada data',
+                        subtitle: 'Data muncul setelah invoice terbit',
+                      )
+                    : Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: PieChart(
+                              PieChartData(
+                                sectionsSpace: 3,
+                                centerSpaceRadius: 42,
+                                sections: <PieChartSectionData>[
+                                  PieChartSectionData(
+                                    value: feesCollected.toDouble(),
+                                    title:
+                                        '${_pct(feesCollected, feesCollected + feesPending)}%',
+                                    color: AppColors.success,
+                                    radius: 52,
+                                    titleStyle: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  PieChartSectionData(
+                                    value: feesPending.toDouble(),
+                                    title:
+                                        '${_pct(feesPending, feesCollected + feesPending)}%',
+                                    color: AppColors.danger,
+                                    radius: 52,
+                                    titleStyle: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              _Legend(
+                                  color: AppColors.success,
+                                  label: 'Diterima',
+                                  value:
+                                      CurrencyFormatter.compact(feesCollected)),
+                              const SizedBox(height: 8),
+                              _Legend(
+                                  color: AppColors.danger,
+                                  label: 'Tunggakan',
+                                  value:
+                                      CurrencyFormatter.compact(feesPending)),
+                            ],
+                          ),
+                        ],
+                      ),
+              ),
+            ),
           ),
         ),
         const SectionHeader(title: 'Tren Kehadiran (7 hari)'),
@@ -181,19 +256,39 @@ class _AdminDashboardView extends StatelessWidget {
 
   LineChartData _chart(List<dynamic> data) {
     final List<FlSpot> spots = <FlSpot>[];
+    final List<String> labels = <String>[];
     double maxSeen = 0;
     for (int i = 0; i < data.length; i++) {
-      final num v = ((data[i] as Map)['value'] as num?) ?? 0;
+      final Map<String, dynamic> row =
+          Map<String, dynamic>.from(data[i] as Map);
+      final num v = (row['value'] as num?) ?? 0;
       if (v.toDouble() > maxSeen) maxSeen = v.toDouble();
       spots.add(FlSpot(i.toDouble(), v.toDouble()));
+      labels.add(_shortDate(row['date']?.toString()));
     }
     return LineChartData(
       gridData: const FlGridData(show: true, drawVerticalLine: false),
       borderData: FlBorderData(show: false),
-      titlesData: const FlTitlesData(
+      titlesData: FlTitlesData(
         show: true,
-        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles:
+            const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (double v, TitleMeta m) {
+              final int i = v.toInt();
+              if (i < 0 || i >= labels.length) {
+                return const SizedBox.shrink();
+              }
+              return Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(labels[i], style: const TextStyle(fontSize: 10)),
+              );
+            },
+          ),
+        ),
       ),
       minY: 0,
       // Scale to the data (percent charts cap at 100; counts grow freely).
@@ -202,13 +297,66 @@ class _AdminDashboardView extends StatelessWidget {
         LineChartBarData(
           spots: spots,
           isCurved: true,
-          color: AppColors.primary,
+          gradient: const LinearGradient(
+            colors: <Color>[AppColors.primary, AppColors.secondary],
+          ),
           barWidth: 3,
-          dotData: const FlDotData(show: false),
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
           belowBarData: BarAreaData(
             show: true,
-            color: AppColors.primary.withValues(alpha: 0.12),
+            gradient: LinearGradient(
+              colors: <Color>[
+                AppColors.primary.withValues(alpha: 0.25),
+                AppColors.primary.withValues(alpha: 0.02),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
+        ),
+      ],
+    );
+  }
+
+  static String _shortDate(String? iso) {
+    if (iso == null || iso.length < 10) return '';
+    // 2026-10-04 -> 04/10
+    return '${iso.substring(8, 10)}/${iso.substring(5, 7)}';
+  }
+
+  static int _pct(int part, int total) =>
+      total <= 0 ? 0 : ((part / total) * 100).round();
+}
+
+class _Legend extends StatelessWidget {
+  const _Legend(
+      {required this.color, required this.label, required this.value});
+  final Color color;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(label, style: Theme.of(context).textTheme.bodySmall),
+            Text(value,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w700)),
+          ],
         ),
       ],
     );

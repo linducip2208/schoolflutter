@@ -94,26 +94,29 @@ class _ExamAttemptPageState extends State<ExamAttemptPage> {
               : const <String, dynamic>{};
           final List<dynamic> questions =
               (exam['questions'] as List?) ?? const <dynamic>[];
-          if (questions.isEmpty) {
+          final List<Map<String, dynamic>> qs = <Map<String, dynamic>>[
+            for (final dynamic e in questions)
+              Map<String, dynamic>.from(e as Map),
+          ];
+          if (qs.isEmpty) {
             return const Center(child: Text('Belum ada soal.'));
           }
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
             children: <Widget>[
-              for (final dynamic q in questions)
+              for (final Map<String, dynamic> q in qs)
                 _ExamQuestionCard(
-                  question: Map<String, dynamic>.from(q as Map),
-                  value: _answers[((q as Map)['id'] as num).toInt()],
+                  question: q,
+                  value: _answers[(q['id'] as num?)?.toInt() ?? -1],
                   onChanged: (String v) => setState(() {
-                    _answers[((q as Map)['id'] as num).toInt()] = v;
+                    _answers[(q['id'] as num?)?.toInt() ?? -1] = v;
                   }),
                 ),
               const SizedBox(height: 12),
               FilledButton.icon(
                 onPressed: _busy ? null : _submit,
                 icon: const Icon(Icons.send_outlined),
-                label:
-                    Text('Kumpulkan (${_answers.length}/${questions.length})'),
+                label: Text('Kumpulkan (${_answers.length}/${qs.length})'),
               ),
             ],
           );

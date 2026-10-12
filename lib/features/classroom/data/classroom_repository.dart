@@ -7,20 +7,30 @@ import '../../../core/error/error_handler.dart';
 import '../../../core/sync/sync_engine.dart';
 
 class ClassroomRepository {
-  Future<List<Map<String, dynamic>>> assignments() async {
+  /// Backend requires `class_section_id`.
+  Future<List<Map<String, dynamic>>> lessons(
+      {required int classSectionId}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.classroomAssignments);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.classroomLessons,
+        queryParameters: <String, dynamic>{
+          'class_section_id': classSectionId,
+        },
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
     }
   }
 
-  Future<List<Map<String, dynamic>>> lessons() async {
+  /// Backend requires `lesson_id`.
+  Future<List<Map<String, dynamic>>> assignments(
+      {required int lessonId}) async {
     try {
-      final Response<dynamic> r =
-          await ApiClient.dio.get<dynamic>(ApiEndpoints.classroomLessons);
+      final Response<dynamic> r = await ApiClient.dio.get<dynamic>(
+        ApiEndpoints.classroomAssignments,
+        queryParameters: <String, dynamic>{'lesson_id': lessonId},
+      );
       return unwrapList(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);

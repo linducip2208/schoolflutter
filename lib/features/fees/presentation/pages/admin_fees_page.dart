@@ -6,6 +6,7 @@ import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
 import '../../../../core/widgets/form_dialog.dart';
 import '../../../../core/widgets/module_list_page.dart';
+import '../../../finance/data/reports_repository.dart';
 import '../../data/fees_repository.dart';
 
 /// Keuangan admin: tagihan (bayar manual) + struktur biaya.
@@ -39,6 +40,48 @@ class _AdminFeesPageState extends State<AdminFeesPage>
         'Invoice ${inv['id']}';
   }
 
+  Widget _summary() {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: ReportsRepository().cashSummary(),
+      builder: (BuildContext c, AsyncSnapshot<Map<String, dynamic>> snap) {
+        if (!snap.hasData) return const SizedBox.shrink();
+        if (snap.hasError) return const SizedBox.shrink();
+        final Map<String, dynamic> d = snap.data!;
+        int v(String k) => (d[k] as num?)?.toInt() ?? 0;
+        return Container(
+          margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: <Color>[AppColors.primary, AppColors.primaryDark],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: _SumItem(
+                    label: 'Masuk bulan ini',
+                    value: CurrencyFormatter.compact(v('collected_month'))),
+              ),
+              Container(
+                  width: 1,
+                  height: 36,
+                  color: Colors.white.withValues(alpha: 0.25)),
+              Expanded(
+                child: _SumItem(
+                    label: 'Belum terbayar',
+                    value: CurrencyFormatter.compact(v('pending'))),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,43 +93,78 @@ class _AdminFeesPageState extends State<AdminFeesPage>
           Tab(text: 'Struktur'),
         ]),
       ),
-      body: TabBarView(
-        controller: _tab,
+      body: Column(
         children: <Widget>[
-          _List(
-              future: _unpaid,
-              isPaid: false,
-              onRefresh: _reload,
-              titleOf: _title,
-              onPay: (Map<String, dynamic> inv) async {
-                final Map<String, String>? v = await showFormDialog(
-                  context,
-                  title: 'Bayar Manual',
-                  fields: const <FormFieldDef>[
-                    FormFieldDef(
-                        key: 'amount', label: 'Nominal (Rp)', isNumber: true),
-                    FormFieldDef(
-                        key: 'payment_method',
-                        label: 'Metode',
-                        options: <String>['cash', 'transfer', 'qris']),
-                  ],
-                );
-                if (v == null || !context.mounted) return;
-                final bool ok = await runMutation(
-                  context,
-                  () => _repo.recordPayment(
-                    invoiceId: (inv['id'] as num).toInt(),
-                    amount: int.parse(v['amount']!),
-                    method: v['payment_method']!,
-                  ),
-                );
-                if (ok) _reload();
-              }),
-          _List(
-              future: _paid, isPaid: true, onRefresh: _reload, titleOf: _title),
-          _StructuresTab(repo: _repo),
+          _summary(),
+          Expanded(
+            child: TabBarView(
+              controller: _tab,
+              children: <Widget>[
+                _List(
+                    future: _unpaid,
+                    isPaid: false,
+                    onRefresh: _reload,
+                    titleOf: _title,
+                    onPay: (Map<String, dynamic> inv) async {
+                      final Map<String, String>? v = await showFormDialog(
+                        context,
+                        title: 'Bayar Manual',
+                        fields: const <FormFieldDef>[
+                          FormFieldDef(
+                              key: 'amount',
+                              label: 'Nominal (Rp)',
+                              isNumber: true),
+                          FormFieldDef(
+                              key: 'payment_method',
+                              label: 'Metode',
+                              options: <String>['cash', 'transfer', 'qris']),
+                        ],
+                      );
+                      if (v == null || !context.mounted) return;
+                      final bool ok = await runMutation(
+                        context,
+                        () => _repo.recordPayment(
+                          invoiceId: (inv['id'] as num).toInt(),
+                          amount: int.parse(v['amount']!),
+                          method: v['payment_method']!,
+                        ),
+                      );
+                      if (ok) _reload();
+                    }),
+                _List(
+                    future: _paid,
+                    isPaid: true,
+                    onRefresh: _reload,
+                    titleOf: _title),
+                _StructuresTab(repo: _repo),
+              ],
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _SumItem extends StatelessWidget {
+  const _SumItem({required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(label,
+            style: const TextStyle(color: Colors.white70, fontSize: 12)),
+        const SizedBox(height: 2),
+        Text(value,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w800)),
+      ],
     );
   }
 }

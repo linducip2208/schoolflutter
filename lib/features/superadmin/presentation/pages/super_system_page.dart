@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/app_error.dart';
 import '../../../../core/widgets/app_loading.dart';
-import '../../../../core/widgets/module_list_page.dart';
 import '../../data/superadmin_repository.dart';
 
 /// System: config + health (docs §super §8, §10).

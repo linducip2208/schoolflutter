@@ -25,6 +25,24 @@ class SuperAdminShell extends StatelessWidget {
       route: Routes.superSchools,
     ),
     ShellNavItem(
+      icon: Icons.workspace_premium_outlined,
+      activeIcon: Icons.workspace_premium,
+      label: 'Paket',
+      route: Routes.superPlans,
+    ),
+    ShellNavItem(
+      icon: Icons.analytics_outlined,
+      activeIcon: Icons.analytics,
+      label: 'Analitik',
+      route: Routes.superAnalytics,
+    ),
+    ShellNavItem(
+      icon: Icons.settings_outlined,
+      activeIcon: Icons.settings,
+      label: 'Sistem',
+      route: Routes.superSystem,
+    ),
+    ShellNavItem(
       icon: Icons.person_outline,
       activeIcon: Icons.person,
       label: 'Profil',

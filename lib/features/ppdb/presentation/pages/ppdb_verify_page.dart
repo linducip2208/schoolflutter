@@ -18,6 +18,8 @@ class PpdbVerifyPage extends StatelessWidget {
       pagedLoader: ({required int page}) => repo.adminApplications(page: page),
       pageSize: 50,
       emptyText: 'Belum ada pendaftar.',
+      emptyHint:
+          'Bagikan tautan PPDB publik sekolah agar calon siswa bisa mendaftar, lalu verifikasi di sini.',
       actions: <Widget>[
         IconButton(
           tooltip: 'Jalankan seleksi',
