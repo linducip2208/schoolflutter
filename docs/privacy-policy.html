@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<!--
+  SIKAD Pro — Kebijakan Privasi (sumber publikasi Play Store).
+  Bahasa: Indonesia. Berdiri sendiri: tanpa CDN, tanpa JavaScript eksternal.
+
+  DITULIS BERDASARKAN AUDIT SOURCE CODE aplikasi Flutter (2026-10-12):
+  AndroidManifest.xml, pubspec.yaml, lib/core/{api,config,notifications,
+  storage,sync,websocket}, lib/features/{auth,emergency,chat,...},
+  ios/Runner/Info.plist, routes/api.php (backend).
+
+  YANG MASIH PERLU DIKONFIRMASI PENERBIT (ditandai [Perlu konfirmasi]):
+  [C1] Nama badan hukum + alamat pengelola aplikasi.
+  [C2] Alamat email privasi (sementara: lindu@act.co.id).
+  [C3] URL publikasi final dokumen ini (asumsi: /privacy di situs resmi).
+  [C4] Masa retensi data di server + prosedur penghapusan akun di server.
+  [C5] Kebijakan usia/persetujuan orang tua untuk akun siswa.
+  [C6] Konfigurasi realtime (Pusher/Reverb) produksi.
+  [C7] Status pengumpulan Firebase Analytics di build rilis.
+-->
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Kebijakan Privasi aplikasi SIKAD Pro — penjelasan data yang diproses, tujuan, penyimpanan, keamanan, dan hak pengguna.">
+<title>Kebijakan Privasi — SIKAD Pro</title>
+<style>
+  :root{
+    --bg:#f6f8fb; --card:#ffffff; --ink:#1c2430; --muted:#5b6675;
+    --brand:#1d4ed8; --brand-soft:#e8effd; --line:#e3e8ef;
+    --warn-bg:#fff7e6; --warn-ink:#8a5a00; --warn-line:#f0d48a;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+      "Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    line-height:1.65; font-size:16px;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:20px 16px 64px}
+  header.hero{
+    background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
+    color:#fff; border-radius:var(--radius); padding:28px 24px; margin-bottom:20px;
+  }
+  header.hero h1{margin:0 0 6px; font-size:1.6rem; line-height:1.3}
+  header.hero p{margin:4px 0; opacity:.95}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;
+  }
+  .meta span{
+    background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.35);
+    padding:4px 12px; border-radius:999px; font-size:.85rem;
+  }
+  nav.toc, section.card{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:var(--radius); padding:20px 22px; margin-bottom:16px;
+  }
+  nav.toc h2{margin-top:0; font-size:1.05rem}
+  nav.toc ol{margin:0; padding-left:22px}
+  nav.toc a{color:var(--brand); text-decoration:none}
+  nav.toc a:hover{text-decoration:underline}
+  section.card h2{margin-top:0; font-size:1.2rem; color:var(--brand)}
+  section.card h3{font-size:1rem; margin-bottom:6px}
+  .tbl{overflow-x:auto; margin:12px 0; border:1px solid var(--line); border-radius:10px}
+  table{border-collapse:collapse; width:100%; font-size:.92rem; min-width:560px}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{background:var(--brand-soft); white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  ul{padding-left:22px}
+  li{margin-bottom:6px}
+  .tbd{
+    display:inline-block; font-size:.78rem; font-weight:700;
+    background:var(--warn-bg); color:var(--warn-ink);
+    border:1px solid var(--warn-line); border-radius:999px;
+    padding:1px 10px; margin-left:6px; vertical-align:middle; white-space:nowrap;
+  }
+  .note{
+    background:var(--warn-bg); border:1px solid var(--warn-line);
+    border-radius:10px; padding:12px 14px; font-size:.92rem; color:var(--warn-ink);
+  }
+  footer{color:var(--muted); font-size:.85rem; text-align:center; margin-top:24px}
+  a{color:var(--brand)}
+  code{background:#eef2f7; padding:1px 6px; border-radius:6px; font-size:.88em}
+  @media (max-width:480px){
+    body{font-size:15px}
+    header.hero h1{font-size:1.35rem}
+    nav.toc, section.card{padding:16px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>Kebijakan Privasi SIKAD Pro</h1>
+    <p>Platform digital sekolah terpadu untuk siswa, orang tua, guru, dan manajemen sekolah.</p>
+    <div class="meta">
+      <span>Berlaku sejak: 12 Oktober 2026</span>
+      <span>Versi dokumen: 1.0</span>
+      <span>Aplikasi: SIKAD Pro (Android) v1.0.0+</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Daftar isi">
+    <h2>Daftar Isi</h2>
+    <ol>
+      <li><a href="#pengelola">Pengelola aplikasi</a></li>
+      <li><a href="#data">Data yang kami proses</a></li>
+      <li><a href="#tujuan">Tujuan penggunaan data</a></li>
+      <li><a href="#izin">Izin perangkat yang diminta</a></li>
+      <li><a href="#lokal">Penyimpanan di perangkat Anda</a></li>
+      <li><a href="#penerima">Ke mana data dikirim</a></li>
+      <li><a href="#pihak-ketiga">Layanan pihak ketiga</a></li>
+      <li><a href="#keamanan">Keamanan</a></li>
+      <li><a href="#retensi">Retensi (penyimpanan jangka waktu)</a></li>
+      <li><a href="#hak">Hak Anda &amp; penghapusan akun/data</a></li>
+      <li><a href="#anak">Data anak / siswa</a></li>
+      <li><a href="#perubahan">Perubahan kebijakan</a></li>
+      <li><a href="#kontak">Kontak pengelola privasi</a></li>
+      <li><a href="#lampiran">Lampiran: ringkasan Keamanan Data Play</a></li>
+    </ol>
+    <p class="note"><strong>Arti tanda <span class="tbd">Perlu konfirmasi</span>:</strong>
+      bagian bertanda ini belum dapat diverifikasi dari source code aplikasi dan
+      wajib dikonfirmasi penerbit sebelum publikasi.</p>
+  </nav>
+
+  <section class="card" id="pengelola">
+    <h2>1. Pengelola Aplikasi</h2>
+    <p>Aplikasi <strong>SIKAD Pro</strong> (“Aplikasi”) adalah aplikasi pendamping
+      layanan administrasi sekolah yang servernya dioperasikan pada
+      <code>sikadpro.whitelabel.co.id</code>. Akun pengguna diterbitkan dan dikelola
+      oleh <strong>sekolah masing-masing</strong>; aplikasi tidak menyediakan
+      pendaftaran akun publik/self-service.</p>
+    <p>Nama badan hukum dan alamat kantor pengelola aplikasi:
+      <span class="tbd">Perlu konfirmasi [C1]</span></p>
+  </section>
+
+  <section class="card" id="data">
+    <h2>2. Data yang Kami Proses</h2>
+    <p>Data di bawah ini benar-benar diproses aplikasi sesuai hasil audit source code.
+      Data yang tidak tercantum di sini <strong>tidak</strong> dikumpulkan aplikasi
+      (misalnya: kontak telepon Anda, SMS, riwayat browser, atau data biometrik).</p>
+    <div class="tbl">
+      <table>
+        <tr><th>Kategori</th><th>Contoh</th><th>Sumber</th></tr>
+        <tr>
+          <td>Identitas akun</td>
+          <td>Nama, alamat email, peran (siswa/orang tua/guru/admin/staf),
+            nomor telepon (opsional), foto profil, bahasa, asal sekolah</td>
+          <td>Diberikan sekolah; dilengkapi/diperbarui oleh pengguna di halaman Profil</td>
+        </tr>
+        <tr>
+          <td>Kredensial masuk</td>
+          <td>Email + kata sandi (ditransmisikan terenkripsi saat login);
+            token sesi; status verifikasi 2 langkah (2FA)</td>
+          <td>Dimasukkan pengguna saat login; token dibuat server</td>
+        </tr>
+        <tr>
+          <td>Data akademik &amp; kesiswaan</td>
+          <td>Nomor induk/NIS, rombel/kelas, kehadiran, jadwal, tugas &amp;
+            pengumpulannya, nilai &amp; rapor, ujian/kuis &amp; jawaban,
+            mata pelajaran, tahun ajaran, prestasi, beasiswa, ekstrakurikuler,
+            catatan konseling/disiplin, laporan pembinaan</td>
+          <td>Ditampilkan dari server sekolah; sebagian dimasukkan guru/admin
+            melalui aplikasi sesuai perannya</td>
+        </tr>
+        <tr>
+          <td>Data keuangan pendidikan</td>
+          <td>Tagihan/invoice SPP, status bayar, riwayat pembayaran,
+            slip gaji (staf), anggaran &amp; laporan kas (admin)</td>
+          <td>Server sekolah; pembayaran diproses melalui penyedia pembayaran
+            resmi sekolah</td>
+        </tr>
+        <tr>
+          <td>Komunikasi</td>
+          <td>Pesan chat + gambar terlampir, pengumuman yang dibaca,
+            notifikasi, laporan darurat &amp; perundungan (bullying)</td>
+          <td>Dibuat pengguna di dalam aplikasi</td>
+        </tr>
+        <tr>
+          <td>File &amp; foto</td>
+          <td>Foto profil, lampiran chat, berkas tugas, dokumen PPDB,
+            logo/branding sekolah, berkas impor/ekspor (admin)</td>
+          <td>Dipilih pengguna dari galeri/berkas perangkat lalu diunggah
+            ke server sekolah</td>
+        </tr>
+        <tr>
+          <td>Kesehatan &amp; kesejahteraan (terbatas)</td>
+          <td>Kunjungan UKS/klinik &amp; vaksinasi (orang tua &amp; petugas UKS),
+            presensi hafalan, laporan harian siswa</td>
+          <td>Dicatat petugas sekolah/orang tua sesuai fitur yang dipakai sekolah</td>
+        </tr>
+        <tr>
+          <td>Lokasi</td>
+          <td><strong>Hanya</strong> saat tombol Darurat ditekan
+            (koordinat dikirim bersama laporan darurat), dan posisi bus sekolah
+            yang <strong>ditampilkan ke orang tua</strong> (berasal dari perangkat
+            armada, bukan dari ponsel orang tua)</td>
+          <td>GPS perangkat, hanya pada momen penggunaan fitur Darurat</td>
+        </tr>
+        <tr>
+          <td>Identitas perangkat (push)</td>
+          <td>Token Firebase Cloud Messaging, platform (Android/iOS),
+            nama perangkat generik (“mobile”)</td>
+          <td>Dibuat otomatis oleh layanan push; dikirim ke server agar
+            notifikasi sampai ke perangkat yang benar</td>
+        </tr>
+        <tr>
+          <td>Diagnostik teknis</td>
+          <td>Versi aplikasi, model perangkat (generik), log galat
+            (hanya pada mode debug/pengembangan)</td>
+          <td>Perangkat; tidak memuat isi data pribadi</td>
+        </tr>
+      </table>
+    </div>
+    <p>Kamera pemindai (QR/barcode gerbang &amp; perpustakaan) <strong>memproses
+      gambar secara lokal di perangkat</strong> dan hanya mengirim hasil pindaian
+      (teks kode) ke server — aplikasi tidak mengunggah rekaman video.</p>
+  </section>
+
+  <section class="card" id="tujuan">
+    <h2>3. Tujuan Penggunaan Data</h2>
+    <ul>
+      <li>Menyediakan layanan inti: autentikasi &amp; peran, dashboard, kehadiran,
+        nilai/rapor, keuangan sekolah, perpustakaan, asrama, transportasi,
+        PPDB, LMS/kelas online, dan modul sekolah lainnya.</li>
+      <li>Mengirim notifikasi penting (tagihan, pengumuman, pesan chat,
+        informasi akademik) melalui push notification.</li>
+      <li>Memungkinkan komunikasi resmi sekolah (chat, pengumuman) dan
+        penanganan darurat/laporan perundungan.</li>
+      <li>Menjaga keamanan akun (token sesi, 2FA, pencabutan sesi saat keluar).</li>
+      <li>Mendukung kerja offline: menyimpan salinan sementara &amp; antrean
+       perubahan agar bisa dikirim saat koneksi kembali.</li>
+      <li>Data <strong>tidak</strong> digunakan untuk iklan, tidak dijual,
+        dan tidak dibagikan untuk pemasaran pihak mana pun.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="izin">
+    <h2>4. Izin Perangkat yang Diminta</h2>
+    <p>Aplikasi meminta izin berikut <strong>hanya saat fitur terkait dipakai</strong>,
+      kecuali akses internet. Anda dapat mencabut izin kapan saja melalui
+      Pengaturan Android (fitur terkait akan berhenti berfungsi).</p>
+    <div class="tbl">
+      <table>
+        <tr><th>Izin Android</th><th>Untuk apa</th><th>Kapan diminta</th></tr>
+        <tr><td>Internet</td><td>Berkomunikasi dengan server sekolah</td><td>Selalu (wajib)</td></tr>
+        <tr><td>Notifikasi</td><td>Menampilkan pengingat &amp; pemberitahuan sekolah</td><td>Saat pertama memakai / sesuai permintaan sistem</td></tr>
+        <tr><td>Kamera</td><td>Foto profil, lampiran chat, pindai QR gerbang &amp; barcode perpustakaan</td><td>Saat fitur dipakai</td></tr>
+        <tr><td>Gambar/media (foto)</td><td>Memilih foto profil &amp; lampiran dari galeri</td><td>Saat fitur dipakai</td></tr>
+        <tr><td>Lokasi akurat &amp; perkiraan</td><td><strong>Hanya</strong> tombol Darurat (mengirim koordinat bersama laporan)</td><td>Saat tombol Darurat ditekan</td></tr>
+        <tr><td>Getar</td><td>Umpan balik notifikasi</td><td>Otomatis sistem</td></tr>
+        <tr><td>Jalankan saat boot</td><td>Menjadwalkan ulang pengingat notifikasi setelah restart</td><td>Otomatis sistem</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="lokal">
+    <h2>5. Penyimpanan di Perangkat Anda</h2>
+    <ul>
+      <li><strong>Penyimpanan aman sistem</strong> (Android Keystore): token sesi,
+        profil &amp; data sekolah yang sedang masuk.</li>
+      <li><strong>Preferensi aplikasi</strong>: token push, bahasa (id/en/ar),
+        tema, penanda “sambutan sudah dilihat”.</li>
+      <li><strong>Basis data lokal (SQLite)</strong>: salinan sementara
+        (mis. jadwal/kehadiran) dan antrean perubahan offline yang masing-masing
+        dikunci kunci idempotensi agar tidak terkirim ganda.</li>
+      <li><strong>Font (Inter)</strong> diunduh sekali dari Google Fonts lalu
+        disimpan di perangkat.</li>
+      <li>Saat Anda <strong>Keluar (logout)</strong>, aplikasi mencabut token di
+        server (upaya terbaik), menghapus pendaftaran push perangkat ini, serta
+        <strong>menghapus token, data sesi, dan salinan lokal</strong> dari perangkat.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="penerima">
+    <h2>6. Ke Mana Data Dikirim</h2>
+    <ul>
+      <li><strong>Server sekolah</strong> (<code>https://sikadpro.whitelabel.co.id</code>,
+        zona waktu Asia/Jakarta): seluruh data operasional aplikasi. Komunikasi
+        memakai HTTPS dan token sesi (Bearer); sesi yang kedaluwarsa/401
+        otomatis mengeluarkan pengguna.</li>
+      <li><strong>Sekolah Anda</strong> (guru, tata usaha, admin sesuai perannya):
+        dapat melihat data yang menjadi kewenangannya, misalnya nilai &amp;
+        kehadiran siswa oleh guru.</li>
+      <li><strong>Tidak ada</strong> pengiriman data ke pengiklan, broker data,
+        atau pihak pemasaran.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="pihak-ketiga">
+    <h2>7. Layanan Pihak Ketiga yang Digunakan</h2>
+    <div class="tbl">
+      <table>
+        <tr><th>Layanan</th><th>Data yang diteruskan</th><th>Kegunaan</th></tr>
+        <tr>
+          <td>Firebase Cloud Messaging (Google)</td>
+          <td>Token push perangkat, platform, nama perangkat generik;
+            isi notifikasi dari sekolah</td>
+          <td>Mengantar notifikasi ke perangkat. Aplikasi tetap berjalan
+            tanpa push bila layanan tak tersedia.</td>
+        </tr>
+        <tr>
+          <td>Google Fonts</td>
+          <td>Permintaan unduhan font standar (data teknis koneksi,
+            mis. alamat IP)</td>
+          <td>Mengunduh font Inter sekali pada peluncuran pertama;
+            selanjutnya dipakai dari penyimpanan perangkat.</td>
+        </tr>
+        <tr>
+          <td>Saluran realtime sekolah (Pusher/Reverb)</td>
+          <td>Pesan chat &amp; siaran yang sedang berlangsung; otentikasi
+            melalui server sekolah</td>
+          <td>Chat &amp; pembaruan langsung. Konfigurasi server produksi:
+            <span class="tbd">Perlu konfirmasi [C6]</span></td>
+        </tr>
+        <tr>
+          <td>WhatsApp (Meta)</td>
+          <td>Hanya bila Anda mengetuk “Hubungi Kami”: membuka percakapan
+            ke nomor resmi (pesan pra-isi)</td>
+          <td>Kontak bantuan atas inisiatif pengguna.</td>
+        </tr>
+        <tr>
+          <td>Penyedia pembayaran sekolah</td>
+          <td>Detail tagihan yang dibayar</td>
+          <td>Memproses pembayaran tagihan sesuai metode yang dipilih.
+            Daftar penyedia per sekolah: <span class="tbd">Perlu konfirmasi [C4]</span></td>
+        </tr>
+      </table>
+    </div>
+    <p class="note"><strong>Catatan hasil audit:</strong> paket Firebase Analytics
+      tercantum pada dependensi Android, namun <strong>tidak ada</strong> pencatatan
+      event analitik di source code aplikasi.
+      Status pengumpulan di build rilis: <span class="tbd">Perlu konfirmasi [C7]</span></p>
+  </section>
+
+  <section class="card" id="keamanan">
+    <h2>8. Keamanan</h2>
+    <ul>
+      <li>Seluruh komunikasi aplikasi–server memakai <strong>HTTPS</strong>.</li>
+      <li>Kata sandi <strong>tidak pernah</strong> disimpan di perangkat;
+        yang disimpan hanyalah token sesi di penyimpanan aman sistem.</li>
+      <li>Token sesi kedaluwarsa &amp; dapat dicabut (otomatis saat keluar;
+        respons 401 memaksa keluar).</li>
+      <li>Antrean offline memakai kunci idempotensi sehingga pengiriman ulang
+        tidak menimbulkan duplikasi (mis. pembayaran/chat).</li>
+      <li>Akses data di server dibatasi peran (siswa/orang tua/guru/admin)
+        dan lingkup sekolah masing-masing.</li>
+      <li>Kunci rilis, kredensial Firebase privat, dan rahasia server
+        <strong>tidak</strong> disertakan di aplikasi maupun repositori publik.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="retensi">
+    <h2>9. Retensi (Jangka Waktu Penyimpanan)</h2>
+    <ul>
+      <li><strong>Di perangkat:</strong> salinan lokal &amp; sesi aktif tersimpan
+        selama Anda masuk; <strong>dihapus saat keluar (logout)</strong> atau
+        saat data aplikasi dihapus lewat Pengaturan Android.</li>
+      <li><strong>Di server sekolah:</strong> mengikuti kebutuhan operasional
+        &amp; arsip akademik sekolah (mis. rapor, keuangan).
+        Jangka waktu pasti &amp; jadwal penghapusan arsip:
+        <span class="tbd">Perlu konfirmasi [C4]</span></li>
+    </ul>
+  </section>
+
+  <section class="card" id="hak">
+    <h2>10. Hak Anda &amp; Penghapusan Akun/Data</h2>
+    <ul>
+      <li><strong>Akses &amp; perbaikan:</strong> lihat/perbarui nama, telepon,
+        foto, dan bahasa di halaman Profil; data akademik diperbaiki melalui
+        tata usaha sekolah.</li>
+      <li><strong>Keluar &amp; bersihkan perangkat:</strong> menu Keluar menghapus
+        token, sesi, pendaftaran push perangkat, dan salinan lokal (terverifikasi).</li>
+      <li><strong>Penghapusan akun &amp; data server:</strong> karena akun
+        diterbitkan sekolah, permintaan penghapusan diajukan ke
+        <strong>tata usaha sekolah Anda</strong> atau kontak pengelola di bawah;
+        pengelola meneruskan ke sekolah untuk diproses sesuai ketentuan arsip
+        yang berlaku. Prosedur &amp; SLA penghapusan server:
+        <span class="tbd">Perlu konfirmasi [C4]</span></li>
+      <li><strong>Menarik persetujuan notifikasi/lokasi/kamera:</strong> matikan
+        izinnya di Pengaturan Android kapan saja.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="anak">
+    <h2>11. Data Anak / Siswa</h2>
+    <p>Akun siswa dibuat dan diberikan oleh sekolah (bukan pendaftaran mandiri
+      oleh anak). Data siswa diproses <strong>semata untuk keperluan layanan
+      pendidikan</strong> (pembelajaran, kehadiran, penilaian, keselamatan)
+      dan hanya dapat diakses pihak berwenang (guru, orang tua/wali yang
+      tertaut, admin sekolah). Ketentuan batas usia &amp; mekanisme persetujuan
+      orang tua mengikuti kebijakan tiap sekolah:
+      <span class="tbd">Perlu konfirmasi [C5]</span></p>
+  </section>
+
+  <section class="card" id="perubahan">
+    <h2>12. Perubahan Kebijakan</h2>
+    <p>Kebijakan ini dapat diperbarui mengikuti perubahan fitur atau regulasi.
+      Versi terbaru selalu tersedia pada tautan publik di bawah dan di halaman
+      <strong>Tentang</strong> aplikasi. Tanggal berlaku tertera di bagian atas
+      dokumen ini.</p>
+  </section>
+
+  <section class="card" id="kontak">
+    <h2>13. Kontak Pengelola Privasi</h2>
+    <ul>
+      <li><strong>WhatsApp resmi (terverifikasi di aplikasi):</strong>
+        0812&nbsp;9605&nbsp;2010</li>
+      <li><strong>Email privasi (sementara):</strong> lindu@act.co.id
+        <span class="tbd">Perlu konfirmasi [C2]</span></li>
+      <li><strong>Pengelola sekolah:</strong> tata usaha sekolah Anda untuk
+        permintaan akses/perbaikan/penghapusan data akademik.</li>
+    </ul>
+    <p>Sertakan nama, sekolah, peran (siswa/orang tua/guru), dan deskripsi
+      permintaan agar dapat diproses. Tautan kebijakan ini juga tersedia di
+      aplikasi pada halaman <strong>Tentang → Kebijakan Privasi</strong>.</p>
+  </section>
+
+  <section class="card" id="lampiran">
+    <h2>Lampiran — Ringkasan untuk Formulir Keamanan Data Play</h2>
+    <p>Ringkasan berbasis audit ini membantu pengisi formulir Data Safety
+      (keputusan final tetap di tangan penerbit):</p>
+    <div class="tbl">
+      <table>
+        <tr><th>Jenis data (Play)</th><th>Dikumpulkan/dibagikan?</th><th>Keterangan terverifikasi</th></tr>
+        <tr><td>Info pribadi (nama, email, telepon)</td><td>Ya / Ya (ke server sekolah)</td><td>Akun &amp; profil; telepon opsional</td></tr>
+        <tr><td>Foto &amp; video (gambar)</td><td>Ya / Ya</td><td>Foto profil, lampiran chat, berkas; video tidak diunggah</td></tr>
+        <tr><td>File &amp; dokumen</td><td>Ya / Ya</td><td>Tugas, dokumen PPDB, impor/ekspor admin</td></tr>
+        <tr><td>Lokasi akurat</td><td>Ya / Ya</td><td>Hanya saat tombol Darurat ditekan</td></tr>
+        <tr><td>Pesan (chat)</td><td>Ya / Ya</td><td>Chat sekolah; realtime via server sekolah</td></tr>
+        <tr><td>Kontak, SMS, biometrik, riwayat browser</td><td>Tidak / Tidak</td><td>Tidak ada di source code &amp; izin</td></tr>
+        <tr><td>ID perangkat (token push)</td><td>Ya / Ya (ke Firebase &amp; server)</td><td>Token FCM + platform + nama generik</td></tr>
+        <tr><td>Penghapusan data</td><td>Tersedia via permintaan</td><td>Logout menghapus data perangkat; hapus server via sekolah/pengelola [C4]</td></tr>
+        <tr><td>Enkripsi saat transit</td><td>Ya</td><td>HTTPS + token Bearer</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 SIKAD Pro · Dokumen v1.0 (12 Oktober 2026) ·
+      <a href="https://sikadpro.whitelabel.co.id/privacy">sikadpro.whitelabel.co.id/privacy</a>
+      <span class="tbd">URL final perlu konfirmasi [C3]</span></p>
+  </footer>
+
+</div>
+</body>
+</html>
