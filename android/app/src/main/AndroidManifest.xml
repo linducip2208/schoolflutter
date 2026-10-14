@@ -1,9 +1,18 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- eSchool permissions: API + FCM + scanner/camera + file/media + GPS -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- eSchool permissions: API + FCM + scanner/camera + GPS -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Pemilihan foto/dokumen memakai system picker (Android Photo Picker
+         via image_picker + Storage Access Framework via file_picker) sehingga
+         tidak butuh izin media luas. open_filex 4.7.0 menyumbang READ_MEDIA_*
+         lewat manifest merger; tiga baris remove di bawah mencabut kontribusi
+         plugin tersebut (kebijakan Play Photo and Video Permissions) tanpa
+         menyentuh CAMERA/lokasi/notifikasi. File dibuka via FileProvider. -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" tools:node="remove" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
