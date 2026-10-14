@@ -205,8 +205,8 @@ flutter build appbundle --release (produksi) → app-release.aab (68.7 MB)
 
 ## 7. Perubahan Git (belum di-commit saat laporan ditulis)
 
-Commit awal: `df7957b` (clean). Diubah 15 file + 1 test baru
-(`test/core/payment_safety_test.dart`): workflow CI, `app_router`,
+Commit awal: `df7957b` (clean). Diubah 17 file (15 modifikasi + 2 baru:
+laporan ini dan `test/core/payment_safety_test.dart`): workflow CI, `app_router`,
 `api_client`, `error_interceptor`, `app_storage`, `sync_engine`,
 `auth_repository`, `auth_bloc`, `fees_repository`,
 `payment_repository`, `payment_methods_page`, `main.dart` (format),
@@ -220,3 +220,19 @@ git push origin master
 
 Klaim jujur: 93 test otomatis hijau + kontrak 259/259 + build sukses.
 Bukan klaim "bebas bug" — §5 dan §6 di atas adalah sisa yang diketahui.
+
+## 8. Addendum 2026-10-14 (pasca-push `8bb7194`)
+
+1. **Firebase Analytics dihapus dari build** (`android/app/build.gradle.kts`):
+   `implementation("com.google.firebase:firebase-analytics")` dibuang.
+   Dart terbukti hanya memakai core + messaging (grep nihil) — SDK yang
+   menganggur ikut mengumpulkan data (beban Data Safety + risiko review).
+   `docs/privacy-policy.html` [C7] ditandai SELESAI (tidak ada analitik).
+2. **`android:allowBackup="false"`** (`AndroidManifest.xml`): default
+   true mem-backup token Sanctum + cache ke Google Drive; aplikasi
+   sekolah tidak boleh membocorkan kredensial ke backup perangkat.
+3. **Komentar TODO applicationId dihapus** (kosmetik; id `com.sikadpro` tetap).
+4. Verifikasi: `flutter build appbundle --release` sukses (67,8 MB);
+   merged manifest memuat `allowBackup="false"`, tanpa analytics /
+   `READ_MEDIA_*`. `flutter analyze` tetap 0 error/warning; tidak ada
+   perubahan Dart sehingga test tidak perlu diulang (93/93 terakhir).

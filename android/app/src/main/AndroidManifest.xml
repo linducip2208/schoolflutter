@@ -18,11 +18,16 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- allowBackup=false: the default (true) would back up the Sanctum
+         session token and cached school data to Google Drive; a school app
+         must not leak credentials into device backups. Logout already
+         wipes local data; this closes the backup exfiltration path. -->
     <application
         android:label="Sikad Pro"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round">
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -15,7 +15,8 @@
   [C4] Masa retensi data di server + prosedur penghapusan akun di server.
   [C5] Kebijakan usia/persetujuan orang tua untuk akun siswa.
   [C6] Konfigurasi realtime (Pusher/Reverb) produksi.
-  [C7] Status pengumpulan Firebase Analytics di build rilis.
+  (C7 SELESAI 2026-10-14: SDK Analytics dihapus dari build — tidak ada
+  pengumpulan analitik.)
 -->
 <html lang="id">
 <head>
@@ -328,10 +329,11 @@
         </tr>
       </table>
     </div>
-    <p class="note"><strong>Catatan hasil audit:</strong> paket Firebase Analytics
-      tercantum pada dependensi Android, namun <strong>tidak ada</strong> pencatatan
-      event analitik di source code aplikasi.
-      Status pengumpulan di build rilis: <span class="tbd">Perlu konfirmasi [C7]</span></p>
+    <p><strong>Firebase Analytics tidak digunakan.</strong> SDK Analytics
+      sudah dihapus dari dependensi Android
+      (<code>android/app/build.gradle.kts</code>) dan tidak ada pencatatan
+      event analitik di source code aplikasi — aplikasi tidak mengumpulkan
+      data analitik perilaku.</p>
   </section>
 
   <section class="card" id="keamanan">

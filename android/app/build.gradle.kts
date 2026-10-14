@@ -34,7 +34,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.sikadpro"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
@@ -79,7 +78,8 @@ dependencies {
     // Required by flutter_local_notifications v18+ (Java 8+ API desugaring).
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 
-    // Firebase BoM (versions managed by BoM) + Analytics.
+    // Firebase BoM (versions managed by BoM). Analytics is intentionally
+    // NOT included: Dart uses only core + messaging, and an unused
+    // analytics SDK would collect data (Data Safety burden + review risk).
     implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
-    implementation("com.google.firebase:firebase-analytics")
 }
