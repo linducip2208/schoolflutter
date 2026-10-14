@@ -41,10 +41,13 @@ class ApiClient {
         AuthInterceptor(),
         ErrorInterceptor(),
         if (kDebugMode)
+          // Bodies stay OFF: login posts a plaintext password and the
+          // login/2FA responses carry the session token — neither may
+          // reach logcat. Status + errors are enough for debugging.
           PrettyDioLogger(
             requestHeader: false,
-            requestBody: true,
-            responseBody: true,
+            requestBody: false,
+            responseBody: false,
             error: true,
             compact: true,
             maxWidth: 100,

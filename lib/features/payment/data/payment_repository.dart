@@ -16,10 +16,15 @@ class PaymentRepository {
     }
   }
 
+  /// Starts a gateway transaction. [idempotencyKey] is REQUIRED and must be
+  /// stable across retries of the same user intent: the backend dedups on
+  /// it for 24h, so a timeout-retry with a fresh key would double-charge.
+  /// Callers must mint one key per (invoice, method) and reuse it until
+  /// the intent succeeds or is abandoned.
   Future<Map<String, dynamic>> initiate({
     required int invoiceId,
     required int paymentMethodId,
-    String? idempotencyKey,
+    required String idempotencyKey,
   }) async {
     try {
       final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
@@ -27,10 +32,10 @@ class PaymentRepository {
         data: <String, dynamic>{
           'invoice_id': invoiceId,
           'payment_method_id': paymentMethodId,
-          if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+          'idempotency_key': idempotencyKey,
         },
         options: Options(headers: <String, String>{
-          if (idempotencyKey != null) 'Idempotency-Key': idempotencyKey,
+          'Idempotency-Key': idempotencyKey,
         }),
       );
       return unwrapMap(r.data);

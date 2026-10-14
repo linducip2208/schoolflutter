@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../api/api_client.dart';
 import '../api/api_endpoints.dart';
@@ -264,8 +265,10 @@ class OfflineQueuedException implements Exception {
   String toString() => message;
 }
 
-String _newKey() =>
-    '${DateTime.now().microsecondsSinceEpoch}-${(identityHashCode(Object()) % 0xffffff).toRadixString(16)}';
+/// Idempotency keys must be unguessable-unique: the old timestamp+hash
+/// scheme could collide under `UNIQUE(idempotencyKey)` and throw while
+/// offline. UUID v4 matches [AuthInterceptor].
+String _newKey() => const Uuid().v4();
 
 /// Cache-key builder for GET endpoints.
 String cacheKey(String path, [Map<String, dynamic>? query]) {

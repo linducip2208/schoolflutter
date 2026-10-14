@@ -121,8 +121,7 @@ void main() {
       expect(find.bySemanticsLabel(RegExp('^Siswa: 120')), findsOneWidget);
       final SemanticsNode node = tester.getSemantics(
         find.byWidgetPredicate(
-          (Widget w) =>
-              w is Semantics && w.properties.label == 'Siswa: 120',
+          (Widget w) => w is Semantics && w.properties.label == 'Siswa: 120',
         ),
       );
       expect(node.flagsCollection.isButton, isTrue);

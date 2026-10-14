@@ -90,9 +90,7 @@ Future<void> main() async {
   try {
     await Firebase.initializeApp().timeout(const Duration(seconds: 15));
     FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
-    await FcmService.instance
-        .init()
-        .timeout(const Duration(seconds: 45));
+    await FcmService.instance.init().timeout(const Duration(seconds: 45));
   } catch (_) {
     // Firebase not configured / unreachable — app runs without push.
   }

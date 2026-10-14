@@ -121,16 +121,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onBoot(AuthBootRequested e, Emitter<AuthState> emit) async {
     final AuthSession? s = await _repo.restoreSession();
-    if (s != null) {
-      emit(state.copyWith(
-        status: AuthStatus.authenticated,
-        user: s.user,
-        school: s.school,
-        clearError: true,
-      ));
-    } else {
+    if (s == null) {
       emit(
           state.copyWith(status: AuthStatus.unauthenticated, clearError: true));
+      return;
+    }
+    emit(state.copyWith(
+      status: AuthStatus.authenticated,
+      user: s.user,
+      school: s.school,
+      clearError: true,
+    ));
+    // Opportunistic server validation: a revoked/deactivated account must
+    // not stay logged in. Offline boot is unaffected (network errors keep
+    // the cached session; 401 expires it via the global interceptor).
+    final bool ok = await _repo.validateSession();
+    if (!ok && !isClosed) {
+      add(const AuthSessionExpired());
     }
   }
 
@@ -189,9 +196,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         clearChallenge: true,
       ));
     } catch (err) {
+      // Backend consumes the challenge on the first verify attempt
+      // (Cache::pull), so a retry with the same challenge can never
+      // succeed — force a fresh login instead of a dead retry loop.
       emit(state.copyWith(
         status: AuthStatus.error,
-        errorMessage: err.toString(),
+        errorMessage: '${err.toString()} Silakan login ulang untuk kode baru.',
+        clearChallenge: true,
       ));
     }
   }

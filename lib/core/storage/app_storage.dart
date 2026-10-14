@@ -1,6 +1,7 @@
 import 'dart:async' show TimeoutException;
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -56,8 +57,11 @@ class AppStorage {
     _memToken = token;
     try {
       await _secure.write(key: _kToken, value: token).timeout(_secureTimeout);
-    } catch (_) {
-      // best effort — memory mirror keeps the session alive.
+    } catch (e) {
+      // best effort — memory mirror keeps the session alive, but surface
+      // the failure in debug so a silently non-persisted session is
+      // diagnosable (previously swallowed entirely).
+      if (kDebugMode) debugPrint('[AppStorage] saveToken failed: $e');
     }
   }
 

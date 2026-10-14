@@ -1,3 +1,4 @@
+import 'package:eschool_app/app/router/app_router.dart';
 import 'package:eschool_app/app/router/routes.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -34,6 +35,16 @@ void main() {
       expect(Routes.homeForRole('foundation_admin'), Routes.foundationHome);
       expect(Routes.homeForRole('homeroom_teacher'), Routes.teacherDashboard);
       expect(Routes.homeForRole('random_xyz'), Routes.staffDashboard);
+    });
+    test('homeroom_teacher passes the teacher guard (no bounce loop)', () {
+      expect(
+          AppRouter.roleMatchesForTest('homeroom_teacher', 'teacher'), isTrue);
+      expect(AppRouter.roleMatchesForTest('teacher', 'teacher'), isTrue);
+      expect(AppRouter.roleMatchesForTest('student', 'teacher'), isFalse);
+      expect(AppRouter.roleMatchesForTest('super_admin', 'teacher'), isTrue);
+      expect(AppRouter.roleMatchesForTest('driver', 'gate_ops'), isTrue);
+      expect(AppRouter.roleMatchesForTest('security', 'gate_ops'), isTrue);
+      expect(AppRouter.roleMatchesForTest('school_admin', 'admin'), isTrue);
     });
     test('admin module hub + aliases registered', () {
       expect(Routes.adminMenu, '/admin/menu');

@@ -54,9 +54,7 @@ class AuthRepository {
         }
       }
       if (r.statusCode != 200 || r.data is! Map) {
-        throw ServerException(
-          (r.data is Map ? r.data['message'] : 'Login gagal') as String,
-        );
+        throw ServerException(_message(r.data, 'Login gagal'));
       }
 
       return _storeSession(Map<String, dynamic>.from(r.data as Map));
@@ -82,9 +80,7 @@ class AuthRepository {
         },
       );
       if (r.statusCode != 200 || r.data is! Map) {
-        throw ServerException(
-          (r.data is Map ? r.data['message'] : 'Verifikasi gagal') as String,
-        );
+        throw ServerException(_message(r.data, 'Verifikasi gagal'));
       }
       return _storeSession(Map<String, dynamic>.from(r.data as Map));
     } on DioException catch (e) {
@@ -92,10 +88,23 @@ class AuthRepository {
     }
   }
 
+  /// Safe message extractor: never throws on malformed bodies
+  /// (a `TypeError` here would crash instead of surfacing [ServerException]).
+  static String _message(dynamic data, String fallback) {
+    if (data is Map && data['message'] is String) {
+      return data['message'] as String;
+    }
+    return fallback;
+  }
+
   Future<AuthSession> _storeSession(Map<String, dynamic> body) async {
-    final String token = body['token'] as String;
-    final Map<String, dynamic> userMap =
-        Map<String, dynamic>.from(body['user'] as Map);
+    final dynamic rawToken = body['token'];
+    final dynamic rawUser = body['user'];
+    if (rawToken is! String || rawToken.isEmpty || rawUser is! Map) {
+      throw ServerException('Respons login tidak valid.');
+    }
+    final String token = rawToken;
+    final Map<String, dynamic> userMap = Map<String, dynamic>.from(rawUser);
     final Map<String, dynamic>? schoolMap = userMap['school'] is Map
         ? Map<String, dynamic>.from(userMap['school'] as Map)
         : null;
@@ -105,11 +114,49 @@ class AuthRepository {
         ? SchoolModel.fromJson(schoolMap)
         : SchoolModel(id: user.schoolId, name: '');
 
+    // P0 guard: the offline outbox replays with the CURRENT token, so a
+    // leftover queue from another user would be sent as the new user.
+    // Wipe local data when the identity changes (or when no session
+    // existed but an orphan queue survived, e.g. reinstall edge cases).
+    final Map<String, dynamic>? previous = await AppStorage.getUser();
+    final dynamic previousId = previous?['id'];
+    if (previousId != user.id) {
+      await SyncEngine.instance.clearLocal();
+    }
+
     await AppStorage.saveToken(token);
     await AppStorage.saveUser(user.toJson());
     await AppStorage.saveSchool(school.toJson());
 
     return AuthSession(user: user, school: school, token: token);
+  }
+
+  /// Validates a restored session against the server (`GET /auth/me`).
+  /// Returns true when the session is usable. A 401 lets the global
+  /// [ErrorInterceptor] expire the session; any network failure keeps the
+  /// cached session so offline boot still works.
+  Future<bool> validateSession() async {
+    try {
+      final Response<dynamic> r =
+          await ApiClient.dio.get<dynamic>(ApiEndpoints.me);
+      final dynamic data = r.data;
+      Map<String, dynamic>? userMap;
+      if (data is Map && data['user'] is Map) {
+        userMap = Map<String, dynamic>.from(data['user'] as Map);
+      } else if (data is Map && data['data'] is Map) {
+        final dynamic inner = (data['data'] as Map)['user'];
+        if (inner is Map) userMap = Map<String, dynamic>.from(inner);
+      } else if (data is Map && data['id'] != null) {
+        userMap = Map<String, dynamic>.from(data);
+      }
+      if (userMap != null) {
+        await AppStorage.saveUser(userMap);
+      }
+      return true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) return false;
+      return true;
+    }
   }
 
   Future<void> forgotPassword(String email) async {

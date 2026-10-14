@@ -18,4 +18,8 @@ jobs:
       - run: dart format --set-exit-if-changed lib test
       - run: flutter analyze
       - run: flutter test
-      - run: flutter build apk --debug --dart-define=API_BASE_URL=https://staging.example.com/api/v1
+      # CI debug build must never point at production or a placeholder domain:
+      # 10.0.2.2 is emulator loopback (non-routable), matching the dev default
+      # in lib/core/config/app_config.dart. Analyze + test above always run
+      # before this build step.
+      - run: flutter build apk --debug --dart-define=API_BASE_URL=http://10.0.2.2:8000/api/v1 --dart-define=APP_ENV=development

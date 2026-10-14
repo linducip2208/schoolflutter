@@ -18,6 +18,7 @@ void main() {
       'AuthBootRequested → authenticated when session restored',
       setUp: () {
         when(() => repo.restoreSession()).thenAnswer((_) async => testSession);
+        when(() => repo.validateSession()).thenAnswer((_) async => true);
       },
       build: () => AuthBloc(repo),
       act: (AuthBloc b) => b.add(const AuthBootRequested()),
@@ -28,6 +29,27 @@ void main() {
               s.user?.id == testUser.id &&
               s.school?.id == testSchool.id,
           'authenticated with restored user',
+        ),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'AuthBootRequested → unauthenticated when server rejects session',
+      setUp: () {
+        when(() => repo.restoreSession()).thenAnswer((_) async => testSession);
+        when(() => repo.validateSession()).thenAnswer((_) async => false);
+      },
+      build: () => AuthBloc(repo),
+      act: (AuthBloc b) => b.add(const AuthBootRequested()),
+      expect: () => <Matcher>[
+        predicate<AuthState>(
+          (AuthState s) => s.status == AuthStatus.authenticated,
+          'optimistic authenticated first (offline-capable boot)',
+        ),
+        predicate<AuthState>(
+          (AuthState s) =>
+              s.status == AuthStatus.unauthenticated && s.user == null,
+          'expired to clean unauthenticated after server reject',
         ),
       ],
     );
@@ -200,6 +222,36 @@ void main() {
           (AuthState s) =>
               s.status == AuthStatus.error && s.errorMessage != null,
           'error with message',
+        ),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'AuthTwoFactorVerifyRequested → challenge cleared on failure',
+      setUp: () {
+        when(() => repo.verifyTwoFactor(
+              challengeId: any(named: 'challengeId'),
+              code: any(named: 'code'),
+              recoveryCode: any(named: 'recoveryCode'),
+            )).thenThrow(Exception('Invalid challenge'));
+      },
+      build: () => AuthBloc(repo)
+        ..emit(const AuthState(
+          status: AuthStatus.twoFactorRequired,
+          challengeId: 'challenge-1',
+        )),
+      act: (AuthBloc b) => b.add(const AuthTwoFactorVerifyRequested(
+        code: '000000',
+      )),
+      expect: () => <Matcher>[
+        predicate<AuthState>(
+            (AuthState s) => s.status == AuthStatus.loggingIn, 'loggingIn'),
+        predicate<AuthState>(
+          (AuthState s) =>
+              s.status == AuthStatus.error &&
+              s.challengeId == null &&
+              (s.errorMessage ?? '').contains('login ulang'),
+          'error, dead challenge cleared, re-login hinted',
         ),
       ],
     );

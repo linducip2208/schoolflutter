@@ -936,6 +936,9 @@ class AppRouter {
     // super_admin bypass on every school-scoped check).
     if (role == 'super_admin') return true;
     if (role == required) return true;
+    // Homeroom teachers use the teacher shell (homeForRole maps them to
+    // teacherDashboard); without this they would bounce on /teacher/*.
+    if (required == 'teacher' && role == 'homeroom_teacher') return true;
     // Device-operator roles share the gate shell.
     if (required == 'gate_ops' && (role == 'driver' || role == 'security')) {
       return true;
@@ -947,6 +950,11 @@ class AppRouter {
     if (required == 'staff') return true;
     return false;
   }
+
+  /// Test seam for the role guard ([_roleMatches] is private).
+  @visibleForTesting
+  static bool roleMatchesForTest(String role, String required) =>
+      _roleMatches(role, required);
 }
 
 class _AuthListenable extends ChangeNotifier {

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
 import '../../../core/api/response_unwrap.dart';
+import '../../../core/error/app_exception.dart';
 import '../../../core/error/error_handler.dart';
 
 class FeesRepository {
@@ -86,20 +87,39 @@ class FeesRepository {
     }
   }
 
+  /// In-flight guard per invoice: the backend `recordPayment` endpoint has
+  /// no idempotency dedup, so a double-tap (or two concurrent retries)
+  /// would record the payment twice. Sequential payments (e.g. cicilan)
+  /// are unaffected — the guard only blocks overlapping calls.
+  static final Set<int> _recordInFlight = <int>{};
+
   /// Catat pembayaran manual (`fee.payment`).
   Future<Map<String, dynamic>> recordPayment({
     required int invoiceId,
     required int amount,
     String method = 'cash',
+    String? idempotencyKey,
   }) async {
+    if (!_recordInFlight.add(invoiceId)) {
+      throw AppException('Pembayaran invoice ini sedang diproses.');
+    }
     try {
       final Response<dynamic> r = await ApiClient.dio.post<dynamic>(
         ApiEndpoints.invoicePay(invoiceId),
-        data: <String, dynamic>{'amount': amount, 'payment_method': method},
+        data: <String, dynamic>{
+          'amount': amount,
+          'payment_method': method,
+          if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+        },
+        options: Options(headers: <String, String>{
+          if (idempotencyKey != null) 'Idempotency-Key': idempotencyKey,
+        }),
       );
       return unwrapMap(r.data);
     } on DioException catch (e) {
       throw mapDioError(e);
+    } finally {
+      _recordInFlight.remove(invoiceId);
     }
   }
 

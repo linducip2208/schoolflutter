@@ -26,6 +26,16 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
   late Future<List<PaymentMethod>> _methodsFuture;
   bool _initiating = false;
 
+  /// One stable idempotency key per (invoice, method) intent, reused across
+  /// retries until that intent succeeds. A fresh key per tap would defeat
+  /// backend dedup and risk a double charge after a timeout.
+  final Map<String, String> _idemKeys = <String, String>{};
+
+  String _keyFor(int methodId) => _idemKeys.putIfAbsent(
+        '${widget.invoiceId}:$methodId',
+        () => const Uuid().v4(),
+      );
+
   @override
   void initState() {
     super.initState();
@@ -41,12 +51,12 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
     if (_initiating) return;
     setState(() => _initiating = true);
     try {
-      final String idemKey = const Uuid().v4();
       final Map<String, dynamic> data = await _repo.initiate(
         invoiceId: widget.invoiceId,
         paymentMethodId: method.id,
-        idempotencyKey: idemKey,
+        idempotencyKey: _keyFor(method.id),
       );
+      _idemKeys.remove('${widget.invoiceId}:${method.id}');
       final PaymentTransaction tx = PaymentTransaction.fromJson(data);
       if (!mounted) return;
       Navigator.of(context).pushReplacement(MaterialPageRoute<void>(
