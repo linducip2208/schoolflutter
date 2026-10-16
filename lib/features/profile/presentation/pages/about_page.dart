@@ -69,18 +69,10 @@ class _AboutPageState extends State<AboutPage> {
               Center(
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                      child: Icon(
-                        Icons.school_rounded,
-                        size: 40,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
+                    Image.asset(
+                      'assets/icons/sikad_pro_logo_horizontal.png',
+                      height: 56,
+                      fit: BoxFit.contain,
                     ),
                     const SizedBox(height: 12),
                     Text(

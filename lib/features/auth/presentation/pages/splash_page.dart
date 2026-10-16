@@ -76,12 +76,20 @@ class _SplashPageState extends State<SplashPage> {
             end: Alignment.bottomRight,
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(Icons.school_rounded, size: 96, color: Colors.white),
-              SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: Image.asset(
+                  'assets/icons/sikad_pro_icon_master_1024.png',
+                  width: 96,
+                  height: 96,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 16),
               Text(
                 'Sikad Pro',
                 style: TextStyle(

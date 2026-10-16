@@ -76,15 +76,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: Row(
                       children: <Widget>[
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.18),
-                            borderRadius: BorderRadius.circular(18),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Image.asset(
+                            'assets/icons/sikad_pro_icon_master_1024.png',
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
                           ),
-                          child: const Icon(Icons.school_rounded,
-                              color: Colors.white, size: 34),
                         ),
                         const SizedBox(width: 14),
                         const Expanded(

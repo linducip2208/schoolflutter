@@ -9,6 +9,14 @@ void main() {
 
     expect(find.text('Sikad Pro'), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    expect(find.byIcon(Icons.school_rounded), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (Widget w) =>
+            w is Image &&
+            (w.image as AssetImage).assetName ==
+                'assets/icons/sikad_pro_icon_master_1024.png',
+      ),
+      findsOneWidget,
+    );
   });
 }
